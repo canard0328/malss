@@ -3,6 +3,7 @@
 def test():
     print 'check\n'
 
+
 def foo():
     print 'foo\n'
 

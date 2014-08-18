@@ -34,9 +34,5 @@ setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     zip_safe=False,
-    keywords='machine learning support system',
-    install_requires=[
-        'numpy',
-        'scikit-learn',
-        'matplotlib']
+    keywords='machine learning support system'
 )

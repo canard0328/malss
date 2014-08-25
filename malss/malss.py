@@ -124,6 +124,9 @@ def __make_data():
     import os
     
     if not os.path.exists('data/spam.txt'):
+        if not os.path.exists('data'):
+            os.mkdir('data')
+        
         import urllib
         urllib.urlretrieve('http://mldata.org/repository/data/download/uci-20070111-spambase/', 'data/uci-20070111-spambase.arff')
         fi = open('data/uci-20070111-spambase.arff', 'r')

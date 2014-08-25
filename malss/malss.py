@@ -10,6 +10,7 @@ from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.svm import LinearSVC
+from docutils.core import publish_cmdline
 
 
 class MALSS(object):
@@ -60,6 +61,7 @@ class MALSS(object):
     def execute(self):
         self.__tune_parameters()
         self.__plot_learning_curve()
+        self.__make_report()
 
 
     def __tune_parameters(self):
@@ -103,8 +105,15 @@ class MALSS(object):
                      label="Cross-validation score")
         
             plt.legend(loc="lower right")
-            plt.savefig('learning_curve_%s.png'%estimator.__class__.__name__, bbox_inches='tight')
+            plt.savefig('learning_curve_%s.png'%estimator.__class__.__name__, bbox_inches='tight', dpi=50)
             plt.close()
+    
+    
+    def __make_report(self):
+        fo = open('report.rst', 'w')
+        fo.write('.. image:: learning_curve_SVC.png')
+        fo.close()
+        publish_cmdline(writer_name='html', argv=['report.rst', 'report.html'])
 
 
 if __name__=="__main__":
@@ -113,6 +122,4 @@ if __name__=="__main__":
     del data['type']
     cls = MALSS(data, y, 'classification', n_jobs=3)
     cls.execute()
-
-    
 

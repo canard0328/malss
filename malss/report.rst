@@ -1,0 +1,1 @@
+.. image:: learning_curve_SVC.png

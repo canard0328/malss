@@ -55,3 +55,4 @@ target/
 *.txt
 *.png
 *.html
+test*/

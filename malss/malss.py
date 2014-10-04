@@ -6,17 +6,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import types
 from jinja2 import Environment, FileSystemLoader
-from sklearn import cross_validation, metrics
+from sklearn.cross_validation import StratifiedKFold, KFold
 from sklearn.utils import shuffle as sk_shuffle
 from sklearn.grid_search import GridSearchCV
 from sklearn.learning_curve import learning_curve
 from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC, LinearSVC
+from sklearn.svm import SVC, LinearSVC, SVR
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.datasets import fetch_mldata
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor
 
 from algorithm import Algorithm
 from html import HTML
@@ -49,22 +49,25 @@ class MALSS(object):
         verbos : bool, default: True
             Enable verbose output.
         """
+        if shuffle:
+            self.X, self.y = sk_shuffle(X, y, random_state=0)
+        else:
+            self.X = X
+            self.y = y
+        self.X = StandardScaler().fit_transform(self.X)
+        self.task = task
+        self.n_jobs = n_jobs
+        self.random_state = random_state
+        self.verbose = verbose
+        self.algorithms = self.__choose_algorithm()
         if task == 'classification':
-            if shuffle:
-                self.X, self.y = sk_shuffle(X, y, random_state=0)
-            else:
-                self.X = X
-                self.y = y
-            self.X = StandardScaler().fit_transform(self.X)
-            self.task = task
-            self.n_jobs = n_jobs
-            self.random_state = random_state
-            self.verbose = verbose
-            self.algorithms = self.__choose_algorithm()
             self.scoring = 'f1'
+            self.cv = StratifiedKFold(self.y, n_folds=5, shuffle=True,
+                                      random_state=self.random_state)
         elif task == 'regression':
             self.scoring = 'r2'
-            raise ValueError('task:%s is not implemented yet' % task)
+            self.cv = KFold(self.X.shape[0], n_folds=5, shuffle=True,
+                            random_state=self.random_state)
         else:
             raise ValueError('task:%s is not supported' % task)
 
@@ -113,14 +116,39 @@ class MALSS(object):
                             n_jobs=self.n_jobs),
                         [{'loss': ['hinge', 'log'],
                           'penalty': ['l2', 'l1'],
-                          'alpha': [1e-05, 1e-04, 1e-03],
+                          'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03],
                           'class_weight': [None, 'auto']}],
                         'SGD Classifier'))
+        if self.task == 'regression':
+            if self.X.shape[0] * self.X.shape[1] <= 1e+06:
+                if self.X.shape[0] ** 2 * self.X.shape[1] <= 1e+09:
+                    algorithms.append(
+                        Algorithm(
+                            SVR(random_state=self.random_state),
+                            [{'kernel': ['rbf'],
+                              'C': [10, 100, 1000, 10000],
+                              'gamma': [1e-4, 1e-3, 1e-2, 1e-1]}],
+                            'Support Vector Machine (RBF Kernel)'))
+                algorithms.append(
+                    Algorithm(
+                        Ridge(),
+                        [{'alpha':
+                            [0.01, 0.1, 1, 10, 100]}],
+                        'Ridge Regression'))
+            else:
+                algorithms.append(
+                    Algorithm(
+                        SGDRegressor(
+                            random_state=self.random_state),
+                        [{'penalty': ['l2', 'l1'],
+                          'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
+                        'SGD Regressor'))
         return algorithms
 
     def execute(self):
         self.__tune_parameters()
-        self.__report_classification_result()
+        if self.task == 'classification':
+            self.__report_classification_result()
 
     def __search_best_algorithm(self):
         best_score = float('-Inf')
@@ -135,12 +163,9 @@ class MALSS(object):
         for i in xrange(len(self.algorithms)):
             estimator = self.algorithms[i].estimator
             parameters = self.algorithms[i].parameters
-            cv = cross_validation.StratifiedKFold(
-                self.y, n_folds=5, shuffle=True,
-                random_state=self.random_state)
             sc = f1score if self.scoring == 'f1' else self.scoring
             clf = GridSearchCV(
-                estimator, parameters, cv=cv, scoring=sc,
+                estimator, parameters, cv=self.cv, scoring=sc,
                 n_jobs=self.n_jobs)
             clf.fit(self.X, self.y)
             self.algorithms[i].estimator = clf.best_estimator_
@@ -159,11 +184,8 @@ class MALSS(object):
     def __plot_learning_curve(self, dname=None):
         for alg in self.algorithms:
             estimator = alg.estimator
-            cv = cross_validation.StratifiedKFold(
-                self.y, n_folds=5, shuffle=True,
-                random_state=self.random_state)
             train_sizes, train_scores, test_scores = learning_curve(
-                estimator, self.X, self.y, cv=cv, n_jobs=self.n_jobs)
+                estimator, self.X, self.y, cv=self.cv, n_jobs=self.n_jobs)
             train_scores_mean = np.mean(train_scores, axis=1)
             train_scores_std = np.std(train_scores, axis=1)
             test_scores_mean = np.mean(test_scores, axis=1)
@@ -216,6 +238,7 @@ class MALSS(object):
 
         html = self.tmpl.render(algorithms=self.algorithms,
                                 scoring=self.scoring,
+                                taks=self.task,
                                 verbose=self.verbose).encode('utf-8')
         fo = open(dname + '/report.html', 'w')
         fo.write(html)

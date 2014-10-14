@@ -11,7 +11,7 @@
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 			<th>algorithm</th>
-			<th>score ({{ scoring }})</th>
+			<th>cross-validation score ({{ scoring }})</th>
 		</tr>
 
 	{%- for algorithm in algorithms %}
@@ -21,11 +21,21 @@
 		</tr>
 	{%- endfor %}
 	</table>
+
+	{%- if verbose %}
+	<p>
+		<strong>* cross-vaidation score:</strong>
+		<ul>
+			<li>Evaluating the quality of the model on the data used to fit the model can lead to <a href="http://en.wikipedia.org/wiki/Overfitting"><i>overfitting</i></a>.</li>
+			<li>The solution to overfitting is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation"><i>k-fold cross validation</i></a>: divide the dataset into k (default: 5) parts of (roughly) equal size, then for each of these five parts, train the classifier on the other four and test on the held-out part.</li>
+		</ul>
+	</p>
+	{%- endif %}
 	<hr>
 
 	{%- for algorithm in algorithms %}
 	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
-	<h3>Parameter optimization</h3>
+	<h3>Parameter optimization by <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><i>grid search</i></a></h3>
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 		{%- for key in algorithm.grid_scores[0][0].keys() %}
@@ -64,26 +74,32 @@
 
 	{%- if verbose %}
 	<p>
-		<strong>High variance</strong>
+		Learning curve
 		<ul>
-			<li>Cross-validation score still increasing as training examples increases.</li>
-			<li>Large gap between training and cross-validation score.</li>
+			<li>A learning curve is a plot of the training and cross-validation error as a function of the number of training points.</li>
+			<li>The algorithm shows <strong>high variance</strong> (over-fitting) if:</li>
+			<ul>
+				<li>Cross-validation score still increasing as training examples increases.</li>
+				<li>Large gap between training and cross-validation score.</li>
+			</ul>
+			<li>The algorithm shows <strong>high bias</strong> (under-fitting) if:</li>
+			<ul>
+				<li>Even training score is unacceptably low.</li>
+				<li>Small gap between training and cross-validation score.</li>
+			</ul>
 		</ul>
-		<strong>High bias</strong>
+		In case of <strong>high variance</strong> (over-fitting):
 		<ul>
-			<li>Even training score is unacceptably low.</li>
-			<li>Small gap between training and cross-validation score.</li>
+			<li>Use fewer features. Using a feature selection technique may be useful, and decrease the over-fitting of the estimator.</li>
+			<li>Use more training samples. Adding training samples can reduce the effect of over-fitting, and lead to improvements in a high variance estimator.</li>
 		</ul>
-		<strong>In case of high variance:</strong>
+		In case of <strong>high bias</strong> (under-fitting):
 		<ul>
-			<li>Try getting more training examples.</li>
-			<li>Try dimensionality reduction or feature selection.</li>
+			<li>Add more features. In our example of predicting home prices, it may be helpful to make use of information such as the neighborhood the house is in, the year the house was built, the size of the lot, etc. Adding these features to the training and test sets can improve a high-bias estimator.</li>
+			<li>Use a more sophisticated model. Adding complexity to the model can help improve on bias. For a polynomial fit, this can be accomplished by increasing the degree d. Each learning technique has its own methods of adding complexity.</li>
+			<li>Use fewer samples. Though this will not improve the classification, a high-bias algorithm can attain nearly the same error with a smaller training sample. For algorithms which are computationally expensive, reducing the training sample size can lead to very large improvements in speed.</li>
 		</ul>
-		<strong>In case of high bias:</strong>
-		<ul>
-			<li>Try a larger set of features.</li>
-		</ul>
-		<strong>See also:</strong>
+		See also:
 		<ul>
 			<li><a href="http://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff">Bias-variance tradeoff</a></li>
 		</ul>
@@ -92,5 +108,8 @@
 
 	<hr>
 	{%- endfor %}
+	{%- if verbose %}
+	* much of the material in this report was adapted from <a href="http://www.astroml.org/sklearn_tutorial/practical.html">sklearn tutorials</a>.
+	{%- endif %}
 </body>
 </html>

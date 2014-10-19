@@ -33,6 +33,26 @@
 	{%- endif %}
 	<hr>
 
+	<h2>Data summary <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<ul>
+		<li>Number of rows: {{ data.shape_before[0] }}</li>
+		<li>Number of columns: {{ data.shape_before[1] }} (numeric: {{ data.shape_before[1] - data.del_columns|length }}, categorical: {{ data.del_columns|length }})</li>
+		{%- if data.del_columns|length > 0 %}
+		<ul>
+			<li>Categorical values were encoded to integer features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features">one-of-K scheme</a>.</li>
+		</ul>
+		{%- endif %}
+	</ul>
+	{%- if data.col_was_null|length > 0 %}
+	<ul>
+		<li>Column {% for col in data.col_was_null %}{{ col }} {% endfor %}had NA values.</li>
+		<ul>
+			<li>NA values were filled in with the most frequent value (categorical), median (integer), mean (float).</li>
+		</ul>
+	</ul>
+	{%- endif %}
+	<hr>
+
 	{%- for algorithm in algorithms %}
 	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<h3>Parameter optimization by <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><i>grid search</i></a></h3>

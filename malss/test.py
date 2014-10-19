@@ -104,5 +104,28 @@ def test_regression_big():
     cls.execute()
     cls.make_report('test_regression_big')
 
+
+def test_classification_categorical():
+    import os
+
+    if not os.path.exists('data/heart.csv'):
+        if not os.path.exists('data'):
+            os.mkdir('data')
+
+        data = pd.read_csv('http://www-bcf.usc.edu/~gareth/ISL/Heart.csv',
+                           index_col=0, na_values=[''])
+        data.to_csv('data/heart.csv', na_rep='')
+    else:
+        data = pd.read_csv('data/heart.csv', na_values=[''])
+
+    y = data['AHD']
+    del data['AHD']
+
+    cls = MALSS(data, y, 'classification', n_jobs=3)
+    cls.execute()
+    cls.make_report('test_classification_categorical')
+
+
 if __name__ == "__main__":
-    test_regression_small()
+    # test_classification_categorical()
+    test_classification_2classes_small()

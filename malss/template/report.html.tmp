@@ -54,8 +54,10 @@
 	</p>
 	{%- endif %}
 
+	{%- if task == "classification" %}
 	<h3>Classification report</h3>
 	<pre>{{ algorithm.classification_report }}</pre>
+	{%- endif %}
 
 	<h3>Learning curve</h3>
 	<img border="0" src="learning_curve_{{ algorithm.estimator.__class__.__name__ }}.png" height="300" alt="learning_curve">
@@ -80,6 +82,10 @@
 		<strong>In case of high bias:</strong>
 		<ul>
 			<li>Try a larger set of features.</li>
+		</ul>
+		<strong>See also:</strong>
+		<ul>
+			<li><a href="http://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff">Bias-variance tradeoff</a></li>
 		</ul>
 	</p>
 	{%- endif %}

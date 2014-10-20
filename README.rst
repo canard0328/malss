@@ -23,7 +23,7 @@ If there are no binary packages matching your Python version you might to try to
 Example
 *******
 
-**Classification**
+**Classification**::
 
   from sklearn.datasets import load_iris
   iris = load_iris()
@@ -31,7 +31,7 @@ Example
   cls.execute()
   cls.make_report('classification_result')
 
-**Regression**
+**Regression**::
 
   from sklearn.datasets import load_boston
   boston = load_boston()

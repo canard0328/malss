@@ -6,6 +6,8 @@ class Algorithm(object):
         self.estimator = estimator
         self.parameters = parameters
         self.best_score = None
+        self.best_params = None
+        self.is_best_algorithm = False
+        self.grid_scores = None
+        self.classification_report = None
         self.name = name
-        self.description = '<h2 id="%s">%s ' % (name, name) + \
-            '<font size="-1">[<a href="#top">Back To Top</a>]</font></h2>\n'

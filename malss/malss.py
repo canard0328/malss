@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import types
+from jinja2 import Environment, FileSystemLoader
 from sklearn import cross_validation, metrics
 from sklearn.utils import shuffle as sk_shuffle
 from sklearn.grid_search import GridSearchCV
@@ -67,6 +68,9 @@ class MALSS(object):
         else:
             raise ValueError('task:%s is not supported' % task)
 
+        env = Environment(loader=FileSystemLoader('template', encoding='utf8'))
+        self.tmpl = env.get_template('report.html.tmp')
+
     def __choose_algorithm(self):
         algorithms = []
         if self.task == 'classification':
@@ -118,6 +122,15 @@ class MALSS(object):
         self.__tune_parameters()
         self.__report_classification_result()
 
+    def __search_best_algorithm(self):
+        best_score = float('-Inf')
+        best_index = -1
+        for i in xrange(len(self.algorithms)):
+            if self.algorithms[i].best_score > best_score:
+                best_score = self.algorithms[i].best_score
+                best_index = i
+        self.algorithms[best_index].is_best_algorithm = True
+
     def __tune_parameters(self):
         for i in xrange(len(self.algorithms)):
             estimator = self.algorithms[i].estimator
@@ -132,35 +145,16 @@ class MALSS(object):
             clf.fit(self.X, self.y)
             self.algorithms[i].estimator = clf.best_estimator_
             self.algorithms[i].best_score = clf.best_score_
+            self.algorithms[i].best_params = clf.best_params_
+            self.algorithms[i].grid_scores = clf.grid_scores_
 
-            self.algorithms[i].description += HTML.h3('Parameter optimization')
-            tbl, col = [], []
-            for row, scr in enumerate(clf.grid_scores_):
-                fc = '#FF0000' if scr[0] == clf.best_params_ else '#000000'
-                if row == 0:
-                    tbl.append(scr[0].keys() + ['%s' % self.scoring, 'SD'])
-                    col.append('#000000')
-                tbl.append(scr[0].values() +
-                           ['%.3f' % scr[1], '%.3f' % scr[2].std()])
-                col.append(fc)
-            self.algorithms[i].description += HTML.table(tbl, col)
-
-            if self.verbose:
-                self.algorithms[i].description += \
-                    HTML.list_item(['If the best parameter is at the border ' +
-                                    'of the grid, its range should be ' +
-                                    'expanded.\n',
-                                    'Often a second, narrower grid is ' +
-                                    'searched centered around the best ' +
-                                    'parameters of the first grid.\n'])
+        self.__search_best_algorithm()
 
     def __report_classification_result(self):
         for i in xrange(len(self.algorithms)):
             est = self.algorithms[i].estimator
-            self.algorithms[i].description +=\
-                HTML.h3('Classification report')
-            self.algorithms[i].description\
-                += HTML.pre(classification_report(self.y, est.predict(self.X)))
+            self.algorithms[i].classification_report =\
+                classification_report(self.y, est.predict(self.X))
 
     def __plot_learning_curve(self, dname=None):
         for alg in self.algorithms:
@@ -205,31 +199,6 @@ class MALSS(object):
                             bbox_inches='tight', dpi=75)
             plt.close()
 
-            alg.description += HTML.h3('Learning curve')
-            alg.description +=\
-                HTML.img('learning_curve_%s.png' %
-                         alg.estimator.__class__.__name__,
-                         300, 'learning_curve')
-
-            if self.verbose:
-                alg.description +=\
-                    HTML.list_item_with_title([
-                        ['High variance',
-                         ['Cross-validation score still increasing as ' +
-                          'training examples increases.',
-                          'Large gap between training and cross-validation ' +
-                          'score.']],
-                        ['High bias',
-                         ['Even training score is unacceptably low.',
-                          'Small gap between training and cross-validation ' +
-                          'score.']],
-                        ['In case of high variance:',
-                         ['Try getting more training examples.',
-                          'Try dimensionality reduction or feature ' +
-                          'selection.']],
-                        ['In case of high bias:',
-                         ['Try a larger set of features.']]])
-
     def make_report(self, dname='report'):
         """
         Make the report
@@ -245,27 +214,12 @@ class MALSS(object):
 
         self.__plot_learning_curve(dname)
 
-        fo = HTML.open(dname + '/report.html', 'w')
-        fo.write(HTML.h1('Results', 'top'))
-        best_score = float('-Inf')
-        for alg in self.algorithms:
-            if alg.best_score > best_score:
-                best_score = alg.best_score
-        tbl, col, link = [], [], []
-        tbl.append(['algorithm', 'score (%s)' % self.scoring])
-        col.append('#000000')
-        link.append(None)
-        for alg in self.algorithms:
-            fc = '#FF0000' if alg.best_score == best_score else '#000000'
-            col.append(fc)
-            tbl.append([alg.name, '%.5f' % alg.best_score])
-            link.append('#%s' % alg.name)
-        fo.write(HTML.table(tbl, col, link))
-        fo.write(HTML.hr())
-        for alg in self.algorithms:
-            fo.write(alg.description)
-            fo.write(HTML.hr())
-        HTML.close(fo)
+        html = self.tmpl.render(algorithms=self.algorithms,
+                                scoring=self.scoring,
+                                verbose=self.verbose).encode('utf-8')
+        fo = open(dname + '/report.html', 'w')
+        fo.write(html)
+        fo.close()
 
 
 def f1score(estimator, X, y):

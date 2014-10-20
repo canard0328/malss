@@ -1,0 +1,90 @@
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<title>Analysis report</title>
+</head>
+
+<body>
+	<h1 id="top">Results</h1>
+
+	<table border="1" cellspacing="0" cellpadding="5">
+		<tr>
+			<th>algorithm</th>
+			<th>score ({{ scoring }})</th>
+		</tr>
+
+	{%- for algorithm in algorithms %}
+		<tr>
+			<td><a href="#{{ algorithm.name }}">{{ algorithm.name }}</a></td>
+			<td><font color="{% if algorithm.is_best_algorithm %}#FF0000{% else %}#000000{% endif %}">{{ algorithm.best_score|round(5) }}</font></td>
+		</tr>
+	{%- endfor %}
+	</table>
+	<hr>
+
+	{%- for algorithm in algorithms %}
+	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<h3>Parameter optimization</h3>
+	<table border="1" cellspacing="0" cellpadding="5">
+		<tr>
+		{%- for key in algorithm.grid_scores[0][0].keys() %}
+			<th>{{ key }}</th>
+		{%- endfor %}
+			<th>{{ scoring }}</th>
+			<th>SD</th>
+		</tr>
+		{%- for scr in algorithm.grid_scores %}
+		<tr>
+			{%- for val in scr[0].values() %}
+			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ val }}</font></td>
+			{%- endfor %}
+			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ scr[1]|round(3) }}</font></td>
+			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ scr[2].std()|round(3) }}</font></td>
+		</tr>
+		{%- endfor %}
+	</table>
+
+	{%- if verbose %}
+	<p>
+		<ul>
+			<li>If the best parameter is at the border of the grid, its range should be expanded.</li>
+			<li>Often a second, narrower grid is searched centered around the best parameters of the first grid.</li>
+		</ul>
+	</p>
+	{%- endif %}
+
+	<h3>Classification report</h3>
+	<pre>{{ algorithm.classification_report }}</pre>
+
+	<h3>Learning curve</h3>
+	<img border="0" src="learning_curve_{{ algorithm.estimator.__class__.__name__ }}.png" height="300" alt="learning_curve">
+
+	{%- if verbose %}
+	<p>
+		<strong>High variance</strong>
+		<ul>
+			<li>Cross-validation score still increasing as training examples increases.</li>
+			<li>Large gap between training and cross-validation score.</li>
+		</ul>
+		<strong>High bias</strong>
+		<ul>
+			<li>Even training score is unacceptably low.</li>
+			<li>Small gap between training and cross-validation score.</li>
+		</ul>
+		<strong>In case of high variance:</strong>
+		<ul>
+			<li>Try getting more training examples.</li>
+			<li>Try dimensionality reduction or feature selection.</li>
+		</ul>
+		<strong>In case of high bias:</strong>
+		<ul>
+			<li>Try a larger set of features.</li>
+		</ul>
+	</p>
+	{%- endif %}
+
+	<hr>
+	{%- endfor %}
+</body>
+</html>

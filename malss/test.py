@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def test_classification_2classes_small():
-    X, y = make_classification(n_samples=10000,
+    X, y = make_classification(n_samples=1000,
                                n_features=10,
                                n_classes=2,
                                n_informative=2,

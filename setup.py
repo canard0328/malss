@@ -18,6 +18,8 @@ try:
     import scipy
     import sklearn
     import matplotlib
+    import pandas
+    import jinja2
 except ImportError as inst:
     print inst
     sys.exit()
@@ -36,6 +38,14 @@ if LooseVersion(sklearn.__version__) < LooseVersion('0.14'):
 
 if LooseVersion(matplotlib.__version__) < LooseVersion('1.3'):
     print 'matplotlib >= 1.3 is required'
+    sys.exit()
+
+if LooseVersion(pandas.__version__) < LooseVersion('0.13'):
+    print 'pandas >= 0.13 is required'
+    sys.exit()
+
+if LooseVersion(jinja2.__version__) < LooseVersion('2.7'):
+    print 'jinja2 >= 2.7 is required'
     sys.exit()
 
 
@@ -60,7 +70,8 @@ setup(
     author_email=AUTHOR_EMAIL,
     license=LICENSE,
     url=URL,
-    packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
+    packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*",
+                                    "tests"]),
     classifiers=[
         "Development Status :: 1 - Planning",
         "Environment :: Console",

@@ -11,8 +11,10 @@ from sklearn.utils import shuffle as sk_shuffle
 from sklearn.grid_search import GridSearchCV
 from sklearn.learning_curve import learning_curve
 from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.svm import SVC, LinearSVC, SVR
 from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import f1_score
 from sklearn.datasets import fetch_mldata
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -20,6 +22,7 @@ from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor
 
 from algorithm import Algorithm
 from html import HTML
+from data import Data
 
 
 class MALSS(object):
@@ -30,10 +33,10 @@ class MALSS(object):
 
         Parameters
         ----------
-        X : {array-like, sparse matrix}, shape = [n_samples, n_features]
+        X : {numpy.ndarray, pandas.DataFrame}, shape = [n_samples, n_features]
             Training vector, where n_samples in the number of samples and
             n_features is the number of features.
-        y : array, shape = [n_samples]
+        y : {numpy.ndarray, pandas.Series}, shape = [n_samples]
             Target values (class labels in classification, real numbers in
             regression)
         task : string
@@ -49,12 +52,8 @@ class MALSS(object):
         verbos : bool, default: True
             Enable verbose output.
         """
-        if shuffle:
-            self.X, self.y = sk_shuffle(X, y, random_state=0)
-        else:
-            self.X = X
-            self.y = y
-        self.X = StandardScaler().fit_transform(self.X)
+
+        self.data = Data(X, y, shuffle, random_state)
         self.task = task
         self.n_jobs = n_jobs
         self.random_state = random_state
@@ -62,11 +61,11 @@ class MALSS(object):
         self.algorithms = self.__choose_algorithm()
         if task == 'classification':
             self.scoring = 'f1'
-            self.cv = StratifiedKFold(self.y, n_folds=5, shuffle=True,
+            self.cv = StratifiedKFold(self.data.y, n_folds=5, shuffle=True,
                                       random_state=self.random_state)
         elif task == 'regression':
             self.scoring = 'r2'
-            self.cv = KFold(self.X.shape[0], n_folds=5, shuffle=True,
+            self.cv = KFold(self.data.X.shape[0], n_folds=5, shuffle=True,
                             random_state=self.random_state)
         else:
             raise ValueError('task:%s is not supported' % task)
@@ -77,8 +76,8 @@ class MALSS(object):
     def __choose_algorithm(self):
         algorithms = []
         if self.task == 'classification':
-            if self.X.shape[0] * self.X.shape[1] <= 1e+06:
-                if self.X.shape[0] ** 2 * self.X.shape[1] <= 1e+09:
+            if self.data.X.shape[0] * self.data.X.shape[1] <= 1e+06:
+                if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
                     algorithms.append(
                         Algorithm(
                             SVC(random_state=self.random_state),
@@ -120,8 +119,8 @@ class MALSS(object):
                           'class_weight': [None, 'auto']}],
                         'SGD Classifier'))
         if self.task == 'regression':
-            if self.X.shape[0] * self.X.shape[1] <= 1e+06:
-                if self.X.shape[0] ** 2 * self.X.shape[1] <= 1e+09:
+            if self.data.X.shape[0] * self.data.X.shape[1] <= 1e+06:
+                if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
                     algorithms.append(
                         Algorithm(
                             SVR(random_state=self.random_state),
@@ -167,7 +166,7 @@ class MALSS(object):
             clf = GridSearchCV(
                 estimator, parameters, cv=self.cv, scoring=sc,
                 n_jobs=self.n_jobs)
-            clf.fit(self.X, self.y)
+            clf.fit(self.data.X, self.data.y)
             self.algorithms[i].estimator = clf.best_estimator_
             self.algorithms[i].best_score = clf.best_score_
             self.algorithms[i].best_params = clf.best_params_
@@ -179,13 +178,17 @@ class MALSS(object):
         for i in xrange(len(self.algorithms)):
             est = self.algorithms[i].estimator
             self.algorithms[i].classification_report =\
-                classification_report(self.y, est.predict(self.X))
+                classification_report(self.data.y, est.predict(self.data.X))
 
     def __plot_learning_curve(self, dname=None):
         for alg in self.algorithms:
             estimator = alg.estimator
             train_sizes, train_scores, test_scores = learning_curve(
-                estimator, self.X, self.y, cv=self.cv, n_jobs=self.n_jobs)
+                estimator,
+                self.data.X,
+                self.data.y,
+                cv=self.cv,
+                n_jobs=self.n_jobs)
             train_scores_mean = np.mean(train_scores, axis=1)
             train_scores_std = np.std(train_scores, axis=1)
             test_scores_mean = np.mean(test_scores, axis=1)
@@ -239,6 +242,7 @@ class MALSS(object):
         html = self.tmpl.render(algorithms=self.algorithms,
                                 scoring=self.scoring,
                                 taks=self.task,
+                                data=self.data,
                                 verbose=self.verbose).encode('utf-8')
         fo = open(dname + '/report.html', 'w')
         fo.write(html)
@@ -246,7 +250,7 @@ class MALSS(object):
 
 
 def f1score(estimator, X, y):
-    return metrics.f1_score(y, estimator.predict(X), average=None).mean()
+    return f1_score(y, estimator.predict(X), average=None).mean()
 
 
 if __name__ == "__main__":

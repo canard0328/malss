@@ -21,7 +21,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor
 
 from algorithm import Algorithm
-from html import HTML
 from data import Data
 
 

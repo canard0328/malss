@@ -20,7 +20,7 @@ These are external packages which you will need to install before installing mal
 
 If there are no binary packages matching your Python version you might to try to install these dependencies from `Christoph Gohlke Unofficial Windows installers <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_.
 
-Installation
+Installation ::
 ************
 
   pip install malss

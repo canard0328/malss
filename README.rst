@@ -22,6 +22,7 @@ If there are no binary packages matching your Python version you might to try to
 
 Installation
 ************
+
   pip install malss
 
 Example

@@ -1,10 +1,13 @@
 language: python
 python:
   - "2.7"
+virtualenv:
+  system_site_packages: true
 install:
   - pip install pandas
   - pip install matplotlib
   - pip install numpy
+  - pip install setuptools
   - pip install scipy
   - pip install scikit-learn
   - pip install jinja2

@@ -20,11 +20,16 @@ These are external packages which you will need to install before installing mal
 
 If there are no binary packages matching your Python version you might to try to install these dependencies from `Christoph Gohlke Unofficial Windows installers <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_.
 
+Installation
+************
+  pip install malss
+
 Example
 *******
 
 Classification::
 
+  from malss import MALSS
   from sklearn.datasets import load_iris
   iris = load_iris()
   cls = MALSS(iris.data, iris.target, task='classification')
@@ -33,6 +38,7 @@ Classification::
 
 Regression::
 
+  from malss import MALSS
   from sklearn.datasets import load_boston
   boston = load_boston()
   cls = MALSS(boston.data, boston.target, task='regression')

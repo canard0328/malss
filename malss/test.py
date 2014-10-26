@@ -19,7 +19,9 @@ def test_classification_2classes_small():
     y = pd.Series(y)
     cls = MALSS(X, y, 'classification', n_jobs=3)
     cls.execute()
-    cls.make_report('test_classification_2classes_small')
+    # cls.make_report('test_classification_2classes_small')
+
+    assert cls.algorithms[0].best_score is not None
 
 
 def test_classification_multiclass_small():
@@ -33,7 +35,9 @@ def test_classification_multiclass_small():
     y = pd.Series(y)
     cls = MALSS(X, y, 'classification', n_jobs=3)
     cls.execute()
-    cls.make_report('test_classification_multiclass_small')
+    # cls.make_report('test_classification_multiclass_small')
+
+    assert cls.algorithms[0].best_score is not None
 
 
 def test_classification_2classes_medium():
@@ -49,7 +53,9 @@ def test_classification_2classes_medium():
     y = pd.Series(y)
     cls = MALSS(X, y, 'classification', n_jobs=3)
     cls.execute()
-    cls.make_report('test_classification_2classes_medium')
+    # cls.make_report('test_classification_2classes_medium')
+
+    assert cls.algorithms[0].best_score is not None
 
 
 def test_classification_2classes_big():
@@ -63,7 +69,9 @@ def test_classification_2classes_big():
     y = pd.Series(y)
     cls = MALSS(X, y, 'classification', n_jobs=3)
     cls.execute()
-    cls.make_report('test_classification_2classes_big')
+    # cls.make_report('test_classification_2classes_big')
+
+    assert cls.algorithms[0].best_score is not None
 
 
 def test_regression_small():
@@ -76,7 +84,9 @@ def test_regression_small():
     y = pd.Series(y)
     cls = MALSS(X, y, 'regression', n_jobs=3)
     cls.execute()
-    cls.make_report('test_regression_small')
+    # cls.make_report('test_regression_small')
+
+    assert cls.algorithms[0].best_score is not None
 
 
 def test_regression_medium():
@@ -89,7 +99,9 @@ def test_regression_medium():
     y = pd.Series(y)
     cls = MALSS(X, y, 'regression', n_jobs=3)
     cls.execute()
-    cls.make_report('test_regression_medium')
+    # cls.make_report('test_regression_medium')
+
+    assert cls.algorithms[0].best_score is not None
 
 
 def test_regression_big():
@@ -102,7 +114,9 @@ def test_regression_big():
     y = pd.Series(y)
     cls = MALSS(X, y, 'regression', n_jobs=3)
     cls.execute()
-    cls.make_report('test_regression_big')
+    # cls.make_report('test_regression_big')
+
+    assert cls.algorithms[0].best_score is not None
 
 
 def test_classification_categorical():
@@ -123,9 +137,11 @@ def test_classification_categorical():
 
     cls = MALSS(data, y, 'classification', n_jobs=3)
     cls.execute()
-    cls.make_report('test_classification_categorical')
+    # cls.make_report('test_classification_categorical')
+
+    assert cls.algorithms[0].best_score is not None
 
 
 if __name__ == "__main__":
-    # test_classification_categorical()
-    test_classification_2classes_small()
+    test_classification_categorical()
+    # test_classification_2classes_small()

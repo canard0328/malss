@@ -69,7 +69,7 @@ class MALSS(object):
         else:
             raise ValueError('task:%s is not supported' % task)
 
-        env = Environment(loader=FileSystemLoader('template', encoding='utf8'))
+        env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file__)) + '/template', encoding='utf8'))
         self.tmpl = env.get_template('report.html.tmp')
 
     def __choose_algorithm(self):

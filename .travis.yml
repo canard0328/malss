@@ -4,6 +4,8 @@ python:
 install:
   - pip install pandas
   - pip install matplotlib
+  - pip install numpy
+  - pip install scipy
   - pip install scikit-learn
   - pip install jinja2
 script: nosetests

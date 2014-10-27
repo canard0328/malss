@@ -23,6 +23,7 @@ def test_classification_2classes_small():
     cls.execute()
     # cls.make_report('test_classification_2classes_small')
 
+    assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
 
 
@@ -39,6 +40,7 @@ def test_classification_multiclass_small():
     cls.execute()
     # cls.make_report('test_classification_multiclass_small')
 
+    assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
 
 
@@ -58,6 +60,7 @@ def test_classification_2classes_medium():
     cls.execute()
     # cls.make_report('test_classification_2classes_medium')
 
+    assert len(cls.algorithms) == 4
     assert cls.algorithms[0].best_score is not None
 
 
@@ -75,6 +78,7 @@ def test_classification_2classes_big():
     cls.execute()
     # cls.make_report('test_classification_2classes_big')
 
+    assert len(cls.algorithms) == 1
     assert cls.algorithms[0].best_score is not None
 
 
@@ -90,6 +94,7 @@ def test_regression_small():
     cls.execute()
     # cls.make_report('test_regression_small')
 
+    assert len(cls.algorithms) == 2
     assert cls.algorithms[0].best_score is not None
 
 
@@ -106,6 +111,7 @@ def test_regression_medium():
     cls.execute()
     # cls.make_report('test_regression_medium')
 
+    assert len(cls.algorithms) == 1
     assert cls.algorithms[0].best_score is not None
 
 
@@ -122,6 +128,7 @@ def test_regression_big():
     cls.execute()
     # cls.make_report('test_regression_big')
 
+    assert len(cls.algorithms) == 1
     assert cls.algorithms[0].best_score is not None
 
 
@@ -136,6 +143,7 @@ def test_classification_categorical():
     cls.execute()
     # cls.make_report('test_classification_categorical')
 
+    assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
 
 
@@ -150,6 +158,7 @@ def test_ndarray():
     cls.execute()
     # cls.make_report('test_ndarray')
 
+    assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
 
 

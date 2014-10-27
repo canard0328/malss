@@ -3,12 +3,11 @@ python:
   - "2.7"
 virtualenv:
   system_site_packages: true
+before_install:
+ - sudo apt-get install -qq python-numpy python-scipy
 install:
   - pip install pandas
   - pip install matplotlib
-  - pip install numpy
-  - pip install setuptools
-  - pip install scipy
   - pip install scikit-learn
   - pip install jinja2
 script: nosetests

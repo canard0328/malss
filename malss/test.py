@@ -22,6 +22,7 @@ def test_classification_2classes_small():
     cls = MALSS(X, y, 'classification', n_jobs=3)
     cls.execute()
     # cls.make_report('test_classification_2classes_small')
+    # cls.make_sample_code()
 
     assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
@@ -39,6 +40,7 @@ def test_classification_multiclass_small():
     cls = MALSS(X, y, 'classification', n_jobs=3)
     cls.execute()
     # cls.make_report('test_classification_multiclass_small')
+    # cls.make_sample_code()
 
     assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
@@ -93,6 +95,7 @@ def test_regression_small():
     cls = MALSS(X, y, 'regression', n_jobs=3)
     cls.execute()
     # cls.make_report('test_regression_small')
+    # cls.make_sample_code()
 
     assert len(cls.algorithms) == 2
     assert cls.algorithms[0].best_score is not None
@@ -163,4 +166,4 @@ def test_ndarray():
 
 
 if __name__ == "__main__":
-    test_classification_2classes_small()
+    test_regression_small()

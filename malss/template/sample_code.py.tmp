@@ -1,0 +1,99 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+{%- if encoded %}
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+{%- endif %}
+{%- if algorithm.estimator.__class__.__name__ == 'SVC' %}
+from sklearn.svm import SVC
+{%- elif algorithm.estimator.__class__.__name__ == 'LinearSVC' %}
+from sklearn.svm import LinearSVC
+{%- elif algorithm.estimator.__class__.__name__ == 'SVR' %}
+from sklearn.svm import SVR
+{%- elif algorithm.estimator.__class__.__name__ == 'DecisionTreeClassifier' %}
+from sklearn.tree import DecisionTreeClassifier
+{%- elif algorithm.estimator.__class__.__name__ == 'KNeighborsClassifier' %}
+from sklearn.neighbors import KNeighborsClassifier
+{%- elif algorithm.estimator.__class__.__name__ == 'LogisticRegression' %}
+from sklearn.linear_model import LogisticRegression
+{%- elif algorithm.estimator.__class__.__name__ == 'Ridge' %}
+from sklearn.linear_model import Ridge
+{%- elif algorithm.estimator.__class__.__name__ == 'SGDRegressor' %}
+from sklearn.linear_model import SGDRegressor
+{%- elif algorithm.estimator.__class__.__name__ == 'SGDClassifier' %}
+from sklearn.linear_model import SGDClassifier
+{%- endif %}
+
+
+class SampleClass(object):
+    def __init__(self, random_state=0):
+        self.random_state = random_state
+
+    def fit(self, X, y):
+        if isinstance(X, np.ndarray):
+            X = pd.DataFrame(X)
+            y = pd.Series(y)
+
+        X = self.imputer(X)
+
+        {%- if encoded %}
+        X = self.encoder(X, False)
+        {%- endif %}
+
+        self.scaler = StandardScaler().fit(X)
+        X = self.scaler.transform(X)
+
+        self.clf = {{ algorithm.estimator.__class__.__name__ }}(
+        {%- for k, v in algorithm.best_params.items() %}
+            {%- if v is string %}
+            {{ k }}='{{ v }}',
+            {%- else %}
+            {{ k }}={{ v }},
+            {%- endif %}
+        {%- endfor %}
+            random_state=self.random_state)
+
+        self.clf.fit(X, y)
+
+    def predict(self, X):
+        X = self.imputer(X)
+        {%- if encoded %}
+        X = self.encoder(X, True)
+        {%- endif %}
+        X = self.scaler.transform(X)
+        return self.clf.predict(X)
+
+    def imputer(self, X):
+        fill = pd.Series([X[c].value_counts().index[0]
+                         if X[c].dtype == np.dtype('O')
+                         else X[c].median()
+                         if X[c].dtype == np.dtype('int')
+                         else X[c].mean()
+                         for c in X],
+                         index=X.columns)
+        return X.fillna(fill)
+
+    {%- if encoded -%}
+    def encoder(self, X, has_encoder=True):
+        del_columns = []
+        if not has_encoder:
+            self.encs = [None for i in xrange(len(X.columns))]
+        for i in xrange(len(X.columns)):
+            if X.dtypes[i] == np.dtype('O'):
+                if not has_encoder:
+                    self.encs[i] = LabelEncoder().fit(X.icol(i))
+                col_enc = self.encs[i].transform(X.icol(i))
+                col_onehot = np.array(
+                    OneHotEncoder().fit_transform(
+                        col_enc.reshape(-1, 1)).todense())
+                col_names = [str(X.columns[i]) + '_' + c
+                             for c in self.encs[i].classes_]
+                col_onehot = pd.DataFrame(col_onehot, columns=col_names,
+                                          index=X.index)
+                X = pd.concat([X, col_onehot], axis=1)
+                del_columns.append(X.columns[i])
+        for col in del_columns:
+            del X[col]
+        return X
+    {%- endif %}
+

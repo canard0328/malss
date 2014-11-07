@@ -37,6 +37,7 @@ Classification::
   cls = MALSS(iris.data, iris.target, task='classification')
   cls.execute()
   cls.make_report('classification_result')
+  cls.make_sample_code('classification_sample_code.py')
 
 Regression::
 
@@ -46,3 +47,4 @@ Regression::
   cls = MALSS(boston.data, boston.target, task='regression')
   cls.execute()
   cls.make_report('regression_result')
+  cls.make_sample_code('regression_sample_code.py')

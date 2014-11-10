@@ -11,7 +11,8 @@ from sklearn.svm import SVC, LinearSVC, SVR
 from sklearn.metrics import classification_report, f1_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor
+from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\
+    SGDClassifier
 
 from algorithm import Algorithm
 from data import Data

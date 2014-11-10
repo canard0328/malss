@@ -72,7 +72,8 @@ setup(
     url=URL,
     packages=["malss"],
     include_package_data=True,
-    package_data={"malss": ["template/report.html.tmp"]},
+    package_data={"malss": ["template/report.html.tmp",
+                            "template/sample_code.py.tmp"]},
     classifiers=[
         "Development Status :: 1 - Planning",
         "Environment :: Console",

@@ -46,6 +46,7 @@ class MALSS(object):
             Enable verbose output.
         """
 
+        self.shuffle = shuffle
         self.data = Data(X, y, shuffle, random_state)
         self.task = task
         self.n_jobs = n_jobs
@@ -62,12 +63,6 @@ class MALSS(object):
                             random_state=self.random_state)
         else:
             raise ValueError('task:%s is not supported' % task)
-
-        env = Environment(
-            loader=FileSystemLoader(
-                os.path.abspath(
-                    os.path.dirname(__file__)) + '/template', encoding='utf8'))
-        self.tmpl = env.get_template('report.html.tmp')
 
     def __choose_algorithm(self):
         algorithms = []
@@ -146,13 +141,13 @@ class MALSS(object):
             self.__report_classification_result()
 
     def __search_best_algorithm(self):
-        best_score = float('-Inf')
-        best_index = -1
+        self.best_score = float('-Inf')
+        self.best_index = -1
         for i in xrange(len(self.algorithms)):
-            if self.algorithms[i].best_score > best_score:
-                best_score = self.algorithms[i].best_score
-                best_index = i
-        self.algorithms[best_index].is_best_algorithm = True
+            if self.algorithms[i].best_score > self.best_score:
+                self.best_score = self.algorithms[i].best_score
+                self.best_index = i
+        self.algorithms[self.best_index].is_best_algorithm = True
 
     def __tune_parameters(self):
         for i in xrange(len(self.algorithms)):
@@ -235,12 +230,31 @@ class MALSS(object):
 
         self.__plot_learning_curve(dname)
 
-        html = self.tmpl.render(algorithms=self.algorithms,
-                                scoring=self.scoring,
-                                taks=self.task,
-                                data=self.data,
-                                verbose=self.verbose).encode('utf-8')
+        env = Environment(
+            loader=FileSystemLoader(
+                os.path.abspath(
+                    os.path.dirname(__file__)) + '/template', encoding='utf8'))
+        tmpl = env.get_template('report.html.tmp')
+
+        html = tmpl.render(algorithms=self.algorithms,
+                           scoring=self.scoring,
+                           taks=self.task,
+                           data=self.data,
+                           verbose=self.verbose).encode('utf-8')
         fo = open(dname + '/report.html', 'w')
+        fo.write(html)
+        fo.close()
+
+    def make_sample_code(self, fname='sample_code.py'):
+        env = Environment(
+            loader=FileSystemLoader(
+                os.path.abspath(
+                    os.path.dirname(__file__)) + '/template', encoding='utf8'))
+        tmpl = env.get_template('sample_code.py.tmp')
+        encoded = True if len(self.data.del_columns) > 0 else False
+        html = tmpl.render(algorithm=self.algorithms[self.best_index],
+                           encoded=encoded).encode('utf-8')
+        fo = open(fname, 'w')
         fo.write(html)
         fo.close()
 

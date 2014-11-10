@@ -3,6 +3,9 @@ MAchine Learning Support System
 
 ``malss`` is a python module to facilitate system development using machine learning algorithms.
 
+.. image:: https://travis-ci.org/canard0328/malss.svg?branch=master
+    :target: https://travis-ci.org/canard0328/malss
+
 Requirements
 ************
 

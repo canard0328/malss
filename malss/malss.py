@@ -1,27 +1,19 @@
 # -*- coding: utf-8 -*-
 
 import os
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import types
 from jinja2 import Environment, FileSystemLoader
 from sklearn.cross_validation import StratifiedKFold, KFold
-from sklearn.utils import shuffle as sk_shuffle
 from sklearn.grid_search import GridSearchCV
 from sklearn.learning_curve import learning_curve
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.svm import SVC, LinearSVC, SVR
-from sklearn.metrics import confusion_matrix, classification_report
-from sklearn.metrics import f1_score
-from sklearn.datasets import fetch_mldata
+from sklearn.metrics import classification_report, f1_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor
 
 from algorithm import Algorithm
-from html import HTML
 from data import Data
 
 
@@ -70,7 +62,10 @@ class MALSS(object):
         else:
             raise ValueError('task:%s is not supported' % task)
 
-        env = Environment(loader=FileSystemLoader('template', encoding='utf8'))
+        env = Environment(
+            loader=FileSystemLoader(
+                os.path.abspath(
+                    os.path.dirname(__file__)) + '/template', encoding='utf8'))
         self.tmpl = env.get_template('report.html.tmp')
 
     def __choose_algorithm(self):

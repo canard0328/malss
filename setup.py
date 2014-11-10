@@ -51,10 +51,10 @@ if LooseVersion(jinja2.__version__) < LooseVersion('2.7'):
 
 PACKAGE = "malss"
 NAME = "malss"
-DESCRIPTION = "MALSS: MAchine Learning Support System for beginners"
+DESCRIPTION = "MALSS: MAchine Learning Support System"
 AUTHOR = __import__(PACKAGE).__author__
-AUTHOR_EMAIL = ""
-URL = ""
+AUTHOR_EMAIL = "https://github.com/canard0328/malss/"
+URL = "https://github.com/canard0328/malss/"
 VERSION = __import__(PACKAGE).__version__
 LICENSE = __import__(PACKAGE).__license__
 
@@ -70,8 +70,9 @@ setup(
     author_email=AUTHOR_EMAIL,
     license=LICENSE,
     url=URL,
-    packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*",
-                                    "tests"]),
+    packages=["malss"],
+    include_package_data=True,
+    package_data={"malss": ["template/report.html.tmp"]},
     classifiers=[
         "Development Status :: 1 - Planning",
         "Environment :: Console",

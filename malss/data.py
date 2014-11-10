@@ -52,7 +52,8 @@ class Data(object):
                         col_enc.reshape(-1, 1)).todense())
                 col_names = [str(self.X.columns[i]) + '_' + c
                              for c in enc.classes_]
-                col_onehot = pd.DataFrame(col_onehot, columns=col_names)
+                col_onehot = pd.DataFrame(col_onehot, columns=col_names,
+                                          index=self.X.index)
                 self.X = pd.concat([self.X, col_onehot], axis=1)
                 self.del_columns.append(self.X.columns[i])
         for col in self.del_columns:

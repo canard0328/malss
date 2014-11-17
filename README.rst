@@ -51,3 +51,7 @@ Regression::
   cls.execute()
   cls.make_report('regression_result')
   cls.make_sample_code('regression_sample_code.py')
+
+API
+***
+View the `documentation here <https://pythonhosted.org/malss/>`_.

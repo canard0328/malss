@@ -136,6 +136,9 @@ class MALSS(object):
         return algorithms
 
     def execute(self):
+        """
+        Tune parameters and search best algorithm
+        """
         self.__tune_parameters()
         if self.task == 'classification':
             self.__report_classification_result()
@@ -246,6 +249,15 @@ class MALSS(object):
         fo.close()
 
     def make_sample_code(self, fname='sample_code.py'):
+        """
+        Make the sample code
+
+        Parameters
+        ----------
+        fname : string (default="sample_code.py")
+            A string containing a path to a output file.
+        """
+
         env = Environment(
             loader=FileSystemLoader(
                 os.path.abspath(

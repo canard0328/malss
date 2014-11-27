@@ -53,6 +53,7 @@ Regression::
   cls.make_sample_code('regression_sample_code.py')
 
 Change algorithm::
+
   from malss import MALSS
   from sklearn.datasets import load_iris
   iris = load_iris()

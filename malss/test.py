@@ -59,14 +59,13 @@ def test_classification_2classes_medium():
     X = pd.DataFrame(X)
     y = pd.Series(y)
     cls = MALSS(X, y, 'classification', n_jobs=3)
-    cls.execute()
-    cls.make_report('test_classification_2classes_medium')
+    # cls.execute()
+    # cls.make_report('test_classification_2classes_medium')
 
     assert len(cls.algorithms) == 4
-    assert cls.algorithms[0].best_score is not None
+    # assert cls.algorithms[0].best_score is not None
 
 
-@attr(speed='slow')
 def test_classification_2classes_big():
     X, y = make_classification(n_samples=200000,
                                n_features=20,
@@ -118,7 +117,6 @@ def test_regression_medium():
     # assert cls.algorithms[0].best_score is not None
 
 
-@attr(speed='slow')
 def test_regression_big():
     X, y = make_regression(n_samples=200000,
                            n_features=10,

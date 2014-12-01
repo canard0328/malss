@@ -137,7 +137,7 @@ class MALSS(object):
 
     def add_algorithm(self, estimator, param_grid, name):
         """
-        Add arbitrary algorithms.
+        Add arbitrary scikit-learn-compatible algorithm.
 
         Parameters
         ----------

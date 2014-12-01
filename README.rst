@@ -2,7 +2,7 @@ MAchine Learning Support System
 ###############################
 
 ``malss`` is a python module to facilitate machine learning tasks.
-This module is written to be compatible with the [scikit-learn algorithms](http://scikit-learn.org/stable/supervised_learning.html) and the other scikit-learn-compatible algorithms.
+This module is written to be compatible with the `scikit-learn algorithms <http://scikit-learn.org/stable/supervised_learning.html>`_ and the other scikit-learn-compatible algorithms.
 
 .. image:: https://travis-ci.org/canard0328/malss.svg?branch=master
     :target: https://travis-ci.org/canard0328/malss

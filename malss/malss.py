@@ -135,6 +135,49 @@ class MALSS(object):
                         'SGD Regressor'))
         return algorithms
 
+    def add_algorithm(self, estimator, param_grid, name):
+        """
+        Add arbitrary scikit-learn-compatible algorithm.
+
+        Parameters
+        ----------
+        estimator : object type that implements the “fit” and “predict” methods
+            A object of that type is instantiated for each grid point.
+        param_grid : dict or list of dictionaries
+            Dictionary with parameters names (string) as keys and lists of parameter settings to try as
+            values, or a list of such dictionaries, in which case the grids spanned by each dictionary in
+            the list are explored. This enables searching over any sequence of parameter settings.
+        name : string
+            Algorithm name (used for report)
+        """
+        self.algorithms.append(Algorithm(estimator, param_grid, name))
+
+    def remove_algorithm(self, index=-1):
+        """
+        Remove algorithm
+
+        Parameters
+        ----------
+        index : int (default=-1)
+            Remove an algorithm from list by index.
+            By default, last algorithm is removed.
+        """
+        del self.algorithms[index]
+
+    def get_algorithms(self):
+        """
+        Get algorithm names and grid parameters.
+
+        Returns
+        -------
+        algorithms : list
+            List of tupples(name, grid_params).
+        """
+        rtn = []
+        for algorithm in self.algorithms:
+            rtn.append((algorithm.name, algorithm.parameters))
+        return rtn
+
     def execute(self):
         """
         Tune parameters and search best algorithm

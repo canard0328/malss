@@ -1,0 +1,133 @@
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<title>分析結果レポート</title>
+</head>
+
+<body>
+	<h1 id="top">分析結果</h1>
+
+	<table border="1" cellspacing="0" cellpadding="5">
+		<tr>
+			<th>アルゴリズム</th>
+			<th>交差検証のスコア（{{ scoring }}）</th>
+		</tr>
+
+	{%- for algorithm in algorithms %}
+		<tr>
+			<td><a href="#{{ algorithm.name }}">{{ algorithm.name }}</a></td>
+			<td><font color="{% if algorithm.is_best_algorithm %}#FF0000{% else %}#000000{% endif %}">{{ algorithm.best_score|round(5) }}</font></td>
+		</tr>
+	{%- endfor %}
+	</table>
+
+	{%- if verbose %}
+	<p>
+		<strong>※交差検証のスコア:</strong>
+		<ul>
+			<li>モデルの学習と評価に同じデータを使うと<a href="http://ja.wikipedia.org/wiki/%E9%81%8E%E5%89%B0%E9%81%A9%E5%90%88"><i>過学習</i></a>してしまい，正しい評価を行うことができません．</li>
+			<li>過学習を防ぐためには<a href="http://ja.wikipedia.org/wiki/%E4%BA%A4%E5%B7%AE%E6%A4%9C%E8%A8%BC"><i>交差検証</i></a>を行います．交差検証はまずデータセットをK個（default: 5）に分割します．そして，そのうちの1つをテスト用とし，残るK−1個でモデルを学習します．交差検証はK個に分割されたデータそれぞれをテストデータとしてK回検証を行い，得られた結果を平均して1つのスコアを得ます．</li>
+		</ul>
+	</p>
+	{%- endif %}
+	<hr>
+
+	<h2>データ概要 <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<ul>
+		<li>データ数（行数）: {{ data.shape_before[0] }}</li>
+		<li>特徴量数（列数）: {{ data.shape_before[1] }} (数値型: {{ data.shape_before[1] - data.del_columns|length }}, カテゴリ型: {{ data.del_columns|length }})</li>
+		{%- if data.del_columns|length > 0 %}
+		<ul>
+			<li>カテゴリ型の特徴量は<a href="http://www.weblio.jp/content/%E3%83%80%E3%83%9F%E3%83%BC%E5%A4%89%E6%95%B0">ダミー変数</a>をつかって数値型に変換しています．</li>
+		</ul>
+		{%- endif %}
+	</ul>
+	{%- if data.col_was_null|length > 0 %}
+	<ul>
+		<li>{% for col in data.col_was_null %}{{ col }} {% endfor %}列は欠損値（NA）を含んでいました．</li>
+		<ul>
+			<li>欠損値は最頻値（カテゴリカル型），中央値（整数型），平均値（実数型）．</li>
+		</ul>
+	</ul>
+	{%- endif %}
+	<hr>
+
+	{%- for algorithm in algorithms %}
+	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<h3><a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><i>グリッドサーチ</i></a>によるパラメータチューニング結果</h3>
+	<table border="1" cellspacing="0" cellpadding="5">
+		<tr>
+		{%- for key in algorithm.grid_scores[0][0].keys() %}
+			<th>{{ key }}</th>
+		{%- endfor %}
+			<th>スコア（{{ scoring }}）</th>
+			<th>偏差</th>
+		</tr>
+		{%- for scr in algorithm.grid_scores %}
+		<tr>
+			{%- for val in scr[0].values() %}
+			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ val }}</font></td>
+			{%- endfor %}
+			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ scr[1]|round(3) }}</font></td>
+			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ scr[2].std()|round(3) }}</font></td>
+		</tr>
+		{%- endfor %}
+	</table>
+
+	{%- if verbose %}
+	<p>
+		<ul>
+			<li>最適なパラメータがグリッドの端の値である場合，グリッドのレンジを変更してください．</li>
+			<li>最適なパラメータ付近でより細かいグリッドでパラメータチューニングを行うとさらに効果的です．</li>
+		</ul>
+	</p>
+	{%- endif %}
+
+	{%- if task == "classification" %}
+	<h3>分類結果</h3>
+	<pre>{{ algorithm.classification_report }}</pre>
+	※<a href="http://ja.wikipedia.org/wiki/%E6%83%85%E5%A0%B1%E6%A4%9C%E7%B4%A2#.E6.A4.9C.E7.B4.A2.E6.80.A7.E8.83.BD.E3.81.AE.E8.A9.95.E4.BE.A1">precision（適合率），recall（再現率），f1-score（F1値）</a>
+	{%- endif %}
+
+	<h3>学習曲線（Learning curve）</h3>
+	<img border="0" src="learning_curve_{{ algorithm.estimator.__class__.__name__ }}.png" height="300" alt="learning_curve">
+
+	{%- if verbose %}
+	<p>
+		学習曲線（Learning curve）
+		<ul>
+			<li>学習曲線はデータサイズを変えた時の訓練データでのスコア，交差検証のスコアをプロットしたものです．</li>
+			<li>学習曲線が以下のような場合，モデルは<strong>ハイバリアンス</strong>（オーバーフィッティング（過学習））であると言えます：</li>
+			<ul>
+				<li>学習データ増加に伴う交差検証のスコアの増加が飽和していない（増加し続けている）．</li>
+				<li>訓練データのスコアと交差検証のスコアの差が大きい．</li>
+			</ul>
+			<li>学習曲線が以下のような場合，モデルは<strong>ハイバイアス</strong>（アンダーフィッティング）であると言えます：</li>
+			<ul>
+				<li>訓練データのスコアでさえも低い．</li>
+				<li>訓練データのスコアと交差検証のスコアの差が小さい．</li>
+			</ul>
+		</ul>
+		<strong>ハイバリアンス</strong>への対策：
+		<ul>
+			<li><a href="http://ja.wikipedia.org/wiki/%E7%89%B9%E5%BE%B4%E9%81%B8%E6%8A%9E">特徴量選択</a>や<a href="http://en.wikipedia.org/wiki/Dimensionality_reduction">次元削減</a>により特徴量の数を減らす．</li>
+			<li>データ量を増やす．</li>
+		</ul>
+		<strong>ハイバイアス</strong>への対策：
+		<ul>
+			<li>特徴量を増やす．</li>
+			<li>より複雑なモデル（アルゴリズム）を利用する．</li>
+			<li>データ量が多すぎて計算コストの問題から複雑なモデルが利用できない場合，データ量の削減が有効な場合があります．</li>
+		</ul>
+		※<a href="http://ibisforest.org/index.php?%E3%83%90%E3%82%A4%E3%82%A2%E3%82%B9-%E3%83%90%E3%83%AA%E3%82%A2%E3%83%B3%E3%82%B9">バイアス，バリアンス</a>
+	</p>
+	{%- endif %}
+
+	<hr>
+	{%- endfor %}
+	{%- if verbose %}
+	※このレポートの記載内容は <a href="http://www.astroml.org/sklearn_tutorial/practical.html">sklearn tutorials</a> を参考にしています．
+	{%- endif %}
+</body>
+</html>

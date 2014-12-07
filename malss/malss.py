@@ -20,7 +20,7 @@ from data import Data
 
 class MALSS(object):
     def __init__(self, X, y, task, shuffle=True, n_jobs=1, random_state=0,
-                 verbose=True):
+                 lang='en', verbose=True):
         """
         Set the given training data.
 
@@ -42,6 +42,9 @@ class MALSS(object):
             jobs is set to the number of cores.
         random_state : int seed, RandomState instance, or None (default=0)
             The seed of the pseudo random number generator
+        lang : string (default='en')
+            Specifies the language in the report. It must be one of
+            'en' (English), 'jp' (Japanese).
         verbos : bool, default: True
             Enable verbose output.
         """
@@ -53,6 +56,9 @@ class MALSS(object):
         self.random_state = random_state
         self.verbose = verbose
         self.algorithms = self.__choose_algorithm()
+        if lang != 'en' and lang != 'jp':
+            raise ValueError('lang:%s is no supported' % lang)
+        self.lang = lang
         if task == 'classification':
             self.scoring = 'f1'
             self.cv = StratifiedKFold(self.data.y, n_folds=5, shuffle=True,
@@ -280,11 +286,14 @@ class MALSS(object):
             loader=FileSystemLoader(
                 os.path.abspath(
                     os.path.dirname(__file__)) + '/template', encoding='utf8'))
-        tmpl = env.get_template('report.html.tmp')
+        if self.lang == 'jp':
+            tmpl = env.get_template('report_jp.html.tmp')
+        else:
+            tmpl = env.get_template('report.html.tmp')
 
         html = tmpl.render(algorithms=self.algorithms,
                            scoring=self.scoring,
-                           taks=self.task,
+                           task=self.task,
                            data=self.data,
                            verbose=self.verbose).encode('utf-8')
         fo = open(dname + '/report.html', 'w')

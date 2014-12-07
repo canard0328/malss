@@ -19,7 +19,7 @@ def test_classification_2classes_small():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'classification', n_jobs=3)
+    cls = MALSS(X, y, 'classification', n_jobs=3, lang='en')
     cls.execute()
     cls.make_report('test_classification_2classes_small')
     cls.make_sample_code()
@@ -231,4 +231,4 @@ def test_get_algorithms():
 
 
 if __name__ == "__main__":
-    test_get_algorithms()
+    test_classification_2classes_small()

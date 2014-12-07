@@ -36,16 +36,16 @@ if LooseVersion(sklearn.__version__) < LooseVersion('0.14'):
     print 'sklearn >= 0.14 is required'
     sys.exit()
 
-if LooseVersion(matplotlib.__version__) < LooseVersion('1.3'):
-    print 'matplotlib >= 1.3 is required'
+if LooseVersion(matplotlib.__version__) < LooseVersion('1.1'):
+    print 'matplotlib >= 1.1 is required'
     sys.exit()
 
 if LooseVersion(pandas.__version__) < LooseVersion('0.13'):
     print 'pandas >= 0.13 is required'
     sys.exit()
 
-if LooseVersion(jinja2.__version__) < LooseVersion('2.7'):
-    print 'jinja2 >= 2.7 is required'
+if LooseVersion(jinja2.__version__) < LooseVersion('2.6'):
+    print 'jinja2 >= 2.6 is required'
     sys.exit()
 
 
@@ -73,6 +73,7 @@ setup(
     packages=["malss"],
     include_package_data=True,
     package_data={"malss": ["template/report.html.tmp",
+                            "template/report_jp.html.tmp",
                             "template/sample_code.py.tmp"]},
     classifiers=[
         "Development Status :: 1 - Planning",

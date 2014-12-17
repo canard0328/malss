@@ -42,7 +42,7 @@ def test_classification_multiclass_small():
     cls.make_report('test_classification_multiclass_small')
     cls.make_sample_code()
 
-    assert len(cls.algorithms) == 5
+    assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
 
 
@@ -136,23 +136,6 @@ def test_regression_medium():
     assert cls.algorithms[0].best_score is not None
 
 
-@attr(travis=True)
-def test_regression_medium_travis():
-    X, y = make_regression(n_samples=20000,
-                           n_features=10,
-                           n_informative=5,
-                           noise=30.0,
-                           random_state=0)
-    X = pd.DataFrame(X)
-    y = pd.Series(y)
-    cls = MALSS(X, y, 'regression', n_jobs=3)
-    # cls.execute()
-    # cls.make_report('test_regression_medium')
-
-    assert len(cls.algorithms) == 1
-    # assert cls.algorithms[0].best_score is not None
-
-
 def test_regression_big():
     X, y = make_regression(n_samples=200000,
                            n_features=10,
@@ -180,7 +163,7 @@ def test_classification_categorical():
     cls.execute()
     cls.make_report('test_classification_categorical')
 
-    assert len(cls.algorithms) == 5
+    assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
 
 
@@ -195,7 +178,7 @@ def test_ndarray():
     cls.execute()
     cls.make_report('test_ndarray')
 
-    assert len(cls.algorithms) == 5
+    assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
 
 
@@ -219,7 +202,7 @@ def test_add_algorithms():
     cls.execute()
     cls.make_report('test_add_algorithms')
 
-    assert len(cls.algorithms) == 6
+    assert len(cls.algorithms) == 7
     assert cls.algorithms[-1].best_score is not None
 
 
@@ -241,7 +224,7 @@ def test_remove_algorithms():
     cls.make_report('test_remove_algorithms')
     cls.make_sample_code()
 
-    assert len(cls.algorithms) == 3
+    assert len(cls.algorithms) == 4
     assert cls.algorithms[0].best_score is not None
 
 
@@ -260,10 +243,11 @@ def test_get_algorithms():
     algorithms = cls.get_algorithms()
 
     assert algorithms[0][0] == 'Support Vector Machine (RBF Kernel)'
-    assert algorithms[1][0] == 'Support Vector Machine (Linear Kernel)'
-    assert algorithms[2][0] == 'Logistic Regression'
-    assert algorithms[3][0] == 'Decision Tree'
-    assert algorithms[4][0] == 'k-Nearest Neighbors'
+    assert algorithms[1][0] == 'Random Forest'
+    assert algorithms[2][0] == 'Support Vector Machine (Linear Kernel)'
+    assert algorithms[3][0] == 'Logistic Regression'
+    assert algorithms[4][0] == 'Decision Tree'
+    assert algorithms[5][0] == 'k-Nearest Neighbors'
 
 
 if __name__ == "__main__":

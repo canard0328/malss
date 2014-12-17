@@ -40,8 +40,10 @@ class SampleClass(object):
         X = self.encoder(X, False)
         {%- endif %}
 
+        {%- if standardize %}
         self.scaler = StandardScaler().fit(X)
         X = self.scaler.transform(X)
+        {%- endif %}
 
         self.clf = {{ algorithm.estimator.__class__.__name__ }}(
         {%- for k, v in algorithm.best_params.items() %}
@@ -60,7 +62,9 @@ class SampleClass(object):
         {%- if encoded %}
         X = self.encoder(X, True)
         {%- endif %}
+        {%- if standardize %}
         X = self.scaler.transform(X)
+        {%- endif %}
         return self.clf.predict(X)
 
     def imputer(self, X):

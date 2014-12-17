@@ -87,7 +87,7 @@
 	{%- if task == "classification" %}
 	<h3>Classification report</h3>
 	<pre>{{ algorithm.classification_report }}</pre>
-	* <a href="http://en.wikipedia.org/wiki/Precision_and_recall">precision, recall, f1-score</a>
+	* <a href="http://scikit-learn.org/0.13/modules/generated/sklearn.metrics.precision_recall_fscore_support.html">precision, recall, f1-score, support</a>
 	{%- endif %}
 
 	<h3>Learning curve</h3>

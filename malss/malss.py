@@ -9,18 +9,19 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.learning_curve import learning_curve
 from sklearn.svm import SVC, LinearSVC, SVR
 from sklearn.metrics import classification_report, f1_score
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\
     SGDClassifier
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 
 from algorithm import Algorithm
 from data import Data
 
 
 class MALSS(object):
-    def __init__(self, X, y, task, shuffle=True, n_jobs=1, random_state=0,
-                 lang='en', verbose=True):
+    def __init__(self, X, y, task, shuffle=True, standardize=True, n_jobs=1,
+                 random_state=0, lang='en', verbose=True):
         """
         Set the given training data.
 
@@ -37,6 +38,8 @@ class MALSS(object):
             'classification', 'regression'.
         shuffle : boolean, optional (default=True)
             Whether to shuffle the data.
+        standardize : boolean, optional (default=True)
+            Whether to sdandardize the data.
         n_jobs : integer, optional (default=1)
             The number of jobs to run in parallel. If -1, then the number of
             jobs is set to the number of cores.
@@ -50,7 +53,8 @@ class MALSS(object):
         """
 
         self.shuffle = shuffle
-        self.data = Data(X, y, shuffle, random_state)
+        self.standardize = standardize
+        self.data = Data(X, y, shuffle, standardize, random_state)
         self.task = task
         self.n_jobs = n_jobs
         self.random_state = random_state
@@ -82,6 +86,15 @@ class MALSS(object):
                               'C': [10, 100, 1000, 10000],
                               'gamma': [1e-4, 1e-3, 1e-2, 1e-1]}],
                             'Support Vector Machine (RBF Kernel)'))
+                    algorithms.append(
+                        Algorithm(
+                            RandomForestClassifier(
+                                random_state=self.random_state,
+                                n_jobs=self.n_jobs),
+                            [{'n_estimators': [10, 50, 100],
+                              'max_features': [0.2, 0.5, 0.8],
+                              'max_depth': [3, 7, None]}],
+                            'Random Forest'))
                 algorithms.append(
                     Algorithm(
                         LinearSVC(random_state=self.random_state),
@@ -125,12 +138,26 @@ class MALSS(object):
                               'C': [10, 100, 1000, 10000],
                               'gamma': [1e-4, 1e-3, 1e-2, 1e-1]}],
                             'Support Vector Machine (RBF Kernel)'))
+                    algorithms.append(
+                        Algorithm(
+                            RandomForestRegressor(
+                                random_state=self.random_state,
+                                n_jobs=self.n_jobs),
+                            [{'n_estimators': [10, 50, 100],
+                              'max_features': [0.2, 0.5, 0.8],
+                              'max_depth': [3, 7, None]}],
+                            'Random Forest'))
                 algorithms.append(
                     Algorithm(
                         Ridge(),
                         [{'alpha':
                             [0.01, 0.1, 1, 10, 100]}],
                         'Ridge Regression'))
+                algorithms.append(
+                    Algorithm(
+                        DecisionTreeRegressor(random_state=self.random_state),
+                        [{'max_depth': [3, 5, 7, 9, 11]}],
+                        'Decision Tree'))
             else:
                 algorithms.append(
                     Algorithm(
@@ -317,7 +344,8 @@ class MALSS(object):
         tmpl = env.get_template('sample_code.py.tmp')
         encoded = True if len(self.data.del_columns) > 0 else False
         html = tmpl.render(algorithm=self.algorithms[self.best_index],
-                           encoded=encoded).encode('utf-8')
+                           encoded=encoded,
+                           standardize=self.standardize).encode('utf-8')
         fo = open(fname, 'w')
         fo.write(html)
         fo.close()

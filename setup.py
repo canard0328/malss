@@ -32,8 +32,8 @@ if LooseVersion(scipy.__version__) < LooseVersion('0.9'):
     print 'scipy >= 0.9 is required'
     sys.exit()
 
-if LooseVersion(sklearn.__version__) < LooseVersion('0.14'):
-    print 'sklearn >= 0.14 is required'
+if LooseVersion(sklearn.__version__) < LooseVersion('0.15'):
+    print 'sklearn >= 0.15 is required'
     sys.exit()
 
 if LooseVersion(matplotlib.__version__) < LooseVersion('1.1'):

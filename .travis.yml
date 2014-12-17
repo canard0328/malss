@@ -10,4 +10,4 @@ install:
   - pip install matplotlib
   - pip install scikit-learn
   - pip install jinja2
-script: nosetests
+script: nosetests -a '!slow'

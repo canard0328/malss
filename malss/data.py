@@ -8,7 +8,8 @@ from sklearn.preprocessing import StandardScaler
 
 
 class Data(object):
-    def __init__(self, X, y, shuffle=True, random_state=None):
+    def __init__(self, X, y, shuffle=True, standardize=True,
+                 random_state=None):
         if isinstance(X, np.ndarray):
             self.X = pd.DataFrame(X)
             self.y = pd.Series(y)
@@ -26,8 +27,8 @@ class Data(object):
         if shuffle:
             self.X, self.y = sk_shuffle(self.X, self.y,
                                         random_state=random_state)
-
-        self.X = StandardScaler().fit_transform(self.X)
+        if standardize:
+            self.X = StandardScaler().fit_transform(self.X)
 
     def __imputer(self):
         fill = pd.Series([self.X[c].value_counts().index[0]

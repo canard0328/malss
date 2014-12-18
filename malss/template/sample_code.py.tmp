@@ -77,7 +77,7 @@ class SampleClass(object):
                          index=X.columns)
         return X.fillna(fill)
 
-    {%- if encoded -%}
+    {%- if encoded %}
     def encoder(self, X, has_encoder=True):
         del_columns = []
         if not has_encoder:

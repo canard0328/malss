@@ -251,4 +251,4 @@ def test_get_algorithms():
 
 
 if __name__ == "__main__":
-    test_regression_small()
+    test_classification_categorical()

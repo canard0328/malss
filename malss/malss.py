@@ -274,12 +274,13 @@ class MALSS(object):
     def __plot_learning_curve(self, dname=None):
         for alg in self.algorithms:
             estimator = alg.estimator
+            sc = f1score if self.scoring == 'f1' else self.scoring
             train_sizes, train_scores, test_scores = learning_curve(
                 estimator,
                 self.data.X,
                 self.data.y,
                 cv=self.cv,
-                scoring=self.scoring,
+                scoring=sc,
                 n_jobs=self.n_jobs)
             if self.minimized_score:
                 train_scores *= -1.0
@@ -345,8 +346,10 @@ class MALSS(object):
         else:
             tmpl = env.get_template('report.html.tmp')
 
+        scoring_name = self.scoring if isinstance(self.scoring, str) else\
+            self.scoring.func_name
         html = tmpl.render(algorithms=self.algorithms,
-                           scoring=self.scoring,
+                           scoring=scoring_name,
                            task=self.task,
                            data=self.data,
                            verbose=self.verbose).encode('utf-8')

@@ -111,7 +111,7 @@ def test_regression_small():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'regression', n_jobs=3, scoring='mean_absolute_error')
+    cls = MALSS(X, y, 'regression', n_jobs=3)
     cls.execute()
     cls.make_report('test_regression_small')
     cls.make_sample_code()
@@ -251,4 +251,4 @@ def test_get_algorithms():
 
 
 if __name__ == "__main__":
-    test_regression_small()
+    test_classification_categorical()

@@ -111,7 +111,7 @@ def test_regression_small():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'regression', n_jobs=3)
+    cls = MALSS(X, y, 'regression', n_jobs=3, scoring='mean_absolute_error')
     cls.execute()
     cls.make_report('test_regression_small')
     cls.make_sample_code()

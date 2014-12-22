@@ -20,8 +20,9 @@ from data import Data
 
 
 class MALSS(object):
-    def __init__(self, X, y, task, shuffle=True, standardize=True, n_jobs=1,
-                 random_state=0, lang='en', verbose=True):
+    def __init__(self, X, y, task, shuffle=True, standardize=True,
+                 scoring=None, n_jobs=1, random_state=0, lang='en',
+                 verbose=True):
         """
         Set the given training data.
 
@@ -40,6 +41,10 @@ class MALSS(object):
             Whether to shuffle the data.
         standardize : boolean, optional (default=True)
             Whether to sdandardize the data.
+        scoring : string, callable or None, optional, default: None
+            A string (see scikit-learn's model evaluation documentation) or
+            a scorer callable object / function with
+            signature scorer(estimator, X, y).
         n_jobs : integer, optional (default=1)
             The number of jobs to run in parallel. If -1, then the number of
             jobs is set to the number of cores.
@@ -63,12 +68,16 @@ class MALSS(object):
         if lang != 'en' and lang != 'jp':
             raise ValueError('lang:%s is no supported' % lang)
         self.lang = lang
+        self.minimized_score = False
         if task == 'classification':
-            self.scoring = 'f1'
+            self.scoring = 'f1' if scoring is None else scoring
             self.cv = StratifiedKFold(self.data.y, n_folds=5, shuffle=True,
                                       random_state=self.random_state)
         elif task == 'regression':
-            self.scoring = 'r2'
+            self.scoring = 'mean_squared_error' if scoring is None else scoring
+            if self.scoring == 'mean_squared_error' or\
+               self.scoring == 'mean_absolute_error':
+                self.minimized_score = True
             self.cv = KFold(self.data.X.shape[0], n_folds=5, shuffle=True,
                             random_state=self.random_state)
         else:
@@ -177,9 +186,11 @@ class MALSS(object):
         estimator : object type that implements the “fit” and “predict” methods
             A object of that type is instantiated for each grid point.
         param_grid : dict or list of dictionaries
-            Dictionary with parameters names (string) as keys and lists of parameter settings to try as
-            values, or a list of such dictionaries, in which case the grids spanned by each dictionary in
-            the list are explored. This enables searching over any sequence of parameter settings.
+            Dictionary with parameters names (string) as keys and
+            lists of parameter settings to try as values, or a list of
+            such dictionaries, in which case the grids spanned by
+            each dictionary in the list are explored.
+            This enables searching over any sequence of parameter settings.
         name : string
             Algorithm name (used for report)
         """
@@ -222,8 +233,12 @@ class MALSS(object):
     def __search_best_algorithm(self):
         self.best_score = float('-Inf')
         self.best_index = -1
+        sign = 1.0
+        if self.minimized_score:
+            sign = -1.0
+            self.best_score = float('Inf')
         for i in xrange(len(self.algorithms)):
-            if self.algorithms[i].best_score > self.best_score:
+            if sign * self.algorithms[i].best_score > sign * self.best_score:
                 self.best_score = self.algorithms[i].best_score
                 self.best_index = i
         self.algorithms[self.best_index].is_best_algorithm = True
@@ -237,6 +252,12 @@ class MALSS(object):
                 estimator, parameters, cv=self.cv, scoring=sc,
                 n_jobs=self.n_jobs)
             clf.fit(self.data.X, self.data.y)
+            if self.minimized_score:
+                clf.best_score_ *= -1.0
+                for j in xrange(len(clf.grid_scores_)):
+                    clf.grid_scores_[j] = (clf.grid_scores_[j][0],
+                                           -1.0 * clf.grid_scores_[j][1],
+                                           -1.0 * clf.grid_scores_[j][2])
             self.algorithms[i].estimator = clf.best_estimator_
             self.algorithms[i].best_score = clf.best_score_
             self.algorithms[i].best_params = clf.best_params_
@@ -258,7 +279,11 @@ class MALSS(object):
                 self.data.X,
                 self.data.y,
                 cv=self.cv,
+                scoring=self.scoring,
                 n_jobs=self.n_jobs)
+            if self.minimized_score:
+                train_scores *= -1.0
+                test_scores *= -1.0
             train_scores_mean = np.mean(train_scores, axis=1)
             train_scores_std = np.std(train_scores, axis=1)
             test_scores_mean = np.mean(test_scores, axis=1)
@@ -280,8 +305,10 @@ class MALSS(object):
                      label="Training score")
             plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
                      label="Cross-validation score")
-
-            plt.legend(loc="lower right")
+            if self.minimized_score:
+                plt.legend(loc='upper right')
+            else:
+                plt.legend(loc="lower right")
             if dname is not None and not os.path.exists(dname):
                 os.mkdir(dname)
             if dname is not None:

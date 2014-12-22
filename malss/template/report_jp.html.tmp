@@ -17,7 +17,7 @@
 	{%- for algorithm in algorithms %}
 		<tr>
 			<td><a href="#{{ algorithm.name }}">{{ algorithm.name }}</a></td>
-			<td><font color="{% if algorithm.is_best_algorithm %}#FF0000{% else %}#000000{% endif %}">{{ algorithm.best_score|round(5) }}</font></td>
+			<td><font color="{% if algorithm.is_best_algorithm %}#FF0000{% else %}#000000{% endif %}">{{ algorithm.best_score|round(3) }}</font></td>
 		</tr>
 	{%- endfor %}
 	</table>
@@ -100,12 +100,12 @@
 			<li>学習曲線はデータサイズを変えた時の訓練データでのスコア，交差検証のスコアをプロットしたものです．</li>
 			<li>学習曲線が以下のような場合，モデルは<strong>ハイバリアンス</strong>（オーバーフィッティング（過学習））であると言えます：</li>
 			<ul>
-				<li>学習データ増加に伴う交差検証のスコアの増加が飽和していない（増加し続けている）．</li>
+				<li>学習データ増加に伴う交差検証のスコアの改善が飽和していない（改善し続けている）．</li>
 				<li>訓練データのスコアと交差検証のスコアの差が大きい．</li>
 			</ul>
 			<li>学習曲線が以下のような場合，モデルは<strong>ハイバイアス</strong>（アンダーフィッティング）であると言えます：</li>
 			<ul>
-				<li>訓練データのスコアでさえも低い．</li>
+				<li>訓練データのスコアでさえも悪い．</li>
 				<li>訓練データのスコアと交差検証のスコアの差が小さい．</li>
 			</ul>
 		</ul>

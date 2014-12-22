@@ -17,7 +17,7 @@
 	{%- for algorithm in algorithms %}
 		<tr>
 			<td><a href="#{{ algorithm.name }}">{{ algorithm.name }}</a></td>
-			<td><font color="{% if algorithm.is_best_algorithm %}#FF0000{% else %}#000000{% endif %}">{{ algorithm.best_score|round(5) }}</font></td>
+			<td><font color="{% if algorithm.is_best_algorithm %}#FF0000{% else %}#000000{% endif %}">{{ algorithm.best_score|round(3) }}</font></td>
 		</tr>
 	{%- endfor %}
 	</table>
@@ -100,12 +100,12 @@
 			<li>A learning curve is a plot of the training and cross-validation error as a function of the number of training points.</li>
 			<li>The algorithm shows <strong>high variance</strong> (over-fitting) if:</li>
 			<ul>
-				<li>Cross-validation score still increasing as training examples increases.</li>
+				<li>Cross-validation score still improving as training examples increases.</li>
 				<li>Large gap between training and cross-validation score.</li>
 			</ul>
 			<li>The algorithm shows <strong>high bias</strong> (under-fitting) if:</li>
 			<ul>
-				<li>Even training score is unacceptably low.</li>
+				<li>Even training score is unacceptably bad.</li>
 				<li>Small gap between training and cross-validation score.</li>
 			</ul>
 		</ul>

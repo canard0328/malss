@@ -239,4 +239,4 @@ def test_change_algorithms():
 
 
 if __name__ == "__main__":
-    test_get_algorithms()
+    test_classification_2classes_small()

@@ -20,20 +20,13 @@ from data import Data
 
 
 class MALSS(object):
-    def __init__(self, X, y, task, shuffle=True, standardize=True,
-                 scoring=None, n_jobs=1, random_state=0, lang='en',
-                 verbose=True):
+    def __init__(self, task, shuffle=True, standardize=True, scoring=None,
+                 n_jobs=1, random_state=0, lang='en', verbose=True):
         """
-        Set the given training data.
+        Initialize parameters.
 
         Parameters
         ----------
-        X : {numpy.ndarray, pandas.DataFrame}, shape = [n_samples, n_features]
-            Training vector, where n_samples in the number of samples and
-            n_features is the number of features.
-        y : {numpy.ndarray, pandas.Series}, shape = [n_samples]
-            Target values (class labels in classification, real numbers in
-            regression)
         task : string
             Specifies the task of the analysis. It must be one of
             'classification', 'regression'.
@@ -59,27 +52,21 @@ class MALSS(object):
 
         self.shuffle = shuffle
         self.standardize = standardize
-        self.data = Data(X, y, shuffle, standardize, random_state)
         self.task = task
         self.n_jobs = n_jobs
         self.random_state = random_state
         self.verbose = verbose
-        self.algorithms = self.__choose_algorithm()
         if lang != 'en' and lang != 'jp':
             raise ValueError('lang:%s is no supported' % lang)
         self.lang = lang
         self.minimized_score = False
         if task == 'classification':
             self.scoring = 'f1' if scoring is None else scoring
-            self.cv = StratifiedKFold(self.data.y, n_folds=5, shuffle=True,
-                                      random_state=self.random_state)
         elif task == 'regression':
             self.scoring = 'mean_squared_error' if scoring is None else scoring
             if self.scoring == 'mean_squared_error' or\
                self.scoring == 'mean_absolute_error':
                 self.minimized_score = True
-            self.cv = KFold(self.data.X.shape[0], n_folds=5, shuffle=True,
-                            random_state=self.random_state)
         else:
             raise ValueError('task:%s is not supported' % task)
 
@@ -222,13 +209,43 @@ class MALSS(object):
             rtn.append((algorithm.name, algorithm.parameters))
         return rtn
 
-    def execute(self):
+    def fit(self, X, y, dname=None):
         """
         Tune parameters and search best algorithm
+
+        Parameters
+        ----------
+        X : {numpy.ndarray, pandas.DataFrame}, shape = [n_samples, n_features]
+            Training vector, where n_samples in the number of samples and
+            n_features is the number of features.
+        y : {numpy.ndarray, pandas.Series}, shape = [n_samples]
+            Target values (class labels in classification, real numbers in
+            regression)
+        dname : string (default=None)
+            If not None, make a analysis report in this directory.
         """
+        self.data = Data(self.shuffle, self.standardize, self.random_state)
+        self.data.fit_transform(X, y)
+        self.algorithms = self.__choose_algorithm()
+        if self.task == 'classification':
+            self.cv = StratifiedKFold(self.data.y, n_folds=5,
+                                      shuffle=self.shuffle,
+                                      random_state=self.random_state)
+        elif self.task == 'regression':
+            self.cv = KFold(self.data.X.shape[0], n_folds=5,
+                            shuffle=self.shuffle,
+                            random_state=self.random_state)
+
         self.__tune_parameters()
         if self.task == 'classification':
             self.__report_classification_result()
+
+        if dname is not None:
+            self.__make_report(dname)
+
+    def predict(self, X):
+        return self.algorithms[self.best_index].estimator.predict(
+            self.data.transform(X))
 
     def __search_best_algorithm(self):
         self.best_score = float('-Inf')
@@ -322,16 +339,7 @@ class MALSS(object):
                             bbox_inches='tight', dpi=75)
             plt.close()
 
-    def make_report(self, dname='report'):
-        """
-        Make the report
-
-        Parameters
-        ----------
-        dname : string (default="report")
-            A string containing a path to a output directory.
-        """
-
+    def __make_report(self, dname='report'):
         if not os.path.exists(dname):
             os.mkdir(dname)
 
@@ -359,7 +367,7 @@ class MALSS(object):
 
     def make_sample_code(self, fname='sample_code.py'):
         """
-        Make the sample code
+        Make a sample code
 
         Parameters
         ----------

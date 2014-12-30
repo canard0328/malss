@@ -19,10 +19,13 @@ def test_classification_2classes_small():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'classification', n_jobs=3, lang='en')
-    cls.execute()
-    cls.make_report('test_classification_2classes_small')
+    cls = MALSS('classification', n_jobs=3, lang='en')
+    cls.fit(X, y, 'test_classification_2classes_small')
     cls.make_sample_code()
+
+    from sklearn.metrics import f1_score
+    pred = cls.predict(X)
+    print f1_score(y, pred, average=None)
 
     assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
@@ -37,10 +40,13 @@ def test_classification_multiclass_small():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'classification', n_jobs=3)
-    cls.execute()
-    cls.make_report('test_classification_multiclass_small')
+    cls = MALSS('classification', n_jobs=3)
+    cls.fit(X, y, 'test_classification_multiclass_small')
     cls.make_sample_code()
+
+    from sklearn.metrics import f1_score
+    pred = cls.predict(X)
+    print f1_score(y, pred, average=None)
 
     assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
@@ -58,32 +64,15 @@ def test_classification_2classes_medium():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'classification', n_jobs=3)
-    cls.execute()
-    cls.make_report('test_classification_2classes_medium')
+    cls = MALSS('classification', n_jobs=3)
+    cls.fit(X, y, 'test_classification_2classes_medium')
+
+    from sklearn.metrics import f1_score
+    pred = cls.predict(X)
+    print f1_score(y, pred, average=None)
 
     assert len(cls.algorithms) == 4
     assert cls.algorithms[0].best_score is not None
-
-
-@attr(travis=True)
-def test_classification_2classes_medium_travis():
-    X, y = make_classification(n_samples=100000,
-                               n_features=10,
-                               n_classes=2,
-                               n_informative=2,
-                               n_redundant=0,
-                               n_repeated=0,
-                               weights=[0.7, 0.3],
-                               random_state=0)
-    X = pd.DataFrame(X)
-    y = pd.Series(y)
-    cls = MALSS(X, y, 'classification', n_jobs=3)
-    # cls.execute()
-    # cls.make_report('test_classification_2classes_medium')
-
-    assert len(cls.algorithms) == 4
-    # assert cls.algorithms[0].best_score is not None
 
 
 def test_classification_2classes_big():
@@ -95,9 +84,13 @@ def test_classification_2classes_big():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'classification', n_jobs=3)
-    cls.execute()
-    cls.make_report('test_classification_2classes_big')
+    cls = MALSS('classification', n_jobs=3)
+    cls.fit(X, y, 'test_classification_2classes_big')
+    cls.make_sample_code()
+
+    from sklearn.metrics import f1_score
+    pred = cls.predict(X)
+    print f1_score(y, pred, average=None)
 
     assert len(cls.algorithms) == 1
     assert cls.algorithms[0].best_score is not None
@@ -111,10 +104,13 @@ def test_regression_small():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'regression', n_jobs=3)
-    cls.execute()
-    cls.make_report('test_regression_small')
+    cls = MALSS('regression', n_jobs=3)
+    cls.fit(X, y, 'test_regression_small')
     cls.make_sample_code()
+
+    from sklearn.metrics import mean_squared_error
+    pred = cls.predict(X)
+    print mean_squared_error(y, pred)
 
     assert len(cls.algorithms) == 4
     assert cls.algorithms[0].best_score is not None
@@ -128,9 +124,13 @@ def test_regression_medium():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'regression', n_jobs=3)
-    cls.execute()
-    cls.make_report('test_regression_medium')
+    cls = MALSS('regression', n_jobs=3)
+    cls.fit(X, y, 'test_regression_medium')
+    cls.make_sample_code()
+
+    from sklearn.metrics import mean_squared_error
+    pred = cls.predict(X)
+    print mean_squared_error(y, pred)
 
     assert len(cls.algorithms) == 2
     assert cls.algorithms[0].best_score is not None
@@ -144,9 +144,13 @@ def test_regression_big():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'regression', n_jobs=3)
-    cls.execute()
-    cls.make_report('test_regression_big')
+    cls = MALSS('regression', n_jobs=3)
+    cls.fit(X, y, 'test_regression_big')
+    cls.make_sample_code()
+
+    from sklearn.metrics import mean_squared_error
+    pred = cls.predict(X)
+    print mean_squared_error(y, pred)
 
     assert len(cls.algorithms) == 1
     assert cls.algorithms[0].best_score is not None
@@ -159,9 +163,13 @@ def test_classification_categorical():
     y = data['AHD']
     del data['AHD']
 
-    cls = MALSS(data, y, 'classification', n_jobs=3)
-    cls.execute()
-    cls.make_report('test_classification_categorical')
+    cls = MALSS('classification', n_jobs=3)
+    cls.fit(data, y, 'test_classification_categorical')
+    cls.make_sample_code()
+
+    pred = cls.predict(data)
+    from sklearn.metrics import f1_score
+    print f1_score(y, pred, average=None)
 
     assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
@@ -174,39 +182,19 @@ def test_ndarray():
     y = data['AHD']
     del data['AHD']
 
-    cls = MALSS(np.array(data), np.array(y), 'classification', n_jobs=3)
-    cls.execute()
-    cls.make_report('test_ndarray')
+    cls = MALSS('classification', n_jobs=3)
+    cls.fit(np.array(data), np.array(y), 'test_ndarray')
+    cls.make_sample_code()
+
+    from sklearn.metrics import f1_score
+    pred = cls.predict(np.array(data))
+    print f1_score(y, pred, average=None)
 
     assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
 
 
-def test_add_algorithms():
-    from sklearn.ensemble import RandomForestClassifier as RF
-
-    X, y = make_classification(n_samples=1000,
-                               n_features=20,
-                               n_classes=3,
-                               n_informative=10,
-                               weights=[0.6, 0.2, 0.2],
-                               random_state=0)
-    X = pd.DataFrame(X)
-    y = pd.Series(y)
-    cls = MALSS(X, y, 'classification', n_jobs=3)
-    cls.add_algorithm(RF(n_jobs=3),
-                      [{'n_estimators': [10, 30, 50],
-                        'max_depth': [3, 5, None],
-                        'max_features': [0.3, 0.6, 'auto']}],
-                      'Random Forest')
-    cls.execute()
-    cls.make_report('test_add_algorithms')
-
-    assert len(cls.algorithms) == 7
-    assert cls.algorithms[-1].best_score is not None
-
-
-def test_remove_algorithms():
+def test_change_algorithms():
     X, y = make_classification(n_samples=1000,
                                n_features=10,
                                n_classes=2,
@@ -217,29 +205,8 @@ def test_remove_algorithms():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS(X, y, 'classification', n_jobs=3)
-    cls.remove_algorithm(0)
-    cls.remove_algorithm()
-    cls.execute()
-    cls.make_report('test_remove_algorithms')
-    cls.make_sample_code()
-
-    assert len(cls.algorithms) == 4
-    assert cls.algorithms[0].best_score is not None
-
-
-def test_get_algorithms():
-    X, y = make_classification(n_samples=1000,
-                               n_features=10,
-                               n_classes=2,
-                               n_informative=2,
-                               n_redundant=0,
-                               n_repeated=0,
-                               weights=[0.7, 0.3],
-                               random_state=0)
-    X = pd.DataFrame(X)
-    y = pd.Series(y)
-    cls = MALSS(X, y, 'classification', n_jobs=3)
+    cls = MALSS('classification', n_jobs=3)
+    cls.fit(X, y)
     algorithms = cls.get_algorithms()
 
     assert algorithms[0][0] == 'Support Vector Machine (RBF Kernel)'
@@ -249,6 +216,27 @@ def test_get_algorithms():
     assert algorithms[4][0] == 'Decision Tree'
     assert algorithms[5][0] == 'k-Nearest Neighbors'
 
+    cls.remove_algorithm(0)
+    cls.remove_algorithm()
+    algorithms = cls.get_algorithms()
+    assert algorithms[0][0] == 'Random Forest'
+    assert algorithms[1][0] == 'Support Vector Machine (Linear Kernel)'
+    assert algorithms[2][0] == 'Logistic Regression'
+    assert algorithms[3][0] == 'Decision Tree'
+
+    from sklearn.ensemble import ExtraTreesClassifier as ET
+    cls.add_algorithm(ET(n_jobs=3),
+                      [{'n_estimators': [10, 30, 50],
+                        'max_depth': [3, 5, None],
+                        'max_features': [0.3, 0.6, 'auto']}],
+                      'Extremely Randomized Trees')
+    algorithms = cls.get_algorithms()
+    assert algorithms[0][0] == 'Random Forest'
+    assert algorithms[1][0] == 'Support Vector Machine (Linear Kernel)'
+    assert algorithms[2][0] == 'Logistic Regression'
+    assert algorithms[3][0] == 'Decision Tree'
+    assert algorithms[4][0] == 'Extremely Randomized Trees'
+
 
 if __name__ == "__main__":
-    test_classification_categorical()
+    test_classification_2classes_small()

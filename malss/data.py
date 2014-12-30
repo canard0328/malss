@@ -8,8 +8,12 @@ from sklearn.preprocessing import StandardScaler
 
 
 class Data(object):
-    def __init__(self, X, y, shuffle=True, standardize=True,
-                 random_state=None):
+    def __init__(self, shuffle=True, standardize=True, random_state=None):
+        self.shuffle = shuffle
+        self.standardize = standardize
+        self.random_state = random_state
+
+    def fit_transform(self, X, y):
         if isinstance(X, np.ndarray):
             self.X = pd.DataFrame(X)
             self.y = pd.Series(y)
@@ -20,42 +24,74 @@ class Data(object):
             raise ValueError('%s is not supported' % type(X))
         self.shape_before = self.X.shape
 
-        self.__imputer()
+        self.X, self.col_was_null = self.__impute(self.X)
 
-        self.__encoder()
+        self._label_encoder = None
+        self._onehot_encoder = None
+        self.X, self.del_columns = self.__encode(self.X)
 
-        if shuffle:
+        self._standardizer = None
+        if self.standardize:
+            self.X = self.__standardize(self.X)
+
+        if self.shuffle:
             self.X, self.y = sk_shuffle(self.X, self.y,
-                                        random_state=random_state)
-        if standardize:
-            self.X = StandardScaler().fit_transform(self.X)
+                                        random_state=self.random_state)
 
-    def __imputer(self):
-        fill = pd.Series([self.X[c].value_counts().index[0]
-                          if self.X[c].dtype == np.dtype('O')
-                          else self.X[c].median()
-                          if self.X[c].dtype == np.dtype('int')
-                          else self.X[c].mean()
-                          for c in self.X],
-                         index=self.X.columns)
-        self.col_was_null = [c for c in self.X
-                             if pd.isnull(self.X[c]).sum() > 0]
-        self.X = self.X.fillna(fill)
+    def transform(self, X):
+        if isinstance(X, np.ndarray):
+            Xtrans = pd.DataFrame(X)
+        else:
+            Xtrans = X.copy(deep=True)
 
-    def __encoder(self):
-        self.del_columns = []
-        for i in xrange(len(self.X.columns)):
-            if self.X.dtypes[i] == np.dtype('O'):
-                enc = LabelEncoder()
-                col_enc = enc.fit_transform(self.X.icol(i))
-                col_onehot = np.array(
-                    OneHotEncoder().fit_transform(
-                        col_enc.reshape(-1, 1)).todense())
-                col_names = [str(self.X.columns[i]) + '_' + c
-                             for c in enc.classes_]
+        Xtrans, col_was_null = self.__impute(Xtrans)
+        Xtrans, del_columns = self.__encode(Xtrans)
+        if self.standardize:
+            Xtrans = self.__standardize(Xtrans)
+        return Xtrans
+
+    def __impute(self, X):
+        fill = pd.Series([X[c].value_counts().index[0]
+                          if X[c].dtype == np.dtype('O')
+                          else X[c].median()
+                          if X[c].dtype == np.dtype('int')
+                          else X[c].mean()
+                          for c in X],
+                         index=X.columns)
+        col_was_null = [c for c in X
+                        if pd.isnull(X[c]).sum() > 0]
+        return X.fillna(fill), col_was_null
+
+    def __encode(self, X):
+        Xenc = X.copy(deep=True)
+
+        if self._label_encoder is None or self._onehot_encoder is None:
+            self._label_encoder = [None] * len(Xenc.columns)
+            self._onehot_encoder = [None] * len(Xenc.columns)
+
+        del_columns = []
+        for i in xrange(len(Xenc.columns)):
+            if Xenc.dtypes[i] == np.dtype('O'):
+                if self._label_encoder[i] is None:
+                    self._label_encoder[i] = LabelEncoder().fit(Xenc.icol(i))
+                col_enc = self._label_encoder[i].transform(Xenc.icol(i))
+                if self._onehot_encoder[i] is None:
+                    self._onehot_encoder[i] = OneHotEncoder().fit(
+                        col_enc.reshape(-1, 1))
+                col_onehot = np.array(self._onehot_encoder[i].transform(
+                    col_enc.reshape(-1, 1)).todense())
+                col_names = [str(Xenc.columns[i]) + '_' + c
+                             for c in self._label_encoder[i].classes_]
                 col_onehot = pd.DataFrame(col_onehot, columns=col_names,
-                                          index=self.X.index)
-                self.X = pd.concat([self.X, col_onehot], axis=1)
-                self.del_columns.append(self.X.columns[i])
-        for col in self.del_columns:
-            del self.X[col]
+                                          index=Xenc.index)
+                Xenc = pd.concat([Xenc, col_onehot], axis=1)
+                del_columns.append(Xenc.columns[i])
+        for col in del_columns:
+            del Xenc[col]
+
+        return Xenc, del_columns
+
+    def __standardize(self, X):
+        if self._standardizer is None:
+            self._standardizer = StandardScaler().fit(X)
+        return self._standardizer.transform(X)

@@ -88,6 +88,10 @@
 	<h3>Classification report</h3>
 	<pre>{{ algorithm.classification_report }}</pre>
 	* <a href="http://scikit-learn.org/0.13/modules/generated/sklearn.metrics.precision_recall_fscore_support.html">precision, recall, f1-score, support</a>
+	<ul>
+		<li>Note that above scores were made by closed test (the training data is same as the test data).</li>
+		<li>Thus, the model may be overfitted.</li>
+	</ul>
 	{%- endif %}
 
 	<h3>Learning curve</h3>

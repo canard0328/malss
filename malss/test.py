@@ -19,8 +19,9 @@ def test_classification_2classes_small():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification', n_jobs=3, lang='en')
-    cls.fit(X, y, 'test_classification_2classes_small')
+    cls = MALSS('classification',
+                n_jobs=3, lang='en').fit(X, y,
+                                         'test_classification_2classes_small')
     cls.make_sample_code()
 
     from sklearn.metrics import f1_score
@@ -40,8 +41,9 @@ def test_classification_multiclass_small():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification', n_jobs=3)
-    cls.fit(X, y, 'test_classification_multiclass_small')
+    cls = MALSS('classification',
+                n_jobs=3).fit(X, y,
+                              'test_classification_multiclass_small')
     cls.make_sample_code()
 
     from sklearn.metrics import f1_score
@@ -64,8 +66,9 @@ def test_classification_2classes_medium():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification', n_jobs=3)
-    cls.fit(X, y, 'test_classification_2classes_medium')
+    cls = MALSS('classification',
+                n_jobs=3).fit(X, y,
+                              'test_classification_2classes_medium')
 
     from sklearn.metrics import f1_score
     pred = cls.predict(X)
@@ -84,8 +87,9 @@ def test_classification_2classes_big():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification', n_jobs=3)
-    cls.fit(X, y, 'test_classification_2classes_big')
+    cls = MALSS('classification',
+                n_jobs=3).fit(X, y,
+                              'test_classification_2classes_big')
     cls.make_sample_code()
 
     from sklearn.metrics import f1_score
@@ -104,8 +108,9 @@ def test_regression_small():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('regression', n_jobs=3)
-    cls.fit(X, y, 'test_regression_small')
+    cls = MALSS('regression',
+                n_jobs=3).fit(X, y,
+                              'test_regression_small')
     cls.make_sample_code()
 
     from sklearn.metrics import mean_squared_error
@@ -124,8 +129,9 @@ def test_regression_medium():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('regression', n_jobs=3)
-    cls.fit(X, y, 'test_regression_medium')
+    cls = MALSS('regression',
+                n_jobs=3).fit(X, y,
+                              'test_regression_medium')
     cls.make_sample_code()
 
     from sklearn.metrics import mean_squared_error
@@ -144,8 +150,9 @@ def test_regression_big():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('regression', n_jobs=3)
-    cls.fit(X, y, 'test_regression_big')
+    cls = MALSS('regression',
+                n_jobs=3).fit(X, y,
+                              'test_regression_big')
     cls.make_sample_code()
 
     from sklearn.metrics import mean_squared_error
@@ -163,8 +170,9 @@ def test_classification_categorical():
     y = data['AHD']
     del data['AHD']
 
-    cls = MALSS('classification', n_jobs=3)
-    cls.fit(data, y, 'test_classification_categorical')
+    cls = MALSS('classification',
+                n_jobs=3).fit(data, y,
+                              'test_classification_categorical')
     cls.make_sample_code()
 
     pred = cls.predict(data)
@@ -182,8 +190,8 @@ def test_ndarray():
     y = data['AHD']
     del data['AHD']
 
-    cls = MALSS('classification', n_jobs=3)
-    cls.fit(np.array(data), np.array(y), 'test_ndarray')
+    cls = MALSS('classification',
+                n_jobs=3).fit(np.array(data), np.array(y), 'test_ndarray')
     cls.make_sample_code()
 
     from sklearn.metrics import f1_score
@@ -205,8 +213,7 @@ def test_change_algorithms():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification', n_jobs=3)
-    cls.fit(X, y)
+    cls = MALSS('classification', n_jobs=3).fit(X, y)
     algorithms = cls.get_algorithms()
 
     assert algorithms[0][0] == 'Support Vector Machine (RBF Kernel)'

@@ -223,6 +223,11 @@ class MALSS(object):
             regression)
         dname : string (default=None)
             If not None, make a analysis report in this directory.
+
+        Returns
+        -------
+        self : object
+            Returns self.
         """
         self.data = Data(self.shuffle, self.standardize, self.random_state)
         self.data.fit_transform(X, y)
@@ -242,6 +247,8 @@ class MALSS(object):
 
         if dname is not None:
             self.__make_report(dname)
+
+        return self
 
     def predict(self, X):
         return self.algorithms[self.best_index].estimator.predict(

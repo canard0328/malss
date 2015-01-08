@@ -21,7 +21,7 @@ from data import Data
 
 class MALSS(object):
     def __init__(self, task, shuffle=True, standardize=True, scoring=None,
-                 n_jobs=1, random_state=0, lang='en', verbose=True):
+                 cv=5, n_jobs=1, random_state=0, lang='en', verbose=True):
         """
         Initialize parameters.
 
@@ -38,6 +38,12 @@ class MALSS(object):
             A string (see scikit-learn's model evaluation documentation) or
             a scorer callable object / function with
             signature scorer(estimator, X, y).
+        cv : integer or cross-validation generator.
+            If an integer is passed, it is the number of folds (default 3).
+            K-fold cv (for regression task) or Stratified k-fold cv is
+            used by default.
+            Specific cross-validation objects can be passed, see
+            sklearn.cross_validation module for the list of possible objects.
         n_jobs : integer, optional (default=1)
             The number of jobs to run in parallel. If -1, then the number of
             jobs is set to the number of cores.
@@ -53,6 +59,7 @@ class MALSS(object):
         self.shuffle = shuffle
         self.standardize = standardize
         self.task = task
+        self.cv = cv
         self.n_jobs = n_jobs
         self.random_state = random_state
         self.verbose = verbose
@@ -232,14 +239,15 @@ class MALSS(object):
         self.data = Data(self.shuffle, self.standardize, self.random_state)
         self.data.fit_transform(X, y)
         self.algorithms = self.__choose_algorithm()
-        if self.task == 'classification':
-            self.cv = StratifiedKFold(self.data.y, n_folds=5,
-                                      shuffle=self.shuffle,
-                                      random_state=self.random_state)
-        elif self.task == 'regression':
-            self.cv = KFold(self.data.X.shape[0], n_folds=5,
-                            shuffle=self.shuffle,
-                            random_state=self.random_state)
+        if isinstance(self.cv, int):
+            if self.task == 'classification':
+                self.cv = StratifiedKFold(self.data.y, n_folds=self.cv,
+                                          shuffle=self.shuffle,
+                                          random_state=self.random_state)
+            elif self.task == 'regression':
+                self.cv = KFold(self.data.X.shape[0], n_folds=self.cv,
+                                shuffle=self.shuffle,
+                                random_state=self.random_state)
 
         self.__tune_parameters()
         if self.task == 'classification':

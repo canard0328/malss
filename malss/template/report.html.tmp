@@ -26,8 +26,10 @@
 	<p>
 		<strong>* cross-vaidation score:</strong>
 		<ul>
-			<li>Evaluating the quality of the model on the data used to fit the model can lead to <a href="http://en.wikipedia.org/wiki/Overfitting"><i>overfitting</i></a>.</li>
-			<li>The solution to overfitting is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation"><i>k-fold cross validation</i></a>: divide the dataset into k (default: 5) parts of (roughly) equal size, then for each of these five parts, train the classifier on the other four and test on the held-out part.</li>
+			<li><a href="http://en.wikipedia.org/wiki/Generalization_error/">Generalization error</a>: It is important to measure how well a learning machine generalizes to unseen data.</li>
+			<li>Evaluating the quality of the model on the data used to fit the model can lead to <a href="http://en.wikipedia.org/wiki/Overfitting"><strong>overfitting</strong></a>.</li>
+			<li>The solution to overfitting is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)"><strong>Cross validation</strong></a>.</br>The most common cross validation method is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation"><strong>k-fold cross validation</strong></a>: divide the dataset into k (5 by default in MALSS) parts of (roughly) equal size, then for each of these five parts, train the classifier on the other four and test on the held-out part.</li>
+			<li>You can select an appropriate cross validation method from <a href="http://scikit-learn.org/stable/modules/cross_validation.html">sklearn.cross_validation modules</a>.</br>(5-fold cross validation for regression task or Stratified 5-fold cross validation for classification task is selected by default).</li>
 		</ul>
 	</p>
 	{%- endif %}
@@ -48,6 +50,7 @@
 		<li>Column {% for col in data.col_was_null %}{{ col }} {% endfor %}had NA values.</li>
 		<ul>
 			<li>NA values were filled in with the most frequent value (categorical), median (integer), mean (float).</li>
+			<li>See also: <a href="http://pandas.pydata.org/pandas-docs/stable/missing_data.html">missing data</a></li>
 		</ul>
 	</ul>
 	{%- endif %}
@@ -55,7 +58,7 @@
 
 	{%- for algorithm in algorithms %}
 	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
-	<h3>Parameter optimization by <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><i>grid search</i></a></h3>
+	<h3>Parameter optimization by <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><strong>grid search</strong></a></h3>
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 		{%- for key in algorithm.grid_scores[0][0].keys() %}

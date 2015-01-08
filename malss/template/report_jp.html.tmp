@@ -26,9 +26,15 @@
 	<p>
 		<strong>※交差検証のスコア:</strong>
 		<ul>
-			<li>機械学習では，学習データに含まれない未知のデータに対して良い結果を出す能力，<i>汎化能力</i>が重要となります．
-			<li>モデルの学習と評価に同じデータを使うと学習データに過度に適応（<a href="http://ja.wikipedia.org/wiki/%E9%81%8E%E5%89%B0%E9%81%A9%E5%90%88"><i>過学習</i></a>）してしまい，汎化能力が低下してしまいます．</li>
-			<li>過学習を防ぐためには<a href="http://ja.wikipedia.org/wiki/%E4%BA%A4%E5%B7%AE%E6%A4%9C%E8%A8%BC"><i>交差検証</i></a>を行います．交差検証はまずデータセットをK個（default: 5）に分割します．そして，そのうちの1つをテスト用とし，残るK−1個でモデルを学習します．交差検証はK個に分割されたデータそれぞれをテストデータとしてK回検証を行い，得られた結果を平均して1つのスコアを得ます．</li>
+			<li>機械学習では，学習データに含まれない未知のデータに対して良い結果を出す能力，<strong>汎化能力</strong>が重要となります．
+			<li>モデルの学習と評価に同じデータを使うと学習データに過度に適応（<a href="http://ja.wikipedia.org/wiki/%E9%81%8E%E5%89%B0%E9%81%A9%E5%90%88"><strong>過学習</strong></a>）してしまい，汎化能力が低下してしまいます．</li>
+			<li>過学習を防ぐためには<a href="http://ja.wikipedia.org/wiki/%E4%BA%A4%E5%B7%AE%E6%A4%9C%E8%A8%BC"><strong>交差検証</strong></a>を行い汎化能力を評価します．</br>代表的な交差検証法であるK-fold cross validationでは，まずデータセットをK個（default: 5）に分割します．そして，そのうちの1つをテスト用とし，残るK−1個でモデルを学習します．交差検証はK個に分割されたデータそれぞれをテストデータとしてK回検証を行い，得られた結果を平均して1つのスコアを得ます．</li>
+			<li>交差検証は<a href="http://scikit-learn.org/stable/modules/cross_validation.html">様々な手法</a>が提案されているので，目的に応じて適切な手法を選択してください．</br>（デフォルトでは，回帰（regression）タスクでは5-fold cross validationが，分類（classification）タスクではStratified 5-fold cross validationが選択されています．）</li>
+		</ul>
+		<strong>※評価基準：</strong>
+		<ul>
+			<li>ラベルに偏りがあり，1％のデータのみが陽性の場合，常に陰性と予測するモデルの精度（accuracy）は99%ですが，このモデルは実用的ではありません．</li>
+			<li>モデルの評価基準（scoringオプション）は<a href="http://scikit-learn.org/stable/modules/model_evaluation.html">sklearn.metricsモジュール</a>から適切なものを選択してください．</br>（デフォルトでは，回帰（regression）タスクでは平均二乗誤差（mean squared error）が，分類（classification）タスクではF値（f1 score）が選択されています．）</li>
 		</ul>
 	</p>
 	{%- endif %}
@@ -46,9 +52,12 @@
 	</ul>
 	{%- if data.col_was_null|length > 0 %}
 	<ul>
-		<li>{% for col in data.col_was_null %}{{ col }} {% endfor %}列は欠損値（NA）を含んでいました．</li>
+		<li>{% for col in data.col_was_null %}{{ col }}列 {% endfor %}は欠損値（NA）を含んでいました．</li>
 		<ul>
 			<li>欠損値は最頻値（カテゴリカル型），中央値（整数型），平均値（実数型）に置換されます．</li>
+			{%- if verbose %}
+			<li>参考）<a href="http://pandas.pydata.org/pandas-docs/stable/missing_data.html">様々な欠損値の処理方法</a></li>
+			{%- endif %}
 		</ul>
 	</ul>
 	{%- endif %}
@@ -56,7 +65,7 @@
 
 	{%- for algorithm in algorithms %}
 	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
-	<h3><a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><i>グリッドサーチ</i></a>によるパラメータチューニング結果</h3>
+	<h3><a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><strong>グリッドサーチ</strong></a>によるパラメータチューニング結果</h3>
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 		{%- for key in algorithm.grid_scores[0][0].keys() %}
@@ -88,7 +97,9 @@
 	{%- if task == "classification" %}
 	<h3>分類結果</h3>
 	<pre>{{ algorithm.classification_report }}</pre>
+	{%- if verbose %}
 	※<a href="http://ja.wikipedia.org/wiki/%E6%83%85%E5%A0%B1%E6%A4%9C%E7%B4%A2#.E6.A4.9C.E7.B4.A2.E6.80.A7.E8.83.BD.E3.81.AE.E8.A9.95.E4.BE.A1">precision（適合率），recall（再現率），f1-score（F1値）</a>，<a href="http://scikit-learn.org/0.13/modules/generated/sklearn.metrics.precision_recall_fscore_support.html">support（正解ラベルのデータ数）</a>
+	{%- endif %}
 	<ul>
 		<li>注）上記のスコアはクローズ評価（学習と評価が同データ）なので，モデルが過学習しているかもしれません．</li>
 	</ul>

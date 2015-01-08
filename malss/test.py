@@ -171,8 +171,9 @@ def test_classification_categorical():
     del data['AHD']
 
     cls = MALSS('classification',
-                n_jobs=3).fit(data, y,
-                              'test_classification_categorical')
+                n_jobs=3, lang='en',
+                verbose=True).fit(data, y,
+                                  'test_classification_categorical')
     cls.make_sample_code()
 
     pred = cls.predict(data)
@@ -246,4 +247,4 @@ def test_change_algorithms():
 
 
 if __name__ == "__main__":
-    test_classification_2classes_small()
+    test_classification_categorical()

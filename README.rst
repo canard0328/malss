@@ -33,7 +33,9 @@ Installation
 Example
 *******
 
-Classification::
+Classification:
+
+.. code-block:: python
 
   from malss import MALSS
   from sklearn.datasets import load_iris
@@ -43,7 +45,9 @@ Classification::
   cls.make_report('classification_result')
   cls.make_sample_code('classification_sample_code.py')
 
-Regression::
+Regression:
+
+.. code-block:: python
 
   from malss import MALSS
   from sklearn.datasets import load_boston
@@ -53,7 +57,9 @@ Regression::
   cls.make_report('regression_result')
   cls.make_sample_code('regression_sample_code.py')
 
-Change algorithm::
+Change algorithm:
+
+.. code-block:: python
 
   from malss import MALSS
   from sklearn.datasets import load_iris

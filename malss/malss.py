@@ -57,6 +57,7 @@ class MALSS(object):
             Enable verbose output.
         """
 
+        self.is_ready = False
         self.shuffle = shuffle
         self.standardize = standardize
         self.task = task
@@ -220,7 +221,7 @@ class MALSS(object):
             rtn.append((algorithm.name, algorithm.parameters))
         return rtn
 
-    def fit(self, X, y, dname=None):
+    def fit(self, X, y, dname=None, algorithm_selection_only=False):
         """
         Tune parameters and search best algorithm
 
@@ -234,6 +235,9 @@ class MALSS(object):
             regression)
         dname : string (default=None)
             If not None, make a analysis report in this directory.
+        algorithm_selection_only : boolean, optional (default=False)
+            If True, only algorithm selection is executed.
+            This option is needed for (get|add|remove)_algorithm(s) methods.
 
         Returns
         -------
@@ -242,7 +246,13 @@ class MALSS(object):
         """
         self.data = Data(self.shuffle, self.standardize, self.random_state)
         self.data.fit_transform(X, y)
-        self.algorithms = self.__choose_algorithm()
+
+        if not self.is_ready:
+            self.algorithms = self.__choose_algorithm()
+        self.is_ready = True
+        if algorithm_selection_only:
+            return self
+
         if isinstance(self.cv, int):
             if self.task == 'classification':
                 self.cv = StratifiedKFold(self.data.y, n_folds=self.cv,

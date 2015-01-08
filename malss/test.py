@@ -22,6 +22,7 @@ def test_classification_2classes_small():
     cls = MALSS('classification',
                 n_jobs=3, lang='en').fit(X, y,
                                          'test_classification_2classes_small')
+    cls.fit(X, y, 'test_classification_2classes_small')
     cls.make_sample_code()
 
     from sklearn.metrics import f1_score
@@ -214,7 +215,7 @@ def test_change_algorithms():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification', n_jobs=3).fit(X, y)
+    cls = MALSS('classification').fit(X, y, algorithm_selection_only=True)
     algorithms = cls.get_algorithms()
 
     assert algorithms[0][0] == 'Support Vector Machine (RBF Kernel)'
@@ -247,4 +248,4 @@ def test_change_algorithms():
 
 
 if __name__ == "__main__":
-    test_classification_categorical()
+    test_classification_2classes_small()

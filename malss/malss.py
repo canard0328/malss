@@ -2,6 +2,7 @@
 
 import os
 import numpy as np
+import multiprocessing
 import matplotlib.pyplot as plt
 from jinja2 import Environment, FileSystemLoader
 from sklearn.cross_validation import StratifiedKFold, KFold
@@ -21,7 +22,7 @@ from data import Data
 
 class MALSS(object):
     def __init__(self, task, shuffle=True, standardize=True, scoring=None,
-                 cv=5, n_jobs=1, random_state=0, lang='en', verbose=True):
+                 cv=5, n_jobs=-1, random_state=0, lang='en', verbose=True):
         """
         Initialize parameters.
 
@@ -46,7 +47,7 @@ class MALSS(object):
             sklearn.cross_validation module for the list of possible objects.
         n_jobs : integer, optional (default=1)
             The number of jobs to run in parallel. If -1, then the number of
-            jobs is set to the number of cores.
+            jobs is set to the number of cores - 1.
         random_state : int seed, RandomState instance, or None (default=0)
             The seed of the pseudo random number generator
         lang : string (default='en')
@@ -60,7 +61,10 @@ class MALSS(object):
         self.standardize = standardize
         self.task = task
         self.cv = cv
-        self.n_jobs = n_jobs
+        if n_jobs == -1:
+            self.n_jobs = np.max([multiprocessing.cpu_count() - 1, 1])
+        else:
+            self.n_jobs = n_jobs
         self.random_state = random_state
         self.verbose = verbose
         if lang != 'en' and lang != 'jp':
@@ -86,16 +90,16 @@ class MALSS(object):
                         Algorithm(
                             SVC(random_state=self.random_state),
                             [{'kernel': ['rbf'],
-                              'C': [10, 100, 1000, 10000],
-                              'gamma': [1e-4, 1e-3, 1e-2, 1e-1]}],
+                              'C': [1, 10, 100, 1000],
+                              'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
                             'Support Vector Machine (RBF Kernel)'))
                     algorithms.append(
                         Algorithm(
                             RandomForestClassifier(
                                 random_state=self.random_state,
                                 n_jobs=self.n_jobs),
-                            [{'n_estimators': [10, 50, 100],
-                              'max_features': [0.2, 0.5, 0.8],
+                            [{'n_estimators': [10, 100, 1000],
+                              'max_features': [0.3, 0.6, 0.9],
                               'max_depth': [3, 7, None]}],
                             'Random Forest'))
                 algorithms.append(
@@ -138,16 +142,16 @@ class MALSS(object):
                         Algorithm(
                             SVR(random_state=self.random_state),
                             [{'kernel': ['rbf'],
-                              'C': [10, 100, 1000, 10000],
-                              'gamma': [1e-4, 1e-3, 1e-2, 1e-1]}],
+                              'C': [1, 10, 100, 1000],
+                              'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
                             'Support Vector Machine (RBF Kernel)'))
                     algorithms.append(
                         Algorithm(
                             RandomForestRegressor(
                                 random_state=self.random_state,
                                 n_jobs=self.n_jobs),
-                            [{'n_estimators': [10, 50, 100],
-                              'max_features': [0.2, 0.5, 0.8],
+                            [{'n_estimators': [10, 100, 1000],
+                              'max_features': [0.3, 0.6, 0.9],
                               'max_depth': [3, 7, None]}],
                             'Random Forest'))
                 algorithms.append(

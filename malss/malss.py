@@ -39,10 +39,12 @@ class MALSS(object):
             A string (see scikit-learn's model evaluation documentation) or
             a scorer callable object / function with
             signature scorer(estimator, X, y).
+            mean_squared_error (for regression task) or f1 (for classification
+            task) is used by default.
         cv : integer or cross-validation generator.
             If an integer is passed, it is the number of folds (default 3).
-            K-fold cv (for regression task) or Stratified k-fold cv is
-            used by default.
+            K-fold cv (for regression task) or Stratified k-fold cv
+            (for classification task) is used by default.
             Specific cross-validation objects can be passed, see
             sklearn.cross_validation module for the list of possible objects.
         n_jobs : integer, optional (default=1)
@@ -53,7 +55,7 @@ class MALSS(object):
         lang : string (default='en')
             Specifies the language in the report. It must be one of
             'en' (English), 'jp' (Japanese).
-        verbos : bool, default: True
+        verbos : boolean, default: True
             Enable verbose output.
         """
 

@@ -28,6 +28,7 @@ from sklearn.linear_model import SGDClassifier
 class SampleClass(object):
     def __init__(self, random_state=0):
         self.random_state = random_state
+        self.fill = None
 
     def fit(self, X, y):
         if isinstance(X, np.ndarray):
@@ -58,6 +59,10 @@ class SampleClass(object):
         self.clf.fit(X, y)
 
     def predict(self, X):
+        if isinstance(X, np.ndarray):
+            X = pd.DataFrame(X)
+            y = pd.Series(y)
+
         X = self.imputer(X)
         {%- if encoded %}
         X = self.encoder(X, True)
@@ -68,14 +73,15 @@ class SampleClass(object):
         return self.clf.predict(X)
 
     def imputer(self, X):
-        fill = pd.Series([X[c].value_counts().index[0]
-                         if X[c].dtype == np.dtype('O')
-                         else X[c].median()
-                         if X[c].dtype == np.dtype('int')
-                         else X[c].mean()
-                         for c in X],
-                         index=X.columns)
-        return X.fillna(fill)
+        if self.fill is None:
+            self.fill = pd.Series([X[c].value_counts().index[0]
+                                   if X[c].dtype == np.dtype('O')
+                                   else X[c].median()
+                                   if X[c].dtype == np.dtype('int')
+                                   else X[c].mean()
+                                   for c in X],
+                                  index=X.columns)
+        return X.fillna(self.fill)
 
     {%- if encoded %}
     def encoder(self, X, has_encoder=True):

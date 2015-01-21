@@ -57,7 +57,10 @@ class SampleClass(object):
             {{ k }}={{ v }},
             {%- endif %}
         {%- endfor %}
-            random_state=self.random_state)
+        {%- if algorithm.estimator.__class__.__name__ != 'Ridge' %}
+            random_state=self.random_state
+        {%- endif %}
+        )
 
         self.clf.fit(X, y)
 

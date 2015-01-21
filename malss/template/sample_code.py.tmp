@@ -61,7 +61,6 @@ class SampleClass(object):
     def predict(self, X):
         if isinstance(X, np.ndarray):
             X = pd.DataFrame(X)
-            y = pd.Series(y)
 
         X = self.imputer(X)
         {%- if encoded %}

@@ -49,9 +49,7 @@
 			<li>Categorical values were encoded to integer features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features">one-of-K scheme</a>.</li>
 		</ul>
 		{%- endif %}
-	</ul>
-	{%- if data.col_was_null|length > 0 %}
-	<ul>
+		{%- if data.col_was_null|length > 0 %}
 		<li>Column {% for col in data.col_was_null %}{{ col }} {% endfor %}had NA values.</li>
 		<ul>
 			<li>NA values were filled in with the most frequent value (categorical), median (integer), mean (float).</li>
@@ -59,8 +57,10 @@
 			<li>See also: <a href="http://pandas.pydata.org/pandas-docs/stable/missing_data.html">missing data</a></li>
 			{%- endif %}
 		</ul>
+		{%- endif %}
+		<li>Data may contain features with a mixtures of scales for various quantities.<br>Many machine learning algorithms expect that features have the same scale.<br>For feature scaling, <a href="http://en.wikipedia.org/wiki/Feature_scaling#Standardization"><strong>standardization</strong></a> is used.<br>If you don't need feature scaling, set <i>standardize=False</i> in constructor.</li>
+		<li>Data shuffling is done to avoid overfitting. If you don't need data shuffling, set <i>shuffle=False</i> in constructor.</li>
 	</ul>
-	{%- endif %}
 	<hr>
 
 	{%- for algorithm in algorithms %}

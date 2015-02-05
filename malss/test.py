@@ -23,7 +23,7 @@ def test_classification_2classes_small():
                 n_jobs=3, lang='en').fit(X, y,
                                          'test_classification_2classes_small')
     cls.fit(X, y, 'test_classification_2classes_small')
-    cls.make_sample_code()
+    cls.generate_module_sample()
 
     from sklearn.metrics import f1_score
     pred = cls.predict(X)
@@ -45,7 +45,7 @@ def test_classification_multiclass_small():
     cls = MALSS('classification',
                 n_jobs=3).fit(X, y,
                               'test_classification_multiclass_small')
-    cls.make_sample_code()
+    cls.generate_module_sample()
 
     from sklearn.metrics import f1_score
     pred = cls.predict(X)
@@ -91,7 +91,7 @@ def test_classification_2classes_big():
     cls = MALSS('classification',
                 n_jobs=3).fit(X, y,
                               'test_classification_2classes_big')
-    cls.make_sample_code()
+    cls.generate_module_sample()
 
     from sklearn.metrics import f1_score
     pred = cls.predict(X)
@@ -112,7 +112,7 @@ def test_regression_small():
     cls = MALSS('regression',
                 n_jobs=3).fit(X, y,
                               'test_regression_small')
-    cls.make_sample_code()
+    cls.generate_module_sample()
 
     from sklearn.metrics import mean_squared_error
     pred = cls.predict(X)
@@ -133,7 +133,7 @@ def test_regression_medium():
     cls = MALSS('regression',
                 n_jobs=3).fit(X, y,
                               'test_regression_medium')
-    cls.make_sample_code()
+    cls.generate_module_sample()
 
     from sklearn.metrics import mean_squared_error
     pred = cls.predict(X)
@@ -152,9 +152,9 @@ def test_regression_big():
     X = pd.DataFrame(X)
     y = pd.Series(y)
     cls = MALSS('regression',
-                n_jobs=3).fit(X, y,
-                              'test_regression_big')
-    cls.make_sample_code()
+                n_jobs=3, lang='en').fit(X, y,
+                                         'test_regression_big')
+    cls.generate_module_sample()
 
     from sklearn.metrics import mean_squared_error
     pred = cls.predict(X)
@@ -175,7 +175,7 @@ def test_classification_categorical():
                 n_jobs=3, lang='en',
                 verbose=True).fit(data, y,
                                   'test_classification_categorical')
-    cls.make_sample_code()
+    cls.generate_module_sample()
 
     pred = cls.predict(data)
     from sklearn.metrics import f1_score
@@ -194,7 +194,7 @@ def test_ndarray():
 
     cls = MALSS('classification',
                 n_jobs=3).fit(np.array(data), np.array(y), 'test_ndarray')
-    cls.make_sample_code()
+    cls.generate_module_sample()
 
     from sklearn.metrics import f1_score
     pred = cls.predict(np.array(data))
@@ -248,4 +248,4 @@ def test_change_algorithms():
 
 
 if __name__ == "__main__":
-    test_classification_categorical()
+    test_regression_big()

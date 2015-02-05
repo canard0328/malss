@@ -55,7 +55,7 @@ class MALSS(object):
         lang : string (default='en')
             Specifies the language in the report. It must be one of
             'en' (English), 'jp' (Japanese).
-        verbos : boolean, default: True
+        verbose : boolean, default: True
             Enable verbose output.
         """
 
@@ -272,11 +272,18 @@ class MALSS(object):
         self : object
             Returns self.
         """
+        if self.verbose:
+            print 'Set data.'
         self.data = Data(self.shuffle, self.standardize, self.random_state)
         self.data.fit_transform(X, y)
 
         if not self.is_ready:
+            if self.verbose:
+                print 'Choose algorithm.'
             self.algorithms = self.__choose_algorithm()
+            if self.verbose:
+                for algorithm in self.algorithms:
+                    print '    %s' % algorithm.name
         self.is_ready = True
         if algorithm_selection_only:
             return self
@@ -291,13 +298,19 @@ class MALSS(object):
                                 shuffle=self.shuffle,
                                 random_state=self.random_state)
 
+        if self.verbose:
+            print 'Analyze. (take some time)'
         self.__tune_parameters()
         if self.task == 'classification':
             self.__report_classification_result()
 
         if dname is not None:
+            if self.verbose:
+                print 'Make report.'
             self.__make_report(dname)
 
+        if self.verbose:
+            print 'Done.'
         return self
 
     def predict(self, X):
@@ -416,19 +429,19 @@ class MALSS(object):
         html = tmpl.render(algorithms=self.algorithms,
                            scoring=scoring_name,
                            task=self.task,
-                           data=self.data,
-                           verbose=self.verbose).encode('utf-8')
+                           data=self.data).encode('utf-8')
         fo = open(dname + '/report.html', 'w')
         fo.write(html)
         fo.close()
 
-    def make_sample_code(self, fname='sample_code.py'):
+    def generate_module_sample(self, fname='module_sample.py'):
         """
-        Make a sample code
+        Generate a module sample to be able to add in the model
+        in your system for prediction.
 
         Parameters
         ----------
-        fname : string (default="sample_code.py")
+        fname : string (default="module_sample.py")
             A string containing a path to a output file.
         """
 

@@ -21,8 +21,10 @@
 		</tr>
 	{%- endfor %}
 	</table>
+	<br>
 
-	{%- if verbose %}
+	<details>
+	<summary><font size="+1"><strong>Descriptions (click here)</strong></font></summary>
 	<p>
 		<strong>* Cross-vaidation score:</strong>
 		<ul>
@@ -37,7 +39,7 @@
 			<li>You can select an appropriate scoring function from <a href="http://scikit-learn.org/stable/modules/model_evaluation.html">sklearn.metrics modules</a>.</br>(mean squared error for regression task or f1 score for classification task is selected by default.)</li>
 		</ul>
 	</p>
-	{%- endif %}
+	</details>
 	<hr>
 
 	<h2>Data summary <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
@@ -53,14 +55,17 @@
 		<li>Column {% for col in data.col_was_null %}{{ col }} {% endfor %}had NA values.</li>
 		<ul>
 			<li>NA values were filled in with the most frequent value (categorical), median (integer), mean (float).</li>
-			{%- if verbose %}
 			<li>See also: <a href="http://pandas.pydata.org/pandas-docs/stable/missing_data.html">missing data</a></li>
-			{%- endif %}
 		</ul>
 		{%- endif %}
-		<li>Data may contain features with a mixtures of scales for various quantities.<br>Many machine learning algorithms expect that features have the same scale.<br>For feature scaling, <a href="http://en.wikipedia.org/wiki/Feature_scaling#Standardization"><strong>standardization</strong></a> is used.<br>If you don't need feature scaling, set <i>standardize=False</i> in constructor.</li>
-		<li>Data shuffling is done to avoid overfitting. If you don't need data shuffling, set <i>shuffle=False</i> in constructor.</li>
 	</ul>
+	<details>
+	<summary><font size="+1"><strong>Descriptions (click here)</strong></font></summary>
+	<ul>
+		<li>Data may contain features with a mixtures of scales for various quantities.<br>Many machine learning algorithms expect that features have the same scale.<br>For feature scaling, <a href="http://en.wikipedia.org/wiki/Feature_scaling#Standardization"><strong>standardization</strong></a> is used in default settings.<br>If you don't need feature scaling, set <i>standardize=False</i> in constructor.</li>
+		<li>Data shuffling is done to avoid overfitting in default settings. If you don't need data shuffling, set <i>shuffle=False</i> in constructor.</li>
+	</ul>
+	</details>
 	<hr>
 
 	{%- for algorithm in algorithms %}
@@ -88,22 +93,22 @@
 		</tr>
 		{%- endfor %}
 	</table>
+	<br>
 
-	{%- if verbose %}
+	<details>
+	<summary><font size="+1"><strong>Descriptions (click here)</strong></font></summary>
 	<p>
 		<ul>
 			<li>If the best parameter is at the border of the grid, its range should be expanded.</li>
 			<li>Often a second, narrower grid is searched centered around the best parameters of the first grid.</li>
 		</ul>
 	</p>
-	{%- endif %}
+	</details>
 
 	{%- if task == "classification" %}
 	<h3>Classification report</h3>
 	<pre>{{ algorithm.classification_report }}</pre>
-	{%- if verbose %}
 	* <a href="http://scikit-learn.org/0.13/modules/generated/sklearn.metrics.precision_recall_fscore_support.html">precision, recall, f1-score, support</a>
-	{%- endif %}
 	<ul>
 		<li>Note that above scores were made by closed test (the training data is same as the test data).</li>
 		<li>Thus, the model may be overfitted.</li>
@@ -113,7 +118,8 @@
 	<h3>Learning curve</h3>
 	<img border="0" src="learning_curve_{{ algorithm.estimator.__class__.__name__ }}.png" height="300" alt="learning_curve">
 
-	{%- if verbose %}
+	<details>
+	<summary><font size="+1"><strong>Descriptions (click here)</strong></font></summary>
 	<p>
 		Learning curve
 		<ul>
@@ -145,12 +151,10 @@
 			<li><a href="http://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff">Bias-variance tradeoff</a></li>
 		</ul>
 	</p>
-	{%- endif %}
+	</details>
 
 	<hr>
 	{%- endfor %}
-	{%- if verbose %}
 	* much of the material in this report was adapted from <a href="http://www.astroml.org/sklearn_tutorial/practical.html">sklearn tutorials</a>.
-	{%- endif %}
 </body>
 </html>

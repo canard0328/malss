@@ -2,7 +2,7 @@
 
 
 class Algorithm(object):
-    def __init__(self, estimator, parameters, name):
+    def __init__(self, estimator, parameters, name, link=None):
         self.estimator = estimator
         self.parameters = parameters
         self.best_score = None
@@ -11,3 +11,4 @@ class Algorithm(object):
         self.grid_scores = None
         self.classification_report = None
         self.name = name
+        self.link = link

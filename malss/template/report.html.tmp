@@ -64,7 +64,11 @@
 	<hr>
 
 	{%- for algorithm in algorithms %}
+	{%- if algorithm.link is not none %}
+	<h2 id="{{ algorithm.name }}"><a href="{{ algorithm.link }}">{{ algorithm.name }}</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	{%- else %}
 	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	{%- endif %}
 	<h3>Parameter optimization by <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><strong>grid search</strong></a></h3>
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>

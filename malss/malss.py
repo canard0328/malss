@@ -95,7 +95,9 @@ class MALSS(object):
                             [{'kernel': ['rbf'],
                               'C': [1, 10, 100, 1000],
                               'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
-                            'Support Vector Machine (RBF Kernel)'))
+                            'Support Vector Machine (RBF Kernel)',
+                            ('http://scikit-learn.org/stable/modules/'
+                             'generated/sklearn.svm.SVC.html')))
                     algorithms.append(
                         Algorithm(
                             RandomForestClassifier(
@@ -104,29 +106,40 @@ class MALSS(object):
                             [{'n_estimators': [10, 100, 1000],
                               'max_features': [0.3, 0.6, 0.9],
                               'max_depth': [3, 7, None]}],
-                            'Random Forest'))
+                            'Random Forest',
+                            ('http://scikit-learn.org/stable/modules/'
+                             'generated/'
+                             'sklearn.ensemble.RandomForestClassifier.html')))
                 algorithms.append(
                     Algorithm(
                         LinearSVC(random_state=self.random_state),
                         [{'C': [0.1, 1, 10, 100]}],
-                        'Support Vector Machine (Linear Kernel)'))
+                        'Support Vector Machine (Linear Kernel)',
+                        ('http://scikit-learn.org/stable/modules/generated/'
+                         'sklearn.svm.LinearSVC.html')))
                 algorithms.append(
                     Algorithm(
                         LogisticRegression(random_state=self.random_state),
                         [{'penalty': ['l2', 'l1'],
                           'C': [0.1, 0.3, 1, 3, 10],
                           'class_weight': [None, 'auto']}],
-                        'Logistic Regression'))
+                        'Logistic Regression',
+                        ('http://scikit-learn.org/stable/modules/generated/'
+                         'sklearn.linear_model.LogisticRegression.html')))
                 algorithms.append(
                     Algorithm(
                         DecisionTreeClassifier(random_state=self.random_state),
                         [{'max_depth': [3, 5, 7, 9, 11]}],
-                        'Decision Tree'))
+                        'Decision Tree',
+                        ('http://scikit-learn.org/stable/modules/generated/'
+                         'sklearn.tree.DecisionTreeClassifier.html')))
                 algorithms.append(
                     Algorithm(
                         KNeighborsClassifier(),
                         [{'n_neighbors': [2, 6, 10, 14, 18]}],
-                        'k-Nearest Neighbors'))
+                        'k-Nearest Neighbors',
+                        ('http://scikit-learn.org/stable/modules/generated/'
+                         'sklearn.neighbors.KNeighborsClassifier.html')))
             else:
                 algorithms.append(
                     Algorithm(
@@ -137,7 +150,9 @@ class MALSS(object):
                           'penalty': ['l2', 'l1'],
                           'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03],
                           'class_weight': [None, 'auto']}],
-                        'SGD Classifier'))
+                        'SGD Classifier',
+                        ('http://scikit-learn.org/stable/modules/generated/'
+                         'sklearn.linear_model.SGDClassifier.html')))
         if self.task == 'regression':
             if self.data.X.shape[0] * self.data.X.shape[1] <= 1e+06:
                 if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
@@ -147,7 +162,9 @@ class MALSS(object):
                             [{'kernel': ['rbf'],
                               'C': [1, 10, 100, 1000],
                               'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
-                            'Support Vector Machine (RBF Kernel)'))
+                            'Support Vector Machine (RBF Kernel)',
+                            ('http://scikit-learn.org/stable/modules/'
+                             'generated/sklearn.svm.SVR.html')))
                     algorithms.append(
                         Algorithm(
                             RandomForestRegressor(
@@ -156,18 +173,25 @@ class MALSS(object):
                             [{'n_estimators': [10, 100, 1000],
                               'max_features': [0.3, 0.6, 0.9],
                               'max_depth': [3, 7, None]}],
-                            'Random Forest'))
+                            'Random Forest',
+                            ('http://scikit-learn.org/stable/modules/'
+                             'generated/'
+                             'sklearn.ensemble.RandomForestRegressor.html')))
                 algorithms.append(
                     Algorithm(
                         Ridge(),
                         [{'alpha':
                             [0.01, 0.1, 1, 10, 100]}],
-                        'Ridge Regression'))
+                        'Ridge Regression',
+                        ('http://scikit-learn.org/stable/modules/generated/'
+                         'sklearn.linear_model.Ridge.html')))
                 algorithms.append(
                     Algorithm(
                         DecisionTreeRegressor(random_state=self.random_state),
                         [{'max_depth': [3, 5, 7, 9, 11]}],
-                        'Decision Tree'))
+                        'Decision Tree',
+                        ('http://scikit-learn.org/stable/modules/generated/'
+                         'sklearn.tree.DecisionTreeRegressor.html')))
             else:
                 algorithms.append(
                     Algorithm(
@@ -175,7 +199,9 @@ class MALSS(object):
                             random_state=self.random_state),
                         [{'penalty': ['l2', 'l1'],
                           'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
-                        'SGD Regressor'))
+                        'SGD Regressor',
+                        ('http://scikit-learn.org/stable/modules/generated/'
+                         'sklearn.linear_model.SGDRegressor.html')))
         return algorithms
 
     def add_algorithm(self, estimator, param_grid, name):

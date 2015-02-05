@@ -42,7 +42,7 @@ Classification:
   iris = load_iris()
   clf = MALSS('classification')
   clf.fit(iris.data, iris.target, 'classification_result')
-  clf.make_sample_code('classification_sample_code.py')
+  clf.generate_module_sample('classification_module_sample.py')
 
 Regression:
 
@@ -53,7 +53,7 @@ Regression:
   boston = load_boston()
   clf = MALSS('regression')
   clf.fit(boston.data, boston.target, 'regression_result')
-  clf.make_sample_code('regression_sample_code.py')
+  clf.generate_module_sample('regression_module_sample.py')
 
 Change algorithm:
 
@@ -73,7 +73,7 @@ Change algorithm:
                       'max_features': [0.3, 0.6, 'auto']}],
                     'Random Forest')
   clf.fit(iris.data, iris.target, 'classification_result')
-  clf.make_sample_code('classification_sample_code.py')
+  clf.generate_module_sample('classification_module_sample.py')
 
 API
 ***

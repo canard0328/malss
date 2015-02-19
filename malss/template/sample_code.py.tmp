@@ -22,6 +22,10 @@ from sklearn.linear_model import Ridge
 from sklearn.linear_model import SGDRegressor
 {%- elif algorithm.estimator.__class__.__name__ == 'SGDClassifier' %}
 from sklearn.linear_model import SGDClassifier
+{%- elif algorithm.estimator.__class__.__name__ == 'RandomForestRegressor' %}
+from sklearn.ensemble import RandomForestRegressor
+{%- elif algorithm.estimator.__class__.__name__ == 'RandomForestClassifier' %}
+from sklearn.ensemble import RandomForestClassifier
 {%- endif %}
 
 
@@ -54,7 +58,10 @@ class SampleClass(object):
             {{ k }}={{ v }},
             {%- endif %}
         {%- endfor %}
-            random_state=self.random_state)
+        {%- if algorithm.estimator.__class__.__name__ != 'Ridge' %}
+            random_state=self.random_state
+        {%- endif %}
+        )
 
         self.clf.fit(X, y)
 

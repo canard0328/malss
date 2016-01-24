@@ -22,7 +22,7 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
 
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION numpy scipy matplotlib nose pandas scikit-learn jinja2
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION setuptools numpy scipy matplotlib nose pandas scikit-learn jinja2
   - source activate test-environment
   - python setup.py install
 

@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from __future__ import print_function
 from distutils.version import LooseVersion
 
 try:
     from setuptools import setup, find_packages
 except ImportError:
-    print 'setuptools is required.'
+    print('setuptools is required.')
     sys.exit()
 
-if sys.version_info < (2, 7):
-    print 'python >= 2.7 is required.'
+if sys.version_info.major == 2 and sys.version_info < (2, 7):
+    print('python >= 2.7 is required.')
+    sys.exit()
+elif sys.version_info.major == 3 and sys.version_info < (3, 4):
+    print('python >= 3.4 is required.')
     sys.exit()
 
 try:
@@ -21,31 +25,31 @@ try:
     import pandas
     import jinja2
 except ImportError as inst:
-    print inst
+    print(inst)
     sys.exit()
 
-if LooseVersion(numpy.__version__) < LooseVersion('1.6.1'):
-    print 'numpy >= 1.6.1 is required'
+if LooseVersion(numpy.__version__) < LooseVersion('1.10.2'):
+    print('numpy >= 1.10.2 is required')
     sys.exit()
 
-if LooseVersion(scipy.__version__) < LooseVersion('0.9'):
-    print 'scipy >= 0.9 is required'
+if LooseVersion(scipy.__version__) < LooseVersion('0.16.1'):
+    print('scipy >= 0.16.1 is required')
     sys.exit()
 
-if LooseVersion(sklearn.__version__) < LooseVersion('0.15'):
-    print 'sklearn >= 0.15 is required'
+if LooseVersion(sklearn.__version__) < LooseVersion('0.17'):
+    print('sklearn >= 0.17 is required')
     sys.exit()
 
-if LooseVersion(matplotlib.__version__) < LooseVersion('1.1'):
-    print 'matplotlib >= 1.1 is required'
+if LooseVersion(matplotlib.__version__) < LooseVersion('1.5.1'):
+    print('matplotlib >= 1.5.1 is required')
     sys.exit()
 
-if LooseVersion(pandas.__version__) < LooseVersion('0.13'):
-    print 'pandas >= 0.13 is required'
+if LooseVersion(pandas.__version__) < LooseVersion('0.14.1'):
+    print('pandas >= 0.14.1 is required')
     sys.exit()
 
-if LooseVersion(jinja2.__version__) < LooseVersion('2.6'):
-    print 'jinja2 >= 2.6 is required'
+if LooseVersion(jinja2.__version__) < LooseVersion('2.8'):
+    print('jinja2 >= 2.8 is required')
     sys.exit()
 
 

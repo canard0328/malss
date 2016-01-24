@@ -5,13 +5,15 @@ import os
 import io
 import numpy as np
 import multiprocessing
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from jinja2 import Environment, FileSystemLoader
 from sklearn.cross_validation import StratifiedKFold, KFold
 from sklearn.grid_search import GridSearchCV
 from sklearn.learning_curve import learning_curve
 from sklearn.svm import SVC, LinearSVC, SVR
-from sklearn.metrics import classification_report, f1_score
+from sklearn.metrics import classification_report
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\

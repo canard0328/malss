@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import sys
 from __future__ import print_function
+import sys
 from distutils.version import LooseVersion
 
 try:

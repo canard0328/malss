@@ -93,8 +93,8 @@ class SampleClass(object):
     def encoder(self, X, has_encoder=True):
         del_columns = []
         if not has_encoder:
-            self.encs = [None for i in xrange(len(X.columns))]
-        for i in xrange(len(X.columns)):
+            self.encs = [None for i in range(len(X.columns))]
+        for i in range(len(X.columns)):
             if X.dtypes[i] == np.dtype('O'):
                 if not has_encoder:
                     self.encs[i] = LabelEncoder().fit(X.icol(i))

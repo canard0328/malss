@@ -70,7 +70,7 @@ class Data(object):
             self._onehot_encoder = [None] * len(Xenc.columns)
 
         del_columns = []
-        for i in xrange(len(Xenc.columns)):
+        for i in range(len(Xenc.columns)):
             if Xenc.dtypes[i] == np.dtype('O'):
                 if self._label_encoder[i] is None:
                     self._label_encoder[i] = LabelEncoder().fit(Xenc.icol(i))

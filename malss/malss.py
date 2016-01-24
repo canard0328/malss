@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import os
+import io
 import numpy as np
 import multiprocessing
 import matplotlib.pyplot as plt
@@ -75,7 +77,7 @@ class MALSS(object):
         self.lang = lang
         self.minimized_score = False
         if task == 'classification':
-            self.scoring = 'f1' if scoring is None else scoring
+            self.scoring = 'f1_weighted' if scoring is None else scoring
         elif task == 'regression':
             self.scoring = 'mean_squared_error' if scoring is None else scoring
             if self.scoring == 'mean_squared_error' or\
@@ -122,7 +124,7 @@ class MALSS(object):
                         LogisticRegression(random_state=self.random_state),
                         [{'penalty': ['l2', 'l1'],
                           'C': [0.1, 0.3, 1, 3, 10],
-                          'class_weight': [None, 'auto']}],
+                          'class_weight': [None, 'balanced']}],
                         'Logistic Regression',
                         ('http://scikit-learn.org/stable/modules/generated/'
                          'sklearn.linear_model.LogisticRegression.html')))
@@ -149,7 +151,7 @@ class MALSS(object):
                         [{'loss': ['hinge', 'log'],
                           'penalty': ['l2', 'l1'],
                           'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03],
-                          'class_weight': [None, 'auto']}],
+                          'class_weight': [None, 'balanced']}],
                         'SGD Classifier',
                         ('http://scikit-learn.org/stable/modules/generated/'
                          'sklearn.linear_model.SGDClassifier.html')))
@@ -158,7 +160,7 @@ class MALSS(object):
                 if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
                     algorithms.append(
                         Algorithm(
-                            SVR(random_state=self.random_state),
+                            SVR(),
                             [{'kernel': ['rbf'],
                               'C': [1, 10, 100, 1000],
                               'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
@@ -221,6 +223,8 @@ class MALSS(object):
         name : string
             Algorithm name (used for report)
         """
+        if self.verbose:
+            print('add %s' % name)
         self.algorithms.append(Algorithm(estimator, param_grid, name))
 
     def remove_algorithm(self, index=-1):
@@ -233,6 +237,8 @@ class MALSS(object):
             Remove an algorithm from list by index.
             By default, last algorithm is removed.
         """
+        if self.verbose:
+            print('remove %s' % self.algorithms[index].name)
         del self.algorithms[index]
 
     def get_algorithms(self):
@@ -273,17 +279,17 @@ class MALSS(object):
             Returns self.
         """
         if self.verbose:
-            print 'Set data.'
+            print('Set data.')
         self.data = Data(self.shuffle, self.standardize, self.random_state)
         self.data.fit_transform(X, y)
 
         if not self.is_ready:
             if self.verbose:
-                print 'Choose algorithm.'
+                print('Choose algorithm.')
             self.algorithms = self.__choose_algorithm()
             if self.verbose:
                 for algorithm in self.algorithms:
-                    print '    %s' % algorithm.name
+                    print('    %s' % algorithm.name)
         self.is_ready = True
         if algorithm_selection_only:
             return self
@@ -299,18 +305,18 @@ class MALSS(object):
                                 random_state=self.random_state)
 
         if self.verbose:
-            print 'Analyze. (take some time)'
+            print('Analyze. (take some time)')
         self.__tune_parameters()
         if self.task == 'classification':
             self.__report_classification_result()
 
         if dname is not None:
             if self.verbose:
-                print 'Make report.'
+                print('Make report.')
             self.__make_report(dname)
 
         if self.verbose:
-            print 'Done.'
+            print('Done.')
         return self
 
     def predict(self, X):
@@ -324,24 +330,25 @@ class MALSS(object):
         if self.minimized_score:
             sign = -1.0
             self.best_score = float('Inf')
-        for i in xrange(len(self.algorithms)):
+        for i in range(len(self.algorithms)):
             if sign * self.algorithms[i].best_score > sign * self.best_score:
                 self.best_score = self.algorithms[i].best_score
                 self.best_index = i
         self.algorithms[self.best_index].is_best_algorithm = True
 
     def __tune_parameters(self):
-        for i in xrange(len(self.algorithms)):
+        for i in range(len(self.algorithms)):
+            if self.verbose:
+                print('    %s' % self.algorithms[i].name)
             estimator = self.algorithms[i].estimator
             parameters = self.algorithms[i].parameters
-            sc = f1score if self.scoring == 'f1' else self.scoring
             clf = GridSearchCV(
-                estimator, parameters, cv=self.cv, scoring=sc,
-                n_jobs=self.n_jobs)
+                estimator, parameters, cv=self.cv, scoring=self.scoring,
+                n_jobs=1)  # parallel run in cross validation
             clf.fit(self.data.X, self.data.y)
             if self.minimized_score:
                 clf.best_score_ *= -1.0
-                for j in xrange(len(clf.grid_scores_)):
+                for j in range(len(clf.grid_scores_)):
                     clf.grid_scores_[j] = (clf.grid_scores_[j][0],
                                            -1.0 * clf.grid_scores_[j][1],
                                            -1.0 * clf.grid_scores_[j][2])
@@ -353,22 +360,23 @@ class MALSS(object):
         self.__search_best_algorithm()
 
     def __report_classification_result(self):
-        for i in xrange(len(self.algorithms)):
+        for i in range(len(self.algorithms)):
             est = self.algorithms[i].estimator
             self.algorithms[i].classification_report =\
                 classification_report(self.data.y, est.predict(self.data.X))
 
     def __plot_learning_curve(self, dname=None):
         for alg in self.algorithms:
+            if self.verbose:
+                print('    %s' % alg.name)
             estimator = alg.estimator
-            sc = f1score if self.scoring == 'f1' else self.scoring
             train_sizes, train_scores, test_scores = learning_curve(
                 estimator,
                 self.data.X,
                 self.data.y,
                 cv=self.cv,
-                scoring=sc,
-                n_jobs=self.n_jobs)
+                scoring=self.scoring,
+                n_jobs=1)  # parallel run in cross validation
             if self.minimized_score:
                 train_scores *= -1.0
                 test_scores *= -1.0
@@ -430,8 +438,8 @@ class MALSS(object):
                            scoring=scoring_name,
                            task=self.task,
                            data=self.data).encode('utf-8')
-        fo = open(dname + '/report.html', 'w')
-        fo.write(html)
+        fo = io.open(dname + '/report.html', 'w', encoding='utf-8')
+        fo.write(html.decode('utf-8'))
         fo.close()
 
     def generate_module_sample(self, fname='module_sample.py'):
@@ -454,13 +462,9 @@ class MALSS(object):
         html = tmpl.render(algorithm=self.algorithms[self.best_index],
                            encoded=encoded,
                            standardize=self.standardize).encode('utf-8')
-        fo = open(fname, 'w')
-        fo.write(html)
+        fo = io.open(fname, 'w', encoding='utf-8')
+        fo.write(html.decode('utf-8'))
         fo.close()
-
-
-def f1score(estimator, X, y):
-    return f1_score(y, estimator.predict(X), average=None).mean()
 
 
 if __name__ == "__main__":

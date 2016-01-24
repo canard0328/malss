@@ -5,6 +5,7 @@ import sys, os
 from distutils.version import LooseVersion
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/malss')
+print(sys.path)
 
 try:
     from setuptools import setup, find_packages

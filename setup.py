@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-import sys, os
+import sys 
 from distutils.version import LooseVersion
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/malss')
-print(sys.path)
 
 try:
     from setuptools import setup, find_packages

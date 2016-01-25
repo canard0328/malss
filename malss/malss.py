@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from __future__ import absolute_import
 import os
 import io
 import numpy as np
@@ -20,8 +21,8 @@ from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\
     SGDClassifier
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 
-from algorithm import Algorithm
-from data import Data
+from .algorithm import Algorithm
+from .data import Data
 
 
 class MALSS(object):

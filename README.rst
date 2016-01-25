@@ -12,13 +12,13 @@ Requirements
 
 These are external packages which you will need to install before installing malss.
 
-* python (>= 2.7, 3.x's are not supported)
-* numpy (>= 1.6.1)
-* scipy (>= 0.9)
-* scikit-learn (>= 0.15)
-* matplotlib (>= 1.1)
-* pandas (>= 0.13)
-* jinja2 (>= 2.6)
+* python (>= 2.7 or >= 3.4)
+* numpy (>= 1.10.2)
+* scipy (>= 0.16.1)
+* scikit-learn (>= 0.17)
+* matplotlib (>= 1.5.1)
+* pandas (>= 0.14.1)
+* jinja2 (>= 2.8)
 
 **Windows**
 

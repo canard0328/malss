@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
+from __future__ import absolute_import
 from sklearn.datasets.samples_generator import make_classification,\
     make_regression
-from malss import MALSS
+from .malss import MALSS
 import pandas as pd
 from nose.plugins.attrib import attr
 import numpy as np

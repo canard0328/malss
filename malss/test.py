@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+from __future__ import absolute_import
 from sklearn.datasets.samples_generator import make_classification,\
     make_regression
-from malss import MALSS
+from .malss import MALSS
 import pandas as pd
 from nose.plugins.attrib import attr
 import numpy as np
@@ -12,22 +14,37 @@ def test_classification_2classes_small():
     X, y = make_classification(n_samples=1000,
                                n_features=10,
                                n_classes=2,
-                               n_informative=2,
-                               n_redundant=0,
-                               n_repeated=0,
-                               weights=[0.7, 0.3],
+                               n_clusters_per_class=1,
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification',
-                n_jobs=3, lang='en').fit(X, y,
-                                         'test_classification_2classes_small')
-    cls.fit(X, y, 'test_classification_2classes_small')
+    cls = MALSS('classification').fit(X, y,
+                                      'test_classification_2classes_small')
     cls.generate_module_sample()
 
     from sklearn.metrics import f1_score
     pred = cls.predict(X)
-    print f1_score(y, pred, average=None)
+    print(f1_score(y, pred, average=None))
+
+    assert len(cls.algorithms) == 6
+    assert cls.algorithms[0].best_score is not None
+
+
+def test_classification_2classes_small_jp():
+    X, y = make_classification(n_samples=1000,
+                               n_features=10,
+                               n_classes=2,
+                               n_clusters_per_class=1,
+                               random_state=0)
+    X = pd.DataFrame(X)
+    y = pd.Series(y)
+    cls = MALSS('classification',
+                lang='jp').fit(X, y, 'test_classification_2classes_small_jp')
+    cls.generate_module_sample()
+
+    from sklearn.metrics import f1_score
+    pred = cls.predict(X)
+    print(f1_score(y, pred, average=None))
 
     assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
@@ -35,21 +52,19 @@ def test_classification_2classes_small():
 
 def test_classification_multiclass_small():
     X, y = make_classification(n_samples=1000,
-                               n_features=20,
+                               n_features=10,
                                n_classes=3,
-                               n_informative=10,
-                               weights=[0.6, 0.2, 0.2],
+                               n_clusters_per_class=1,
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification',
-                n_jobs=3).fit(X, y,
-                              'test_classification_multiclass_small')
+    cls = MALSS('classification').fit(X, y,
+                                      'test_classification_multiclass_small')
     cls.generate_module_sample()
 
     from sklearn.metrics import f1_score
     pred = cls.predict(X)
-    print f1_score(y, pred, average=None)
+    print(f1_score(y, pred, average=None))
 
     assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
@@ -60,20 +75,16 @@ def test_classification_2classes_medium():
     X, y = make_classification(n_samples=100000,
                                n_features=10,
                                n_classes=2,
-                               n_informative=2,
-                               n_redundant=0,
-                               n_repeated=0,
-                               weights=[0.7, 0.3],
+                               n_clusters_per_class=1,
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification',
-                n_jobs=3).fit(X, y,
-                              'test_classification_2classes_medium')
+    cls = MALSS('classification').fit(X, y,
+                                      'test_classification_2classes_medium')
 
     from sklearn.metrics import f1_score
     pred = cls.predict(X)
-    print f1_score(y, pred, average=None)
+    print(f1_score(y, pred, average=None))
 
     assert len(cls.algorithms) == 4
     assert cls.algorithms[0].best_score is not None
@@ -83,19 +94,17 @@ def test_classification_2classes_big():
     X, y = make_classification(n_samples=200000,
                                n_features=20,
                                n_classes=2,
-                               n_informative=3,
-                               weights=[0.7, 0.3],
+                               n_clusters_per_class=1,
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification',
-                n_jobs=3).fit(X, y,
-                              'test_classification_2classes_big')
+    cls = MALSS('classification').fit(X, y,
+                                      'test_classification_2classes_big')
     cls.generate_module_sample()
 
     from sklearn.metrics import f1_score
     pred = cls.predict(X)
-    print f1_score(y, pred, average=None)
+    print(f1_score(y, pred, average=None))
 
     assert len(cls.algorithms) == 1
     assert cls.algorithms[0].best_score is not None
@@ -109,14 +118,12 @@ def test_regression_small():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('regression',
-                n_jobs=3).fit(X, y,
-                              'test_regression_small')
+    cls = MALSS('regression').fit(X, y, 'test_regression_small')
     cls.generate_module_sample()
 
     from sklearn.metrics import mean_squared_error
     pred = cls.predict(X)
-    print mean_squared_error(y, pred)
+    print(mean_squared_error(y, pred))
 
     assert len(cls.algorithms) == 4
     assert cls.algorithms[0].best_score is not None
@@ -130,14 +137,12 @@ def test_regression_medium():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('regression',
-                n_jobs=3).fit(X, y,
-                              'test_regression_medium')
+    cls = MALSS('regression').fit(X, y, 'test_regression_medium')
     cls.generate_module_sample()
 
     from sklearn.metrics import mean_squared_error
     pred = cls.predict(X)
-    print mean_squared_error(y, pred)
+    print(mean_squared_error(y, pred))
 
     assert len(cls.algorithms) == 2
     assert cls.algorithms[0].best_score is not None
@@ -151,14 +156,12 @@ def test_regression_big():
                            random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('regression',
-                n_jobs=3, lang='en').fit(X, y,
-                                         'test_regression_big')
+    cls = MALSS('regression').fit(X, y, 'test_regression_big')
     cls.generate_module_sample()
 
     from sklearn.metrics import mean_squared_error
     pred = cls.predict(X)
-    print mean_squared_error(y, pred)
+    print(mean_squared_error(y, pred))
 
     assert len(cls.algorithms) == 1
     assert cls.algorithms[0].best_score is not None
@@ -171,15 +174,13 @@ def test_classification_categorical():
     y = data['AHD']
     del data['AHD']
 
-    cls = MALSS('classification',
-                n_jobs=3, lang='en',
-                verbose=True).fit(data, y,
-                                  'test_classification_categorical')
+    cls = MALSS('classification').fit(data, y,
+                                      'test_classification_categorical')
     cls.generate_module_sample()
 
     pred = cls.predict(data)
     from sklearn.metrics import f1_score
-    print f1_score(y, pred, average=None)
+    print(f1_score(y, pred, average=None))
 
     assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
@@ -192,13 +193,13 @@ def test_ndarray():
     y = data['AHD']
     del data['AHD']
 
-    cls = MALSS('classification',
-                n_jobs=3).fit(np.array(data), np.array(y), 'test_ndarray')
+    cls = MALSS('classification').fit(np.array(data), np.array(y),
+                                      'test_ndarray')
     cls.generate_module_sample()
 
     from sklearn.metrics import f1_score
     pred = cls.predict(np.array(data))
-    print f1_score(y, pred, average=None)
+    print(f1_score(y, pred, average=None))
 
     assert len(cls.algorithms) == 6
     assert cls.algorithms[0].best_score is not None
@@ -208,10 +209,7 @@ def test_change_algorithms():
     X, y = make_classification(n_samples=1000,
                                n_features=10,
                                n_classes=2,
-                               n_informative=2,
-                               n_redundant=0,
-                               n_repeated=0,
-                               weights=[0.7, 0.3],
+                               n_clusters_per_class=1,
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
@@ -248,4 +246,4 @@ def test_change_algorithms():
 
 
 if __name__ == "__main__":
-    test_regression_big()
+    test_change_algorithms()

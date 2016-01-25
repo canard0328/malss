@@ -73,8 +73,8 @@ class Data(object):
         for i in range(len(Xenc.columns)):
             if Xenc.dtypes[i] == np.dtype('O'):
                 if self._label_encoder[i] is None:
-                    self._label_encoder[i] = LabelEncoder().fit(Xenc.icol(i))
-                col_enc = self._label_encoder[i].transform(Xenc.icol(i))
+                    self._label_encoder[i] = LabelEncoder().fit(Xenc.iloc[:,i])
+                col_enc = self._label_encoder[i].transform(Xenc.iloc[:,i])
                 if self._onehot_encoder[i] is None:
                     self._onehot_encoder[i] = OneHotEncoder().fit(
                         col_enc.reshape(-1, 1))

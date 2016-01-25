@@ -61,6 +61,7 @@ Change algorithm:
 
   from malss import MALSS
   from sklearn.datasets import load_iris
+  from sklearn.ensemble import RandomForestClassifier as RF
   iris = load_iris()
   clf = MALSS('classification')
   clf.fit(iris.data, iris.target, algorithm_selection_only=True)

@@ -54,6 +54,7 @@ docs/_build/
 target/
 
 *.txt
+!LICENSE.txt
 *.png
 *.html
 test*/

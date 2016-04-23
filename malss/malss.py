@@ -79,6 +79,7 @@ class MALSS(object):
             raise ValueError('lang:%s is no supported' % lang)
         self.lang = lang
         self.minimized_score = False
+        self.algorithms = []
         if task == 'classification':
             self.scoring = 'f1_weighted' if scoring is None else scoring
         elif task == 'regression':

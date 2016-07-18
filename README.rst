@@ -20,13 +20,17 @@ These are external packages which you will need to install before installing mal
 * pandas (>= 0.14.1)
 * jinja2 (>= 2.8)
 
-**Windows**
-
-If there are no binary packages matching your Python version you might to try to install these dependencies from `Christoph Gohlke Unofficial Windows installers <http://www.lfd.uci.edu/~gohlke/pythonlibs/>`_.
+I highly recommend `Anaconda <https://www.continuum.io/downloads>`_.
+Anaconda conveniently installs packages listed above.
 
 Installation
 ************
-::
+
+Do not install package dependencies::
+
+  pip install --no-deps malss
+
+Install package dependencies::
 
   pip install malss
 

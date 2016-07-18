@@ -91,3 +91,7 @@ data/
 .DS_Store
 module_sample.py
 *.swp
+
+# Pycharm project settings
+.idea/
+

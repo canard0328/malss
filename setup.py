@@ -18,40 +18,30 @@ elif sys.version_info.major == 3 and sys.version_info < (3, 4):
     print('python >= 3.4 is required.')
     sys.exit()
 
-try:
-    import numpy
-    import scipy
-    import sklearn
-    import matplotlib
-    import pandas
-    import jinja2
-except ImportError as inst:
-    print(inst)
-    sys.exit()
+import numpy
+import scipy
+import sklearn
+import matplotlib
+import pandas
+import jinja2
 
 if LooseVersion(numpy.__version__) < LooseVersion('1.10.2'):
-    print('numpy >= 1.10.2 is required')
-    sys.exit()
+    raise ImportError('numpy >= 1.10.2 is required')
 
 if LooseVersion(scipy.__version__) < LooseVersion('0.16.1'):
-    print('scipy >= 0.16.1 is required')
-    sys.exit()
+    raise ImportError('scipy >= 0.16.1 is required')
 
 if LooseVersion(sklearn.__version__) < LooseVersion('0.17'):
-    print('sklearn >= 0.17 is required')
-    sys.exit()
+    raise ImportError('sklearn >= 0.17 is required')
 
 if LooseVersion(matplotlib.__version__) < LooseVersion('1.5.1'):
-    print('matplotlib >= 1.5.1 is required')
-    sys.exit()
+    raise ImportError('matplotlib >= 1.5.1 is required')
 
 if LooseVersion(pandas.__version__) < LooseVersion('0.14.1'):
-    print('pandas >= 0.14.1 is required')
-    sys.exit()
+    raise ImportError('pandas >= 0.14.1 is required')
 
 if LooseVersion(jinja2.__version__) < LooseVersion('2.8'):
-    print('jinja2 >= 2.8 is required')
-    sys.exit()
+    raise ImportError('jinja2 >= 2.8 is required')
 
 
 PACKAGE = "malss"
@@ -76,12 +66,20 @@ setup(
     license=LICENSE,
     url=URL,
     packages=["malss"],
+    install_requires=[
+        'numpy>=1.10.2',
+        'scipy>=0.16.1',
+        'scikit-learn>=0.17',
+        'matplotlib>=1.5.1',
+        'pandas>=0.14.1',
+        'jinja2>=2.8'
+        ],
     include_package_data=True,
     package_data={"malss": ["template/report.html.tmp",
                             "template/report_jp.html.tmp",
                             "template/sample_code.py.tmp"]},
     classifiers=[
-        "Development Status :: 1 - Planning",
+        "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",

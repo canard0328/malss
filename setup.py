@@ -18,8 +18,12 @@ elif sys.version_info.major == 3 and sys.version_info < (3, 4):
     print('python >= 3.4 is required.')
     sys.exit()
 
-import numpy
-import scipy
+try:
+    import numpy
+    import scipy
+except ImportError as inst:
+    print(inst)
+    sys.exit()
 import sklearn
 import matplotlib
 import pandas
@@ -67,8 +71,6 @@ setup(
     url=URL,
     packages=["malss"],
     install_requires=[
-        'numpy>=1.10.2',
-        'scipy>=0.16.1',
         'scikit-learn>=0.17',
         'matplotlib>=1.5.1',
         'pandas>=0.14.1',

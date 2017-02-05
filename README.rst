@@ -26,13 +26,11 @@ Anaconda conveniently installs packages listed above.
 Installation
 ************
 
-Do not install package dependencies::
-
-  pip install --no-deps malss
-
-Install package dependencies::
+If you already have a working installation of numpy and scipy:
 
   pip install malss
+
+If you have not installed numpy or scipy yet, you can also install these using pip.
 
 Example
 *******

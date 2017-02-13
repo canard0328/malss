@@ -36,7 +36,7 @@ if LooseVersion(scipy.__version__) < LooseVersion('0.16.1'):
     raise ImportError('scipy >= 0.16.1 is required')
 
 if LooseVersion(sklearn.__version__) < LooseVersion('0.17'):
-    raise ImportError('sklearn >= 0.17 is required')
+    raise ImportError('sklearn >= 0.18 is required')
 
 if LooseVersion(matplotlib.__version__) < LooseVersion('1.5.1'):
     raise ImportError('matplotlib >= 1.5.1 is required')
@@ -52,7 +52,7 @@ PACKAGE = "malss"
 NAME = "malss"
 DESCRIPTION = "MALSS: MAchine Learning Support System"
 AUTHOR = __import__(PACKAGE).__author__
-AUTHOR_EMAIL = "https://github.com/canard0328/malss/"
+AUTHOR_EMAIL = "malss@malss.com"
 URL = "https://github.com/canard0328/malss/"
 VERSION = __import__(PACKAGE).__version__
 LICENSE = __import__(PACKAGE).__license__
@@ -71,7 +71,7 @@ setup(
     url=URL,
     packages=["malss"],
     install_requires=[
-        'scikit-learn>=0.17',
+        'scikit-learn>=0.18',
         'matplotlib>=1.5.1',
         'pandas>=0.14.1',
         'jinja2>=2.8'

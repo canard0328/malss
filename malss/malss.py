@@ -4,15 +4,17 @@ from __future__ import print_function
 from __future__ import absolute_import
 import os
 import io
+import warnings
 import numpy as np
 import multiprocessing
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from jinja2 import Environment, FileSystemLoader
-from sklearn.cross_validation import StratifiedKFold, KFold
-from sklearn.grid_search import GridSearchCV
-from sklearn.learning_curve import learning_curve
+from sklearn.model_selection import StratifiedKFold, KFold
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import learning_curve
+from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC, LinearSVC, SVR
 from sklearn.metrics import classification_report
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
@@ -20,6 +22,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\
     SGDClassifier
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.exceptions import UndefinedMetricWarning
 
 from .algorithm import Algorithm
 from .data import Data
@@ -27,7 +30,7 @@ from .data import Data
 
 class MALSS(object):
     def __init__(self, task, shuffle=True, standardize=True, scoring=None,
-                 cv=5, n_jobs=-1, random_state=0, lang='en', verbose=True):
+                 cv=3, n_jobs=-1, random_state=0, lang='en', verbose=True):
         """
         Initialize parameters.
 
@@ -51,7 +54,7 @@ class MALSS(object):
             K-fold cv (for regression task) or Stratified k-fold cv
             (for classification task) is used by default.
             Specific cross-validation objects can be passed, see
-            sklearn.cross_validation module for the list of possible objects.
+            sklearn.model_selection module for the list of possible objects.
         n_jobs : integer, optional (default=1)
             The number of jobs to run in parallel. If -1, then the number of
             jobs is set to the number of cores - 1.
@@ -78,17 +81,15 @@ class MALSS(object):
         if lang != 'en' and lang != 'jp':
             raise ValueError('lang:%s is no supported' % lang)
         self.lang = lang
-        self.minimized_score = False
         self.algorithms = []
         if task == 'classification':
             self.scoring = 'f1_weighted' if scoring is None else scoring
         elif task == 'regression':
-            self.scoring = 'mean_squared_error' if scoring is None else scoring
-            if self.scoring == 'mean_squared_error' or\
-               self.scoring == 'mean_absolute_error':
-                self.minimized_score = True
+            self.scoring = 'neg_mean_squared_error' if scoring is None else scoring
         else:
             raise ValueError('task:%s is not supported' % task)
+
+        warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
 
     def __choose_algorithm(self):
         algorithms = []
@@ -109,7 +110,7 @@ class MALSS(object):
                             RandomForestClassifier(
                                 random_state=self.random_state,
                                 n_jobs=self.n_jobs),
-                            [{'n_estimators': [10, 100, 1000],
+                            [{'n_estimators': [10, 100, 500],
                               'max_features': [0.3, 0.6, 0.9],
                               'max_depth': [3, 7, None]}],
                             'Random Forest',
@@ -176,7 +177,7 @@ class MALSS(object):
                             RandomForestRegressor(
                                 random_state=self.random_state,
                                 n_jobs=self.n_jobs),
-                            [{'n_estimators': [10, 100, 1000],
+                            [{'n_estimators': [10, 100, 500],
                               'max_features': [0.3, 0.6, 0.9],
                               'max_depth': [3, 7, None]}],
                             'Random Forest',
@@ -300,11 +301,11 @@ class MALSS(object):
 
         if isinstance(self.cv, int):
             if self.task == 'classification':
-                self.cv = StratifiedKFold(self.data.y, n_folds=self.cv,
+                self.cv = StratifiedKFold(n_splits=self.cv,
                                           shuffle=self.shuffle,
                                           random_state=self.random_state)
             elif self.task == 'regression':
-                self.cv = KFold(self.data.X.shape[0], n_folds=self.cv,
+                self.cv = KFold(n_splits=self.cv,
                                 shuffle=self.shuffle,
                                 random_state=self.random_state)
 
@@ -330,12 +331,8 @@ class MALSS(object):
     def __search_best_algorithm(self):
         self.best_score = float('-Inf')
         self.best_index = -1
-        sign = 1.0
-        if self.minimized_score:
-            sign = -1.0
-            self.best_score = float('Inf')
         for i in range(len(self.algorithms)):
-            if sign * self.algorithms[i].best_score > sign * self.best_score:
+            if self.algorithms[i].best_score > self.best_score:
                 self.best_score = self.algorithms[i].best_score
                 self.best_index = i
         self.algorithms[self.best_index].is_best_algorithm = True
@@ -350,16 +347,16 @@ class MALSS(object):
                 estimator, parameters, cv=self.cv, scoring=self.scoring,
                 n_jobs=1)  # parallel run in cross validation
             clf.fit(self.data.X, self.data.y)
-            if self.minimized_score:
-                clf.best_score_ *= -1.0
-                for j in range(len(clf.grid_scores_)):
-                    clf.grid_scores_[j] = (clf.grid_scores_[j][0],
-                                           -1.0 * clf.grid_scores_[j][1],
-                                           -1.0 * clf.grid_scores_[j][2])
+            grid_scores = []
+            for j in range(len(clf.cv_results_['mean_test_score'])):
+                grid_scores.append((clf.cv_results_['params'][j],
+                                  clf.cv_results_['mean_test_score'][j],
+                                  clf.cv_results_['std_test_score'][j]))
             self.algorithms[i].estimator = clf.best_estimator_
-            self.algorithms[i].best_score = clf.best_score_
+            # self.algorithms[i].best_score = clf.best_score_
+            self.algorithms[i].best_score = cross_val_score(clf, X=self.data.X, y=self.data.y, cv=self.cv).mean()
             self.algorithms[i].best_params = clf.best_params_
-            self.algorithms[i].grid_scores = clf.grid_scores_
+            self.algorithms[i].grid_scores = grid_scores
 
         self.__search_best_algorithm()
 
@@ -381,9 +378,6 @@ class MALSS(object):
                 cv=self.cv,
                 scoring=self.scoring,
                 n_jobs=1)  # parallel run in cross validation
-            if self.minimized_score:
-                train_scores *= -1.0
-                test_scores *= -1.0
             train_scores_mean = np.mean(train_scores, axis=1)
             train_scores_std = np.std(train_scores, axis=1)
             test_scores_mean = np.mean(test_scores, axis=1)
@@ -405,10 +399,7 @@ class MALSS(object):
                      label="Training score")
             plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
                      label="Cross-validation score")
-            if self.minimized_score:
-                plt.legend(loc='upper right')
-            else:
-                plt.legend(loc="lower right")
+            plt.legend(loc="lower right")
             if dname is not None and not os.path.exists(dname):
                 os.mkdir(dname)
             if dname is not None:

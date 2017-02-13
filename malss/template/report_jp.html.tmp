@@ -11,7 +11,7 @@
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 			<th>アルゴリズム</th>
-			<th>交差検証のスコア（{{ scoring }}）</th>
+			<th>入れ子式交差検証のスコア</br>（{{ scoring }}）</th>
 		</tr>
 
 	{%- for algorithm in algorithms %}
@@ -32,12 +32,14 @@
 			<li>モデルの学習と評価に同じデータを使うと訓練データに過度に適応(<a href="http://ja.wikipedia.org/wiki/%E9%81%8E%E5%89%B0%E9%81%A9%E5%90%88"><strong>過学習</strong></a>)してしまい，訓練スコア(training score)は良く(訓練誤差(training error)は小さく)なりますが，汎化能力が低下してしまいます．</li>
 			<li>過学習を防ぐためには<a href="http://ja.wikipedia.org/wiki/%E4%BA%A4%E5%B7%AE%E6%A4%9C%E8%A8%BC"><strong>交差検証</strong></a>を行い，交差検証スコア(cross-validation score)(交差検証誤差(cross-validation error))により，汎化能力を評価します．</br>代表的な交差検証法であるK-fold cross validationでは，まずデータセットをK個（default: 5）に分割します．そして，そのうちの1つをテスト用とし，残るK−1個でモデルを学習します．<br>交差検証はK個に分割されたデータそれぞれをテストデータとしてK回検証を行い，得られた結果を平均して1つのスコアを得ます．</li>
 			<li>交差検証は<a href="http://scikit-learn.org/stable/modules/cross_validation.html">様々な手法</a>が提案されているので，目的に応じて適切な手法を選択してください．</br>（デフォルトでは，回帰（regression）タスクでは5-fold cross validationが，分類（classification）タスクではStratified 5-fold cross validationが選択されています．）</li>
+			<li>機械学習アルゴリズムが調整可能なパラメータ（ハイパーパラメータ）を持つ場合，<a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><strong>グリッドサーチ</strong></a>によるハイパーパラメータチューニングが必要です．この時通常の交差検証ではパラメータチューニングと評価に同じデータを利用することになるため，汎化能力を楽観的に見積もってしまう可能性があります．このような場合，<a href="http://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html"><strong>入れ子式交差検証</strong></a>を用いる必要があります．</li>
 		</ul>
 		<strong>※スコア：</strong>
 		<ul>
 			<li>汎化能力の評価指標(スコア)には様々なものがあります(<a href="http://scikit-learn.org/stable/modules/model_evaluation.html">scoringオプション</a>)．</li>
 			<li>精度(accuracy)は分類モデルを評価する代表的なスコアの一つですが，ラベルに偏りがあり，1％のデータのみが陽性の場合，常に陰性と予測するモデルの精度は99%ですが，このモデルは実用的ではありません．</li>
 			<li>デフォルトでは，回帰（regression）タスクでは平均二乗誤差(mean squared error)(小さいほど良く0が最小)が，分類（classification）タスクではF値(f1 score)(大きいほどよく1が最大)が選択されています．</li>
+			<li>sklearn.metrics内の評価指標は「大きい値ほど良い」というルールになっています．よって，例えば<i>平均二乗誤差</i>のように小さい方が良い評価指標を用いる場合は，<i>neg_mean_squared_error</i>のように符号を反転させた指標を利用します．</li>
 		</ul>
 	</p>
 	</details>
@@ -75,13 +77,13 @@
 	{%- else %}
 	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	{%- endif %}
-	<h3><a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><strong>グリッドサーチ</strong></a>によるパラメータチューニング結果</h3>
+	<h3><a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><strong>グリッドサーチ</strong></a>によるハイパーパラメータチューニング結果</h3>
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 		{%- for key in algorithm.grid_scores[0][0].keys() %}
 			<th>{{ key }}</th>
 		{%- endfor %}
-			<th>スコア（{{ scoring }}）</th>
+			<th>交差検証（非入れ子式）スコア<br>（{{ scoring }}）</th>
 			<th>偏差</th>
 		</tr>
 		{%- for scr in algorithm.grid_scores %}
@@ -90,7 +92,7 @@
 			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ val }}</font></td>
 			{%- endfor %}
 			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ scr[1]|round(3) }}</font></td>
-			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ scr[2].std()|round(3) }}</font></td>
+			<td><font color="{% if scr[0] == algorithm.best_params %}#FF0000{% else %}#000000{% endif %}">{{ scr[2]|round(3) }}</font></td>
 		</tr>
 		{%- endfor %}
 	</table>

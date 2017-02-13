@@ -15,7 +15,7 @@ These are external packages which you will need to install before installing mal
 * python (>= 2.7 or >= 3.4)
 * numpy (>= 1.10.2)
 * scipy (>= 0.16.1)
-* scikit-learn (>= 0.17)
+* scikit-learn (>= 0.18)
 * matplotlib (>= 1.5.1)
 * pandas (>= 0.14.1)
 * jinja2 (>= 2.8)

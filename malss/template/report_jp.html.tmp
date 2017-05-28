@@ -111,7 +111,7 @@
 	{%- if task == "classification" %}
 	<h3>分類結果</h3>
 	<pre>{{ algorithm.classification_report }}</pre>
-	※<a href="http://ja.wikipedia.org/wiki/%E6%83%85%E5%A0%B1%E6%A4%9C%E7%B4%A2#.E6.A4.9C.E7.B4.A2.E6.80.A7.E8.83.BD.E3.81.AE.E8.A9.95.E4.BE.A1">precision（適合率），recall（再現率），f1-score（F1値）</a>，<a href="http://scikit-learn.org/0.13/modules/generated/sklearn.metrics.precision_recall_fscore_support.html">support（正解ラベルのデータ数）</a>
+	※<a href="http://ja.wikipedia.org/wiki/%E6%83%85%E5%A0%B1%E6%A4%9C%E7%B4%A2#.E6.A4.9C.E7.B4.A2.E6.80.A7.E8.83.BD.E3.81.AE.E8.A9.95.E4.BE.A1">precision（適合率），recall（再現率），f1-score（F1値）</a>，<a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_fscore_support.html">support（正解ラベルのデータ数）</a>
 	<ul>
 		<li>注）上記のスコアはクローズ評価（学習と評価が同データ）なので，モデルが過学習しているかもしれません．</li>
 	</ul>

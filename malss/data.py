@@ -94,4 +94,5 @@ class Data(object):
     def __standardize(self, X):
         if self._standardizer is None:
             self._standardizer = StandardScaler().fit(X)
-        return self._standardizer.transform(X)
+        return pd.DataFrame(self._standardizer.transform(X),
+                            index=X.index, columns=X.columns)

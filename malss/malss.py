@@ -24,8 +24,10 @@ from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.exceptions import UndefinedMetricWarning
 
-from .algorithm import Algorithm
-from .data import Data
+# from .algorithm import Algorithm
+# from .data import Data
+from algorithm import Algorithm
+from data import Data
 
 
 class MALSS(object):
@@ -140,13 +142,19 @@ class MALSS(object):
                         'Decision Tree',
                         ('http://scikit-learn.org/stable/modules/generated/'
                          'sklearn.tree.DecisionTreeClassifier.html')))
-                algorithms.append(
-                    Algorithm(
-                        KNeighborsClassifier(),
-                        [{'n_neighbors': [2, 6, 10, 14, 18]}],
-                        'k-Nearest Neighbors',
-                        ('http://scikit-learn.org/stable/modules/generated/'
-                         'sklearn.neighbors.KNeighborsClassifier.html')))
+
+                # Too small data doesn't suit for kNN.
+                min_nn = int(0.1 * (self.cv - 1) * self.data.X.shape[0] / self.cv)
+                # where 0.1 means smallest data size ratio of learning_curve function.
+                # The value of min_nn isn't accurate when cv is stratified.
+                if min_nn >= 11:
+                    algorithms.append(
+                        Algorithm(
+                            KNeighborsClassifier(),
+                            [{'n_neighbors': list(range(2, min(20, min_nn + 1), 4))}],
+                            'k-Nearest Neighbors',
+                            ('http://scikit-learn.org/stable/modules/generated/'
+                             'sklearn.neighbors.KNeighborsClassifier.html')))
             else:
                 algorithms.append(
                     Algorithm(

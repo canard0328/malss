@@ -24,10 +24,10 @@ from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.exceptions import UndefinedMetricWarning
 
-# from .algorithm import Algorithm
-# from .data import Data
-from algorithm import Algorithm
-from data import Data
+from .algorithm import Algorithm
+from .data import Data
+# from algorithm import Algorithm
+# from data import Data
 
 
 class MALSS(object):

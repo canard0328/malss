@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-
 __author__ = 'Ryota KAMOSHIDA'
-__version__ = '1.1.3'
+__version__ = '2.0.0'
 __license__ = 'MIT License: http://www.opensource.org/licenses/mit-license.php'
 
 

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-from __future__ import absolute_import
 from sklearn.datasets.samples_generator import make_classification,\
     make_regression
 from .malss import MALSS
@@ -246,4 +244,4 @@ def test_change_algorithms():
 
 
 if __name__ == "__main__":
-    test_change_algorithms()
+    test_classification_2classes_small()

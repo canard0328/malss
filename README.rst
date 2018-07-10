@@ -12,7 +12,7 @@ Requirements
 
 These are external packages which you will need to install before installing malss.
 
-* python (>= 3.4)
+* python (>= 3.5)
 * numpy (>= 1.10.2)
 * scipy (>= 0.16.1)
 * scikit-learn (>= 0.18)

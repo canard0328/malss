@@ -12,10 +12,10 @@ except ImportError:
     sys.exit()
 
 if sys.version_info.major == 2:
-    print('python >= 3.4 is required.')
+    print('python >= 3.5 is required.')
     sys.exit()
-elif sys.version_info.major == 3 and sys.version_info < (3, 4):
-    print('python >= 3.4 is required.')
+elif sys.version_info.major == 3 and sys.version_info < (3, 5):
+    print('python >= 3.5 is required.')
     sys.exit()
 
 try:

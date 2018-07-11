@@ -29,8 +29,9 @@ from .data import Data
 
 
 class MALSS(object):
-    def __init__(self, task, shuffle=True, standardize=True, scoring=None,
-                 cv=3, n_jobs=-1, random_state=0, lang='en', verbose=True):
+    def __init__(self, task=None, shuffle=True, standardize=True, scoring=None,
+                 cv=3, n_jobs=-1, random_state=0, lang='en', verbose=True,
+                 interactive=False):
         """
         Initialize parameters.
 
@@ -65,12 +66,38 @@ class MALSS(object):
             'en' (English), 'jp' (Japanese).
         verbose : boolean, default: True
             Enable verbose output.
+        interactive : boolean, default: False
+            Run MALSS with interactive application mode.
         """
 
+        if interactive:
+            import sys
+            from .app.app import App
+            try:
+                from PyQt5.QtWidgets import QApplication
+            except ImportError:
+                print('PyQt5 is required.')
+                sys.exit()
+            app = QApplication(sys.argv)
+            ex = App()
+            sys.exit(app.exec_())
+
         self.is_ready = False
+
         self.shuffle = shuffle
+
         self.standardize = standardize
+
+        if task is None:
+            raise ValueError("Set task ('classification' or 'regression').")
+        elif task == 'classification':
+            self.scoring = 'f1_weighted' if scoring is None else scoring
+        elif task == 'regression':
+            self.scoring = 'neg_mean_squared_error' if scoring is None else scoring
+        else:
+            raise ValueError('task:%s is not supported' % task)
         self.task = task
+
         self.cv = cv
         if n_jobs == -1:
             self.n_jobs = np.max([multiprocessing.cpu_count() - 1, 1])
@@ -78,16 +105,12 @@ class MALSS(object):
             self.n_jobs = n_jobs
         self.random_state = random_state
         self.verbose = verbose
+
         if lang != 'en' and lang != 'jp':
             raise ValueError('lang:%s is no supported' % lang)
         self.lang = lang
+        
         self.algorithms = []
-        if task == 'classification':
-            self.scoring = 'f1_weighted' if scoring is None else scoring
-        elif task == 'regression':
-            self.scoring = 'neg_mean_squared_error' if scoring is None else scoring
-        else:
-            raise ValueError('task:%s is not supported' % task)
 
         warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
 
@@ -469,4 +492,4 @@ class MALSS(object):
 
 
 if __name__ == "__main__":
-    pass
+    MALSS(interactive=True)

@@ -3,6 +3,7 @@
 import os
 import io
 import warnings
+import argparse
 import numpy as np
 import multiprocessing
 import matplotlib
@@ -70,6 +71,9 @@ class MALSS(object):
             Run MALSS with interactive application mode.
         """
 
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--lang', '-l', nargs=1, choices=['en', 'jp'])
+
         if interactive:
             import sys
             from .app.app import App
@@ -79,7 +83,9 @@ class MALSS(object):
                 print('PyQt5 is required.')
                 sys.exit()
             app = QApplication(sys.argv)
-            ex = App()
+            args = parser.parse_args()
+            lang = args.lang[0] if args.lang is not None else 'en'
+            ex = App(lang=lang)
             sys.exit(app.exec_())
 
         self.is_ready = False

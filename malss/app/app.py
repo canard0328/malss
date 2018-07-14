@@ -9,8 +9,10 @@ from .menuview import MenuView
 
 
 class App(QWidget):
-    def __init__(self):
+    def __init__(self, lang='en'):
         super().__init__()
+        self.lang = lang
+        print(self.lang)
         self.initUI()
 
     

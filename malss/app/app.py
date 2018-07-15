@@ -12,7 +12,6 @@ class App(QWidget):
     def __init__(self, lang='en'):
         super().__init__()
         self.lang = lang
-        print(self.lang)
         self.initUI()
 
     
@@ -34,10 +33,10 @@ class App(QWidget):
         self.splitter = QSplitter(Qt.Horizontal, self)
         self.splitter.setHandleWidth(0)
 
-        self.menuview = MenuView(self.splitter, self.update_content)
+        self.menuview = MenuView(self.splitter, self.update_content, self.lang)
         self.menuview.setWidgetResizable(True)
 
-        self.contentview = Introduction(self.splitter, self.menuview.add_button)
+        self.contentview = Introduction(self.splitter, self.menuview.add_button, self.lang)
         self.contentview.setWidgetResizable(True)
 
         self.splitter.addWidget(self.menuview)
@@ -49,7 +48,7 @@ class App(QWidget):
         self.setLayout(vbox)
         
         self.center()
-        self.setWindowTitle('Myapp')
+        self.setWindowTitle('MALSS interactive')
         self.show()
 
     def center(self):

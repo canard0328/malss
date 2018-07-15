@@ -25,8 +25,6 @@ from sklearn.exceptions import UndefinedMetricWarning
 
 from .algorithm import Algorithm
 from .data import Data
-# from algorithm import Algorithm
-# from data import Data
 
 
 class MALSS(object):
@@ -76,7 +74,7 @@ class MALSS(object):
 
         if interactive:
             import sys
-            from .app.app import App
+            from .app import App
             try:
                 from PyQt5.QtWidgets import QApplication
             except ImportError:
@@ -84,7 +82,8 @@ class MALSS(object):
                 sys.exit()
             app = QApplication(sys.argv)
             args = parser.parse_args()
-            lang = args.lang[0] if args.lang is not None else 'en'
+            if args.lang is not None:
+                lang = args.lang[0]
             ex = App(lang=lang)
             sys.exit(app.exec_())
 

@@ -70,3 +70,11 @@ class Content(QScrollArea):
             self.vbox.addWidget(lbl_txt)
 
         self.inner.setLayout(self.vbox)
+
+    def get_text(self, path):
+        try:
+            text = open(path, encoding='utf8').read()
+        except FileNotFoundError:
+            text = 'No text available'
+        return text
+

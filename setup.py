@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
 import sys 
 from distutils.version import LooseVersion
 
@@ -69,7 +68,8 @@ setup(
     author_email=AUTHOR_EMAIL,
     license=LICENSE,
     url=URL,
-    packages=["malss"],
+    #packages=["malss", "malss.app"],
+    packages=find_packages(),
     install_requires=[
         'scikit-learn>=0.18',
         'matplotlib>=1.5.1',
@@ -79,7 +79,8 @@ setup(
     include_package_data=True,
     package_data={"malss": ["template/report.html.tmp",
                             "template/report_jp.html.tmp",
-                            "template/sample_code.py.tmp"]},
+                            "template/sample_code.py.tmp",
+                            "app/static/*.txt"]},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",

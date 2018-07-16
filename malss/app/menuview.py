@@ -77,3 +77,5 @@ class MenuView(QScrollArea):
             btn.setFont(fnt)
             btn.clicked.connect(lambda: self.buttonClicked(text))
             self.vbox.addWidget(btn)
+
+        self.buttonClicked(text)

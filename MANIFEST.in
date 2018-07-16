@@ -1,5 +1,3 @@
-include malss/template/report.html.tmp
-include malss/template/report_jp.html.tmp
-include malss/template/sample_code.py.tmp
+include malss/template/*.tmp
 include malss/app/static/*.txt
 recursive-include docs *

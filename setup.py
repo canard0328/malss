@@ -77,9 +77,7 @@ setup(
         'jinja2>=2.8'
         ],
     include_package_data=True,
-    package_data={"malss": ["template/report.html.tmp",
-                            "template/report_jp.html.tmp",
-                            "template/sample_code.py.tmp",
+    package_data={"malss": ["template/*.tmp",
                             "app/static/*.txt"]},
     classifiers=[
         "Development Status :: 4 - Beta",

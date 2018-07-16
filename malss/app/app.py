@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QWidget, QApplication, QFrame,
         QVBoxLayout, QSplitter, QDesktopWidget)
 from .introduction import Introduction
+from .analysis import Analysis
 from .menuview import MenuView
 
 
@@ -16,7 +17,7 @@ class App(QWidget):
 
     
     def initUI(self):
-        self.txt2func = {'Introduction': Introduction}
+        self.txt2func = {'Introduction': Introduction, 'Analysis': Analysis}
 
         self.setMinimumSize(900, 600)
         self.setStyleSheet('background-color: rgb(242, 242, 242)')
@@ -71,7 +72,7 @@ class App(QWidget):
                                                        self.menuview.add_button)
                 self.contentview.setWidgetResizable(True)
                 self.splitter.addWidget(self.contentview)
-        
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

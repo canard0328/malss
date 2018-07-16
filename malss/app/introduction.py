@@ -8,9 +8,7 @@ from .content import Content
 class Introduction(Content):
 
     def __init__(self, parent=None, button_func=None, lang='en'):
-        super().__init__(parent, 'Introduction')
-
-        self.lang = lang
+        super().__init__(parent, 'Introduction', lang)
 
         self.button_func = button_func
 
@@ -28,8 +26,8 @@ class Introduction(Content):
         hbox = QHBoxLayout()
         hbox.setContentsMargins(10, 10, 10, 10)
         
-        btn = QPushButton('hoge', self.inner)
-        btn.clicked.connect(lambda: self.button_func('Hoge'))
+        btn = QPushButton('Next', self.inner)
+        btn.clicked.connect(lambda: self.button_func('Analysis'))
 
         hbox.addStretch(1)
         hbox.addWidget(btn)

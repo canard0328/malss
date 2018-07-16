@@ -11,7 +11,7 @@
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 			<th>アルゴリズム</th>
-			<th>入れ子式交差検証のスコア</br>（{{ scoring }}）</th>
+			<th>交差検証のスコア</br>（{{ scoring }}）</th>
 		</tr>
 
 	{%- for algorithm in algorithms %}
@@ -32,7 +32,6 @@
 			<li>モデルの学習と評価に同じデータを使うと訓練データに過度に適応(<a href="http://ja.wikipedia.org/wiki/%E9%81%8E%E5%89%B0%E9%81%A9%E5%90%88"><strong>過学習</strong></a>)してしまい，訓練スコア(training score)は良く(訓練誤差(training error)は小さく)なりますが，汎化能力が低下してしまいます．</li>
 			<li>過学習を防ぐためには<a href="http://ja.wikipedia.org/wiki/%E4%BA%A4%E5%B7%AE%E6%A4%9C%E8%A8%BC"><strong>交差検証</strong></a>を行い，交差検証スコア(cross-validation score)(交差検証誤差(cross-validation error))により，汎化能力を評価します．</br>代表的な交差検証法であるK-fold cross validationでは，まずデータセットをK個（default: 5）に分割します．そして，そのうちの1つをテスト用とし，残るK−1個でモデルを学習します．<br>交差検証はK個に分割されたデータそれぞれをテストデータとしてK回検証を行い，得られた結果を平均して1つのスコアを得ます．</li>
 			<li>交差検証は<a href="http://scikit-learn.org/stable/modules/cross_validation.html">様々な手法</a>が提案されているので，目的に応じて適切な手法を選択してください．</br>（デフォルトでは，回帰（regression）タスクでは5-fold cross validationが，分類（classification）タスクではStratified 5-fold cross validationが選択されています．）</li>
-			<li>機械学習アルゴリズムが調整可能なパラメータ（ハイパーパラメータ）を持つ場合，<a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><strong>グリッドサーチ</strong></a>によるハイパーパラメータチューニングが必要です．この時通常の交差検証ではパラメータチューニングと評価に同じデータを利用することになるため，汎化能力を楽観的に見積もってしまう可能性があります．このような場合，<a href="http://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html"><strong>入れ子式交差検証</strong></a>を用いる必要があります．</li>
 		</ul>
 		<strong>※スコア：</strong>
 		<ul>
@@ -83,7 +82,7 @@
 		{%- for key in algorithm.grid_scores[0][0].keys() %}
 			<th>{{ key }}</th>
 		{%- endfor %}
-			<th>交差検証（非入れ子式）スコア<br>（{{ scoring }}）</th>
+			<th>交差検証スコア<br>（{{ scoring }}）</th>
 			<th>偏差</th>
 		</tr>
 		{%- for scr in algorithm.grid_scores %}

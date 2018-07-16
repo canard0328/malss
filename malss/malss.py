@@ -11,9 +11,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from jinja2 import Environment, FileSystemLoader
 from sklearn.model_selection import StratifiedKFold, KFold
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import learning_curve
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV, learning_curve
 from sklearn.svm import SVC, LinearSVC, SVR
 from sklearn.metrics import classification_report
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
@@ -29,7 +27,7 @@ from .data import Data
 
 class MALSS(object):
     def __init__(self, task=None, shuffle=True, standardize=True, scoring=None,
-                 cv=3, n_jobs=-1, random_state=0, lang='en', verbose=True,
+                 cv=5, n_jobs=-1, random_state=0, lang='en', verbose=True,
                  interactive=False):
         """
         Initialize parameters.
@@ -387,8 +385,7 @@ class MALSS(object):
                                   clf.cv_results_['mean_test_score'][j],
                                   clf.cv_results_['std_test_score'][j]))
             self.algorithms[i].estimator = clf.best_estimator_
-            # self.algorithms[i].best_score = clf.best_score_
-            self.algorithms[i].best_score = cross_val_score(clf, X=self.data.X, y=self.data.y, cv=self.cv).mean()
+            self.algorithms[i].best_score = clf.best_score_
             self.algorithms[i].best_params = clf.best_params_
             self.algorithms[i].grid_scores = grid_scores
 

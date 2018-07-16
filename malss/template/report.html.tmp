@@ -11,7 +11,7 @@
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 			<th>Algorithm</th>
-			<th>Nested cross-validation score</br>({{ scoring }})</th>
+			<th>Cross-validation score</br>({{ scoring }})</th>
 		</tr>
 
 	{%- for algorithm in algorithms %}
@@ -32,7 +32,6 @@
 			<li>Evaluating the quality of the model on the data used to fit the model can lead to <a href="http://en.wikipedia.org/wiki/Overfitting"><strong>overfitting</strong></a>.</li>
 			<li>The solution to overfitting is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)"><strong>Cross validation</strong></a>.</br>The most common cross validation method is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation"><strong>k-fold cross validation</strong></a>: divide the dataset into k (5 by default in MALSS) parts of (roughly) equal size, then for each of these five parts, train the classifier on the other four and test on the held-out part.</li>
 			<li>You can select an appropriate cross validation method from <a href="http://scikit-learn.org/stable/modules/cross_validation.html">sklearn.cross_validation modules</a>.</br>(5-fold cross validation for regression task or Stratified 5-fold cross validation for classification task is selected by default).</li>
-			<li>Some algorithms have hyperparameters to be optimized. In this case, choosing the parameters that maximize normal cross validation biases the model to the dataset, yielding an overly-optimistic score, because model selection with normal cross validation uses the same data to tune model parameters and evaluate model performance. To avoid over-estimating model performance, <a href="http://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html"><strong>nested cross validation</strong></a> is needed.</li>
 		</ul>
 		<strong>* Model evaluation:</strong>
 		<ul>
@@ -82,7 +81,7 @@
 		{%- for key in algorithm.grid_scores[0][0].keys() %}
 			<th>{{ key }}</th>
 		{%- endfor %}
-			<th>Non-nested cross validation score</br>{{ scoring }}</th>
+			<th>Cross validation score</br>{{ scoring }}</th>
 			<th>SD</th>
 		</tr>
 		{%- for scr in algorithm.grid_scores %}

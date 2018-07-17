@@ -4,7 +4,9 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QWidget, QApplication, QFrame,
         QVBoxLayout, QSplitter, QDesktopWidget)
+from .params import Params
 from .introduction import Introduction
+from .type_of_task import TypeOfTask
 from .analysis import Analysis
 from .menuview import MenuView
 
@@ -12,12 +14,15 @@ from .menuview import MenuView
 class App(QWidget):
     def __init__(self, lang='en'):
         super().__init__()
-        self.lang = lang
+
+        self.params = Params(lang)
+        # self.lang = lang
         self.initUI()
 
     
     def initUI(self):
-        self.txt2func = {'Introduction': Introduction, 'Analysis': Analysis}
+        self.txt2func = {'Introduction': Introduction, 'Task': TypeOfTask,
+                'Analysis': Analysis}
 
         self.setMinimumSize(900, 600)
         self.setStyleSheet('background-color: rgb(242, 242, 242)')
@@ -34,10 +39,10 @@ class App(QWidget):
         self.splitter = QSplitter(Qt.Horizontal, self)
         self.splitter.setHandleWidth(0)
 
-        self.menuview = MenuView(self.splitter, self.update_content, self.lang)
+        self.menuview = MenuView(self.splitter, self.update_content, self.params)
         self.menuview.setWidgetResizable(True)
 
-        self.contentview = Introduction(self.splitter, self.menuview.add_button, self.lang)
+        self.contentview = Introduction(self.splitter, self.menuview.add_button, self.params)
         self.contentview.setWidgetResizable(True)
 
         self.splitter.addWidget(self.menuview)
@@ -69,7 +74,8 @@ class App(QWidget):
                 content.deleteLater()
 
                 self.contentview = self.txt2func[text](self.splitter,
-                                                       self.menuview.add_button)
+                                                       self.menuview.add_button,
+                                                       self.params)
                 self.contentview.setWidgetResizable(True)
                 self.splitter.addWidget(self.contentview)
 

@@ -7,10 +7,10 @@ from .introduction import Introduction
 
 class MenuView(QScrollArea):
 
-    def __init__(self, parent=None, update_func=None, lang='en'):
+    def __init__(self, parent=None, update_func=None, params=None):
         super().__init__(parent)
 
-        self.lang = lang
+        self.params = params
 
         self.H1_HEIGHT = 50
         self.H2_HEIGHT = 50 

@@ -7,13 +7,13 @@ from .content import Content
 
 class Introduction(Content):
 
-    def __init__(self, parent=None, button_func=None, lang='en'):
-        super().__init__(parent, 'Introduction', lang)
+    def __init__(self, parent=None, button_func=None, params=None):
+        super().__init__(parent, 'Introduction', params)
 
         self.button_func = button_func
 
         path = os.path.abspath(os.path.dirname(__file__)) + '/static/'
-        if self.lang == 'en':
+        if self.params.lang == 'en':
             path += 'introduction_en.txt'
         else:
             path += 'introduction_jp.txt'
@@ -27,7 +27,7 @@ class Introduction(Content):
         hbox.setContentsMargins(10, 10, 10, 10)
         
         btn = QPushButton('Next', self.inner)
-        btn.clicked.connect(lambda: self.button_func('Analysis'))
+        btn.clicked.connect(lambda: self.button_func('Task'))
 
         hbox.addStretch(1)
         hbox.addWidget(btn)

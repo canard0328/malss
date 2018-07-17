@@ -8,10 +8,10 @@ from PyQt5.QtGui import QPalette
 
 class Content(QScrollArea):
 
-    def __init__(self, parent=None, title='', lang='en'):
+    def __init__(self, parent=None, title='', params=None):
         super().__init__(parent)
 
-        self.lang = lang
+        self.params = params
 
         self.H1_HEIGHT = 50
         self.H2_HEIGHT = 50 

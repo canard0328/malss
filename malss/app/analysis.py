@@ -6,7 +6,7 @@ from .content import Content
 
 class Analysis(Content):
 
-    def __init__(self, parent=None, button_func=None, lang='en'):
+    def __init__(self, parent=None, button_func=None, params=None):
         super().__init__(parent, 'Analysis')
 
         self.button_func = button_func

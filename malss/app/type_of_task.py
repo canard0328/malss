@@ -8,13 +8,13 @@ from .content import Content
 class TypeOfTask(Content):
 
     def __init__(self, parent=None, button_func=None, params=None):
-        super().__init__(parent, 'Taks', params)
+        super().__init__(parent, 'Task', params)
 
         self.button_func = button_func
 
         if params.lang == 'jp':
             self.set_paragraph('Type of task',
-                    text='あなたの機械学習のタスクを選択してください。.')
+                    text='あなたの機械学習のタスクを選択してください。')
         else:
             self.set_paragraph('Type of task',
                     text='Choose your machine learning taks.')
@@ -45,7 +45,7 @@ class TypeOfTask(Content):
         hbox2.setContentsMargins(10, 10, 10, 10)
         
         self.btn = QPushButton('Next', self.inner)
-        self.btn.clicked.connect(lambda: self.button_func('Analysis'))
+        self.btn.clicked.connect(lambda: self.button_func('File selection'))
         if params.task == None:
             self.btn.setEnabled(False)
 

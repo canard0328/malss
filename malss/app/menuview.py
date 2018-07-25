@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from PyQt5.QtWidgets import (QScrollArea, QWidget, QVBoxLayout,
-        QLabel, QFrame, QPushButton)
+        QLabel, QFrame, QPushButton, QSizePolicy)
 from PyQt5.QtCore import Qt
 from .introduction import Introduction
 
@@ -9,6 +9,8 @@ class MenuView(QScrollArea):
 
     def __init__(self, parent=None, update_func=None, params=None):
         super().__init__(parent)
+
+        self.setMaximumWidth(200)
 
         self.params = params
 

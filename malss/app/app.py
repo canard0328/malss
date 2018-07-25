@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import (QWidget, QApplication, QFrame,
 from .params import Params
 from .introduction import Introduction
 from .type_of_task import TypeOfTask
+from .set_file import SetFile
+from .data_check import DataCheck
 from .analysis import Analysis
 from .menuview import MenuView
 
@@ -16,15 +18,15 @@ class App(QWidget):
         super().__init__()
 
         self.params = Params(lang)
-        # self.lang = lang
         self.initUI()
 
     
     def initUI(self):
         self.txt2func = {'Introduction': Introduction, 'Task': TypeOfTask,
+                'File selection': SetFile, 'Data check': DataCheck,
                 'Analysis': Analysis}
 
-        self.setMinimumSize(900, 600)
+        self.setMinimumSize(1280, 720)
         self.setStyleSheet('background-color: rgb(242, 242, 242)')
 
         vbox = QVBoxLayout(self)
@@ -53,7 +55,8 @@ class App(QWidget):
 
         self.setLayout(vbox)
         
-        self.center()
+        # self.center()
+        self.showMaximized()
         self.setWindowTitle('MALSS interactive')
         self.show()
 

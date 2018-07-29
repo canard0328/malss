@@ -16,7 +16,7 @@ class DataCheck(Content):
         self.button_func = button_func
 
         data = pd.read_csv(self.params.fpath, header=0,
-                dtype=self.__make_dtype(self.params.columns, self.params.col_types))
+                dtype=self.make_dtype(self.params.columns, self.params.col_types))
         if self.params.data is None:
             self.params.data = data
             self.params.columns = data.columns
@@ -93,15 +93,6 @@ class DataCheck(Content):
         self.vbox.addLayout(hbox2)
 
         self.vbox.addStretch(1)
-
-    def __make_dtype(self, columns, dtypes):
-        if columns is None or dtypes is None:
-            return None
-
-        dic = {}
-        for c, d in zip(columns, dtypes):
-            dic[c] = d
-        return dic
 
     def __make_cell(self, c, name, col_type, col_type_def):
         cell = QWidget(self.inner)

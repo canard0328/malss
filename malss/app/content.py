@@ -80,3 +80,12 @@ class Content(QScrollArea):
             text = 'No text available'
         return text
 
+    def make_dtype(self, columns, dtypes):
+        if columns is None or dtypes is None:
+            return None
+
+        dic = {}
+        for c, d in zip(columns, dtypes):
+            dic[c] = d
+        return dic
+

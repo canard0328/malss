@@ -39,7 +39,9 @@ class DataCheck(Content):
 
         for r in range(nr):
             for c in range(data.shape[1]):
-                table.setItem(r, c, QTableWidgetItem(str(data.iat[r, c])))
+                item = QTableWidgetItem(str(data.iat[r, c]))
+                item.setFlags(Qt.ItemIsEnabled)
+                table.setItem(r, c, item)
 
         self.vbox.addWidget(table)
 
@@ -55,7 +57,9 @@ class DataCheck(Content):
         self.obj_group = QButtonGroup(self.inner)
         for c in range(data.shape[1]):
             # col 1
-            htable.setItem(c, 0, QTableWidgetItem(data.columns[c]))
+            item = QTableWidgetItem(data.columns[c])
+            item.setFlags(Qt.ItemIsEnabled)
+            htable.setItem(c, 0, item)
 
             group = QButtonGroup(self.inner)
 

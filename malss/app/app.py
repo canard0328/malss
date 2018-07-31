@@ -22,6 +22,7 @@ class App(QWidget):
 
     
     def initUI(self):
+
         self.txt2func = {'Introduction': Introduction, 'Task': TypeOfTask,
                 'File selection': SetFile, 'Data check': DataCheck,
                 'Analysis': Analysis}

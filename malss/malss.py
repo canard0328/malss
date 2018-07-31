@@ -352,6 +352,12 @@ class MALSS(object):
                 print('Make report.')
             self.__make_report(dname)
 
+        self.results = {'algorithms': {}}
+        for algorithm in self.algorithms:
+            self.results['algorithms'][algorithm.name] = {}
+            self.results['algorithms'][algorithm.name]['grid_scores'] =\
+                    algorithm.grid_scores
+
         if self.verbose:
             print('Done.')
         return self

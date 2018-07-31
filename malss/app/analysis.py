@@ -6,6 +6,8 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from ..malss import MALSS
 from .content import Content
 from multiprocessing import Process, Queue
+from .waiting_animation import WaitingAnimation
+
 
 class Analysis(Content):
 
@@ -27,6 +29,15 @@ class Analysis(Content):
 
         self.vbox.addStretch(1)
 
+        # To be modified.
+        self.wait_ani = WaitingAnimation(parent.parent())
+        self.wait_ani.hide()
+
+    def resizeEvent(self, event):
+        # To be modified.
+        self.wait_ani.resize(self.parent().parent().size())
+        event.accept()
+
     def button_clicked(self):
         self.params.data = pd.read_csv(self.params.fpath, header=0,
                 dtype=self.make_dtype(self.params.columns, self.params.col_types))
@@ -38,8 +49,10 @@ class Analysis(Content):
         self.thread = AnalyzeWorker(self.params.task.lower(), X, y)
         self.thread.finSignal.connect(self.analyzed)
         self.thread.start()
+        self.wait_ani.show()
 
     def analyzed(self, signalData):
+        self.wait_ani.hide()
         print(signalData)
         self.button_func('Hoge')
 
@@ -68,4 +81,4 @@ class AnalyzeWorker(QThread):
     @staticmethod
     def sub_job(mdl, X, y, q):
         mdl.fit(X, y)
-        q.put({'hoge': None})
+        q.put(mdl.results)

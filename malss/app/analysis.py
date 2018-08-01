@@ -1,7 +1,8 @@
 # coding: utf-8
 
 import pandas as pd
-from PyQt5.QtWidgets import (QVBoxLayout, QHBoxLayout, QPushButton)
+from PyQt5.QtWidgets import (QVBoxLayout, QHBoxLayout, QPushButton,
+        QScrollArea)
 from PyQt5.QtCore import QThread, pyqtSignal
 from ..malss import MALSS
 from .content import Content
@@ -37,6 +38,8 @@ class Analysis(Content):
         # To be modified.
         self.wait_ani.resize(self.parent().parent().size())
         event.accept()
+
+        QScrollArea.resizeEvent(self, event)
 
     def button_clicked(self):
         self.params.data = pd.read_csv(self.params.fpath, header=0,

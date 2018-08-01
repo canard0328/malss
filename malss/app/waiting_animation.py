@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import math, sys
-from PyQt5.QtCore import Qt#, QTimer
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QPainter, QBrush, QColor, QPen
 from PyQt5.QtWidgets import QWidget
  
@@ -24,7 +24,6 @@ class WaitingAnimation(QWidget):
         painter.setPen(QPen(Qt.NoPen))
         
         for i in range(6):
-            # if (self.counter / 5) % 6 == i:
             if self.counter % 6 == i:
                 painter.setBrush(QBrush(QColor(204, 112, 0)))
             else:
@@ -48,8 +47,5 @@ class WaitingAnimation(QWidget):
     
         self.counter += 1
         self.update()
-        # if self.counter == 60:
-        #     self.killTimer(self.timer)
-        #     self.hide()
  
 

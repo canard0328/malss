@@ -53,7 +53,7 @@ class MALSS(object):
             (for classification task) is used by default.
             Specific cross-validation objects can be passed, see
             sklearn.model_selection module for the list of possible objects.
-        n_jobs : integer, optional (default=1)
+        n_jobs : integer, optional (default=-1)
             The number of jobs to run in parallel. If -1, then the number of
             jobs is set to the number of cores - 1.
         random_state : int seed, RandomState instance, or None (default=0)

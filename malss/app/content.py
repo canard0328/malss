@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from PyQt5.QtWidgets import (QScrollArea, QWidget, QVBoxLayout,
-        QLabel, QFrame)
+                             QLabel, QFrame)
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette
 
@@ -14,7 +14,7 @@ class Content(QScrollArea):
         self.params = params
 
         self.H1_HEIGHT = 50
-        self.H2_HEIGHT = 50 
+        self.H2_HEIGHT = 50
         self.SIDE_MARGIN = 5
         self.H1_FONT_SIZE = 18
         self.H2_FONT_SIZE = 18
@@ -22,7 +22,7 @@ class Content(QScrollArea):
         self.TEXT_FONT_SIZE = 14
 
         self.inner = QWidget(self)
-        
+
         self.vbox = QVBoxLayout(self.inner)
         self.vbox.setSpacing(0)
         self.vbox.setContentsMargins(0, 0, 0, 0)
@@ -88,4 +88,3 @@ class Content(QScrollArea):
         for c, d in zip(columns, dtypes):
             dic[c] = d
         return dic
-

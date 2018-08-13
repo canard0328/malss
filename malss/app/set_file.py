@@ -1,7 +1,7 @@
 # coding: utf-8
 
-from PyQt5.QtWidgets import (QVBoxLayout, QHBoxLayout, QPushButton,
-        QFileDialog, QLabel, QLineEdit)
+from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QLabel,
+                             QFileDialog, QLineEdit)
 from .content import Content
 
 
@@ -28,7 +28,7 @@ class SetFile(Content):
 
         hbox2 = QHBoxLayout()
         hbox2.setContentsMargins(10, 10, 10, 10)
-        
+
         self.btn = QPushButton('Next', self.inner)
         self.btn.clicked.connect(lambda: self.button_func('Data check'))
 

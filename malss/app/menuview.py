@@ -1,9 +1,9 @@
 # coding: utf-8
 
 from PyQt5.QtWidgets import (QScrollArea, QWidget, QVBoxLayout,
-        QLabel, QFrame, QPushButton, QSizePolicy)
+                             QLabel, QFrame, QPushButton)
 from PyQt5.QtCore import Qt
-from .introduction import Introduction
+
 
 class MenuView(QScrollArea):
 
@@ -15,7 +15,7 @@ class MenuView(QScrollArea):
         self.params = params
 
         self.H1_HEIGHT = 50
-        self.H2_HEIGHT = 50 
+        self.H2_HEIGHT = 50
         self.SIDE_MARGIN = 5
         self.H1_FONT_SIZE = 18
         self.H2_FONT_SIZE = 18

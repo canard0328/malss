@@ -1,8 +1,8 @@
 # coding: utf-8
 
-from PyQt5.QtWidgets import (QVBoxLayout, QHBoxLayout, QPushButton,
-        QTableWidget, QTableWidgetItem, QRadioButton, QButtonGroup,
-        QWidget)
+from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QTableWidget,
+                             QTableWidgetItem, QRadioButton, QButtonGroup,
+                             QWidget)
 from PyQt5.QtCore import Qt
 import pandas as pd
 from .content import Content
@@ -16,20 +16,24 @@ class DataCheck(Content):
         self.button_func = button_func
 
         data = pd.read_csv(self.params.fpath, header=0,
-                dtype=self.make_dtype(self.params.columns, self.params.col_types))
+                           dtype=self.make_dtype(self.params.columns,
+                                                 self.params.col_types))
         if self.params.data is None:
             self.params.data = data
             self.params.columns = data.columns
-            self.params.col_types_def = list(map(str, data.dtypes.get_values()))
+            self.params.col_types_def =\
+                list(map(str, data.dtypes.get_values()))
             self.params.col_types = list(map(str, data.dtypes.get_values()))
         nr = min(5, data.shape[0])
 
         if params.lang == 'jp':
-            self.set_paragraph('First {n} rows of your data.'.format(n=nr),
-                    text='データを正しく読み込めていることを確認してください。')
+            self.set_paragraph(
+                'First {n} rows of your data.'.format(n=nr),
+                text='データを正しく読み込めていることを確認してください。')
         else:
-            self.set_paragraph('First {n} rows of your data.'.format(n=nr),
-                    text='Confirm that the data was read correctly.')
+            self.set_paragraph(
+                'First {n} rows of your data.'.format(n=nr),
+                text='Confirm that the data was read correctly.')
 
         table = QTableWidget(self.inner)
 
@@ -49,7 +53,8 @@ class DataCheck(Content):
 
         htable.setRowCount(len(data.columns))
         htable.setColumnCount(4)
-        htable.setHorizontalHeaderLabels(['columns', 'categorical', 'numerical', 'objective variable'])
+        htable.setHorizontalHeaderLabels(
+            ['columns', 'categorical', 'numerical', 'objective variable'])
 
         self.lst_cat = []
         self.lst_num = []
@@ -64,18 +69,24 @@ class DataCheck(Content):
             group = QButtonGroup(self.inner)
 
             # col 2
-            htable.setCellWidget(c, 1, self.__make_cell(c, 'cat',
-                self.params.col_types[c], self.params.col_types_def[c]))
+            htable.setCellWidget(
+                c, 1,
+                self.__make_cell(c, 'cat', self.params.col_types[c],
+                                 self.params.col_types_def[c]))
             group.addButton(self.lst_cat[-1])
 
             # col 3
-            htable.setCellWidget(c, 2, self.__make_cell(c, 'num',
-                self.params.col_types[c], self.params.col_types_def[c]))
+            htable.setCellWidget(
+                c, 2,
+                self.__make_cell(c, 'num', self.params.col_types[c],
+                                 self.params.col_types_def[c]))
             group.addButton(self.lst_num[-1])
 
             # col 4
-            htable.setCellWidget(c, 3, self.__make_cell(c, 'obj',
-                self.params.col_types[c], self.params.col_types_def[c]))
+            htable.setCellWidget(
+                c, 3,
+                self.__make_cell(c, 'obj', self.params.col_types[c],
+                                 self.params.col_types_def[c]))
             self.obj_group.addButton(self.lst_obj[-1])
             self.obj_group.setId(self.lst_obj[-1], c)
 
@@ -83,7 +94,7 @@ class DataCheck(Content):
 
         hbox2 = QHBoxLayout()
         hbox2.setContentsMargins(10, 10, 10, 10)
-        
+
         self.btn = QPushButton('Next', self.inner)
         self.btn.clicked.connect(lambda: self.button_func('Analysis'))
         if self.obj_group.checkedButton() is None:
@@ -101,7 +112,7 @@ class DataCheck(Content):
     def __make_cell(self, c, name, col_type, col_type_def):
         cell = QWidget(self.inner)
         rbtn = QRadioButton('', cell)
-        rbtn.toggled.connect(lambda: self.rbtn_clicked(name + '_' +  str(c)))
+        rbtn.toggled.connect(lambda: self.rbtn_clicked(name + '_' + str(c)))
         hbl = QHBoxLayout(cell)
         hbl.addWidget(rbtn)
         hbl.setContentsMargins(0, 0, 0, 0)
@@ -159,5 +170,6 @@ class DataCheck(Content):
             self.params.objective = None
             self.btn.setEnabled(False)
         else:
-            self.params.objective = self.params.columns[self.obj_group.checkedId()]
+            self.params.objective =\
+                self.params.columns[self.obj_group.checkedId()]
             self.btn.setEnabled(True)

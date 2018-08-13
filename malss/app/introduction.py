@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import os
-from PyQt5.QtWidgets import (QVBoxLayout, QHBoxLayout, QPushButton)
+from PyQt5.QtWidgets import (QHBoxLayout, QPushButton)
 from .content import Content
 
 
@@ -25,7 +25,7 @@ class Introduction(Content):
         # hbox = QHBoxLayout(self.inner)  # raise warning
         hbox = QHBoxLayout()
         hbox.setContentsMargins(10, 10, 10, 10)
-        
+
         btn = QPushButton('Next', self.inner)
         btn.clicked.connect(lambda: self.button_func('Task'))
 

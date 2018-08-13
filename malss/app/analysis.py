@@ -1,8 +1,8 @@
 # coding: utf-8
 
+import sys
 import pandas as pd
-from PyQt5.QtWidgets import (QVBoxLayout, QHBoxLayout, QPushButton,
-        QScrollArea)
+from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QScrollArea)
 from PyQt5.QtCore import QThread, pyqtSignal
 from ..malss import MALSS
 from .content import Content
@@ -19,7 +19,7 @@ class Analysis(Content):
 
         hbox = QHBoxLayout()
         hbox.setContentsMargins(10, 10, 10, 10)
-        
+
         btn = QPushButton('Analyze', self.inner)
         btn.clicked.connect(self.button_clicked)
 
@@ -42,13 +42,18 @@ class Analysis(Content):
         QScrollArea.resizeEvent(self, event)
 
     def button_clicked(self):
-        self.params.data = pd.read_csv(self.params.fpath, header=0,
-                dtype=self.make_dtype(self.params.columns, self.params.col_types))
-        col_cat = [self.params.columns[i] for i in range(len(self.params.columns))\
-                if self.params.col_types[i] == 'object']
-        data_tidy = pd.get_dummies(self.params.data, columns=col_cat, drop_first=True)
-        X, y = data_tidy.drop(self.params.objective, axis=1), data_tidy.loc[:, self.params.objective]
-        
+        self.params.data =\
+                pd.read_csv(self.params.fpath, header=0,
+                            dtype=self.make_dtype(self.params.columns,
+                                                  self.params.col_types))
+        col_cat = [self.params.columns[i]
+                   for i in range(len(self.params.columns))
+                   if self.params.col_types[i] == 'object']
+        data_tidy = pd.get_dummies(self.params.data, columns=col_cat,
+                                   drop_first=True)
+        X = data_tidy.drop(self.params.objective, axis=1)
+        y = data_tidy.loc[:, self.params.objective]
+
         self.thread = AnalyzeWorker(self.params.task.lower(), X, y)
         self.thread.finSignal.connect(self.analyzed)
         self.thread.start()
@@ -56,13 +61,17 @@ class Analysis(Content):
 
     def analyzed(self, signalData):
         self.wait_ani.hide()
-        print(signalData)
-        self.button_func('Hoge')
+        if 'error' in signalData:
+            self.params.error = signalData['error']
+            self.button_func('Error')
+        else:
+            self.params.results = signalData
+            self.button_func('Results')
 
 
 class AnalyzeWorker(QThread):
     finSignal = pyqtSignal(dict)
-    
+
     def __init__(self, task, X, y):
         super().__init__()
         self.mdl = MALSS(task)
@@ -71,11 +80,14 @@ class AnalyzeWorker(QThread):
 
     def run(self):
         self.mdl.fit(self.X, self.y, algorithm_selection_only=True)
-        self.mdl.remove_algorithm(0)
-        self.mdl.remove_algorithm(0)
+        self.mdl.remove_algorithm(-1)
+        self.mdl.remove_algorithm(-1)
+        self.mdl.remove_algorithm(-1)
+        self.mdl.remove_algorithm(-1)
 
         q = Queue()
-        job = Process(target=AnalyzeWorker.sub_job, args=(self.mdl, self.X, self.y, q))
+        job = Process(target=AnalyzeWorker.sub_job,
+                      args=(self.mdl, self.X, self.y, q))
         job.start()
         job.join()
         rtn = q.get()
@@ -83,5 +95,11 @@ class AnalyzeWorker(QThread):
 
     @staticmethod
     def sub_job(mdl, X, y, q):
-        mdl.fit(X, y)
-        q.put(mdl.results)
+        rtn = {}
+        try:
+            mdl.fit(X, y)
+            rtn = mdl.results
+        except Exception as e:
+            import traceback
+            rtn['error'] = traceback.format_exc()
+        q.put(rtn)

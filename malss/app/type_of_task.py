@@ -1,7 +1,7 @@
 # coding: utf-8
 
-from PyQt5.QtWidgets import (QVBoxLayout, QHBoxLayout, QPushButton,
-        QRadioButton, QButtonGroup)
+from PyQt5.QtWidgets import (QHBoxLayout, QPushButton,
+                             QRadioButton, QButtonGroup)
 from .content import Content
 
 
@@ -13,15 +13,17 @@ class TypeOfTask(Content):
         self.button_func = button_func
 
         if params.lang == 'jp':
-            self.set_paragraph('Type of task',
-                    text='あなたの機械学習のタスクを選択してください。')
+            self.set_paragraph(
+                'Type of task',
+                text='あなたの機械学習のタスクを選択してください。')
         else:
-            self.set_paragraph('Type of task',
-                    text='Choose your machine learning taks.')
+            self.set_paragraph(
+                'Type of task',
+                text='Choose your machine learning taks.')
 
         hbox1 = QHBoxLayout()
         hbox1.setContentsMargins(10, 10, 10, 10)
-        
+
         rbtn_cls = QRadioButton('Classification', self.inner)
         rbtn_cls.clicked.connect(self.rbtn_clicked)
         rbtn_reg = QRadioButton('Regression', self.inner)
@@ -43,10 +45,10 @@ class TypeOfTask(Content):
 
         hbox2 = QHBoxLayout()
         hbox2.setContentsMargins(10, 10, 10, 10)
-        
+
         self.btn = QPushButton('Next', self.inner)
         self.btn.clicked.connect(lambda: self.button_func('File selection'))
-        if params.task == None:
+        if params.task is None:
             self.btn.setEnabled(False)
 
         hbox2.addStretch(1)

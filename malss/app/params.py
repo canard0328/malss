@@ -11,3 +11,5 @@ class Params:
         self.col_types_def = None
         self.col_types = None
         self.objective = None
+        self.results = None
+        self.error = None

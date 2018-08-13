@@ -82,7 +82,7 @@ class MALSS(object):
             args = parser.parse_args()
             if args.lang is not None:
                 lang = args.lang[0]
-            ex = App(lang=lang)
+            App(lang=lang)
             sys.exit(app.exec_())
 
         self.is_ready = False
@@ -96,7 +96,8 @@ class MALSS(object):
         elif task == 'classification':
             self.scoring = 'f1_weighted' if scoring is None else scoring
         elif task == 'regression':
-            self.scoring = 'neg_mean_squared_error' if scoring is None else scoring
+            self.scoring =\
+                    'neg_mean_squared_error' if scoring is None else scoring
         else:
             raise ValueError('task:%s is not supported' % task)
         self.task = task
@@ -112,7 +113,7 @@ class MALSS(object):
         if lang != 'en' and lang != 'jp':
             raise ValueError('lang:%s is no supported' % lang)
         self.lang = lang
-        
+
         self.algorithms = []
 
         warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
@@ -168,17 +169,21 @@ class MALSS(object):
                          'sklearn.tree.DecisionTreeClassifier.html')))
 
                 # Too small data doesn't suit for kNN.
-                min_nn = int(0.1 * (self.cv - 1) * self.data.X.shape[0] / self.cv)
-                # where 0.1 means smallest data size ratio of learning_curve function.
+                min_nn = int(
+                    0.1 * (self.cv - 1) * self.data.X.shape[0] / self.cv)
+                # where 0.1 means smallest data size ratio of learning_curve
+                # function.
                 # The value of min_nn isn't accurate when cv is stratified.
                 if min_nn >= 11:
                     algorithms.append(
                         Algorithm(
                             KNeighborsClassifier(),
-                            [{'n_neighbors': list(range(2, min(20, min_nn + 1), 4))}],
+                            [{'n_neighbors': list(range(2, min(20, min_nn + 1),
+                                                        4))}],
                             'k-Nearest Neighbors',
-                            ('http://scikit-learn.org/stable/modules/generated/'
-                             'sklearn.neighbors.KNeighborsClassifier.html')))
+                            ('http://scikit-learn.org/stable/modules/'
+                             'generated/sklearn.neighbors.KNeighborsClassifier'
+                             '.html')))
             else:
                 algorithms.append(
                     Algorithm(
@@ -356,7 +361,7 @@ class MALSS(object):
         for algorithm in self.algorithms:
             self.results['algorithms'][algorithm.name] = {}
             self.results['algorithms'][algorithm.name]['grid_scores'] =\
-                    algorithm.grid_scores
+                algorithm.grid_scores
 
         if self.verbose:
             print('Done.')
@@ -388,8 +393,8 @@ class MALSS(object):
             grid_scores = []
             for j in range(len(clf.cv_results_['mean_test_score'])):
                 grid_scores.append((clf.cv_results_['params'][j],
-                                  clf.cv_results_['mean_test_score'][j],
-                                  clf.cv_results_['std_test_score'][j]))
+                                    clf.cv_results_['mean_test_score'][j],
+                                    clf.cv_results_['std_test_score'][j]))
             self.algorithms[i].estimator = clf.best_estimator_
             self.algorithms[i].best_score = clf.best_score_
             self.algorithms[i].best_params = clf.best_params_

@@ -3,7 +3,7 @@
 import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QWidget, QApplication, QFrame,
-        QVBoxLayout, QSplitter, QDesktopWidget)
+                             QVBoxLayout, QSplitter, QDesktopWidget)
 from .params import Params
 from .introduction import Introduction
 from .type_of_task import TypeOfTask
@@ -11,6 +11,8 @@ from .set_file import SetFile
 from .data_check import DataCheck
 from .analysis import Analysis
 from .menuview import MenuView
+from .results import Results
+from .error import Error
 
 
 class App(QWidget):
@@ -20,12 +22,11 @@ class App(QWidget):
         self.params = Params(lang)
         self.initUI()
 
-    
     def initUI(self):
-
         self.txt2func = {'Introduction': Introduction, 'Task': TypeOfTask,
-                'File selection': SetFile, 'Data check': DataCheck,
-                'Analysis': Analysis}
+                         'File selection': SetFile, 'Data check': DataCheck,
+                         'Analysis': Analysis, 'Results': Results,
+                         'Error': Error}
 
         self.setMinimumSize(1280, 720)
         self.setStyleSheet('background-color: rgb(242, 242, 242)')
@@ -42,10 +43,12 @@ class App(QWidget):
         self.splitter = QSplitter(Qt.Horizontal, self)
         self.splitter.setHandleWidth(0)
 
-        self.menuview = MenuView(self.splitter, self.update_content, self.params)
+        self.menuview = MenuView(self.splitter, self.update_content,
+                                 self.params)
         self.menuview.setWidgetResizable(True)
 
-        self.contentview = Introduction(self.splitter, self.menuview.add_button, self.params)
+        self.contentview = Introduction(self.splitter,
+                                        self.menuview.add_button, self.params)
         self.contentview.setWidgetResizable(True)
 
         self.splitter.addWidget(self.menuview)
@@ -55,7 +58,7 @@ class App(QWidget):
         vbox.addWidget(self.splitter)
 
         self.setLayout(vbox)
-        
+
         # self.center()
         self.showMaximized()
         self.setWindowTitle('MALSS interactive')
@@ -64,7 +67,8 @@ class App(QWidget):
     def center(self):
         # Get a rectangle of the main window.
         qr = self.frameGeometry()
-        # Figure out the screen resolution; and from this resolution, get the center point (x, y)
+        # Figure out the screen resolution; and from this resolution,
+        # get the center point (x, y)
         cp = QDesktopWidget().availableGeometry().center()
         # Set the center of the rectangle to the center of the screen.
         qr.moveCenter(cp)
@@ -77,9 +81,10 @@ class App(QWidget):
                 content.hide()
                 content.deleteLater()
 
-                self.contentview = self.txt2func[text](self.splitter,
-                                                       self.menuview.add_button,
-                                                       self.params)
+                self.contentview =\
+                    self.txt2func[text](self.splitter,
+                                        self.menuview.add_button,
+                                        self.params)
                 self.contentview.setWidgetResizable(True)
                 self.splitter.addWidget(self.contentview)
 

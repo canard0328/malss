@@ -66,8 +66,8 @@ class Analysis(Content):
             # self.params.mdl.remove_algorithm(-1)
             # self.params.mdl.remove_algorithm(-1)
             # self.params.mdl.remove_algorithm(-1)
-            # self.params.mdl.remove_algorithm(0)
-            # self.params.mdl.remove_algorithm(0)
+            self.params.mdl.remove_algorithm(0)
+            self.params.mdl.remove_algorithm(0)
             # self.params.mdl.remove_algorithm(0)
             self.params.algorithms = self.params.mdl.get_algorithms()
         else:

@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QWidget,
                              QLabel, QLineEdit, QDoubleSpinBox,
                              QSpinBox)
 from PyQt5.QtCore import Qt, QEvent
+from PyQt5.QtGui import QColor
 import numpy as np
 from .content import Content
 from .nonscroll_table import NonScrollTable
@@ -49,6 +50,8 @@ class Results(Content):
                     item = QTableWidgetItem(str(scores[r][c]))
                     item.setFlags(Qt.ItemIsEnabled)
                     table.setItem(r, c, item)
+                    if scores[r][-1] == best_score:
+                        table.item(r, c).setBackground(QColor('#ffeeee'))
 
             self.vbox.addWidget(table)
 

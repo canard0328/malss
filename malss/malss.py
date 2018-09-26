@@ -125,9 +125,8 @@ class MALSS(object):
                 if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
                     algorithms.append(
                         Algorithm(
-                            SVC(random_state=self.random_state),
-                            [{'kernel': ['rbf'],
-                              'C': [1, 10, 100, 1000],
+                            SVC(random_state=self.random_state, kernel='rbf'),
+                            [{'C': [1, 10, 100, 1000],
                               'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
                             'Support Vector Machine (RBF Kernel)',
                             ('http://scikit-learn.org/stable/modules/'
@@ -136,10 +135,10 @@ class MALSS(object):
                         Algorithm(
                             RandomForestClassifier(
                                 random_state=self.random_state,
-                                n_jobs=self.n_jobs),
-                            [{'n_estimators': [10, 100, 500],
-                              'max_features': [0.3, 0.6, 0.9],
-                              'max_depth': [3, 7, None]}],
+                                n_estimators=500,
+                                n_jobs=1),
+                            [{'max_features': [0.3, 0.6, 0.9],
+                              'max_depth': [3, 7, 11]}],
                             'Random Forest',
                             ('http://scikit-learn.org/stable/modules/'
                              'generated/'
@@ -154,9 +153,7 @@ class MALSS(object):
                 algorithms.append(
                     Algorithm(
                         LogisticRegression(random_state=self.random_state),
-                        [{'penalty': ['l2', 'l1'],
-                          'C': [0.1, 0.3, 1, 3, 10],
-                          'class_weight': [None, 'balanced']}],
+                        [{'C': [0.1, 0.3, 1, 3, 10]}],
                         'Logistic Regression',
                         ('http://scikit-learn.org/stable/modules/generated/'
                          'sklearn.linear_model.LogisticRegression.html')))
@@ -189,11 +186,8 @@ class MALSS(object):
                     Algorithm(
                         SGDClassifier(
                             random_state=self.random_state,
-                            n_jobs=self.n_jobs),
-                        [{'loss': ['hinge', 'log'],
-                          'penalty': ['l2', 'l1'],
-                          'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03],
-                          'class_weight': [None, 'balanced']}],
+                            n_jobs=1),
+                        [{'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
                         'SGD Classifier',
                         ('http://scikit-learn.org/stable/modules/generated/'
                          'sklearn.linear_model.SGDClassifier.html')))
@@ -202,9 +196,8 @@ class MALSS(object):
                 if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
                     algorithms.append(
                         Algorithm(
-                            SVR(),
-                            [{'kernel': ['rbf'],
-                              'C': [1, 10, 100, 1000],
+                            SVR(kernel='rbf'),
+                            [{'C': [1, 10, 100, 1000],
                               'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
                             'Support Vector Machine (RBF Kernel)',
                             ('http://scikit-learn.org/stable/modules/'
@@ -213,10 +206,10 @@ class MALSS(object):
                         Algorithm(
                             RandomForestRegressor(
                                 random_state=self.random_state,
-                                n_jobs=self.n_jobs),
-                            [{'n_estimators': [10, 100, 500],
-                              'max_features': [0.3, 0.6, 0.9],
-                              'max_depth': [3, 7, None]}],
+                                n_estimators=500,
+                                n_jobs=1),
+                            [{'max_features': [0.3, 0.6, 0.9],
+                              'max_depth': [3, 7, 11]}],
                             'Random Forest',
                             ('http://scikit-learn.org/stable/modules/'
                              'generated/'
@@ -241,14 +234,13 @@ class MALSS(object):
                     Algorithm(
                         SGDRegressor(
                             random_state=self.random_state),
-                        [{'penalty': ['l2', 'l1'],
-                          'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
+                        [{'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
                         'SGD Regressor',
                         ('http://scikit-learn.org/stable/modules/generated/'
                          'sklearn.linear_model.SGDRegressor.html')))
         return algorithms
 
-    def add_algorithm(self, estimator, param_grid, name):
+    def add_algorithm(self, estimator, param_grid, name, link=None):
         """
         Add arbitrary scikit-learn-compatible algorithm.
 
@@ -264,10 +256,39 @@ class MALSS(object):
             This enables searching over any sequence of parameter settings.
         name : string
             Algorithm name (used for report)
+        link : string
+            URL to explain the algorithm (used for report)
         """
         if self.verbose:
             print('add %s' % name)
-        self.algorithms.append(Algorithm(estimator, param_grid, name))
+        self.algorithms.append(Algorithm(estimator, param_grid, name, link))
+
+    def change_params(self, identifier, param_grid):
+        """
+        Change parameters of an algorithm.
+
+        Parameters
+        ----------
+        identifier : integer or string.
+            If an integer is passed, it is the index of the algorithm
+            in the list of algorithms.
+            If a string is passed, it is the name of the algorithm.
+        param_grid : dict or list of dictionaries
+            Dictionary with parameters names (string) as keys and
+            lists of parameter settings to try as values, or a list of
+            such dictionaries, in which case the grids spanned by
+            each dictionary in the list are explored.
+            This enables searching over any sequence of parameter settings.
+        """
+        if isinstance(identifier, int):
+            self.algorithms[identifier].parameters = param_grid
+        elif isinstance(identifier, str):
+            for algorithm in self.algorithms:
+                if algorithm.name == identifier:
+                    algorithm.parameters = param_grid
+                    break
+        else:
+            raise Exception('Wrong identifier')
 
     def remove_algorithm(self, index=-1):
         """
@@ -332,7 +353,16 @@ class MALSS(object):
             if self.verbose:
                 for algorithm in self.algorithms:
                     print('    %s' % algorithm.name)
-        self.is_ready = True
+            self.is_ready = True
+        else:
+            # initialize
+            for algorithm in self.algorithms:
+                algorithm.best_score is None
+                algorithm.best_params is None
+                algorithm.is_bset_algorithm = False
+                algorithm.grid_scores is None
+                algorithm.classification_report is None
+
         if algorithm_selection_only:
             return self
 
@@ -388,7 +418,7 @@ class MALSS(object):
             parameters = self.algorithms[i].parameters
             clf = GridSearchCV(
                 estimator, parameters, cv=self.cv, scoring=self.scoring,
-                n_jobs=1)  # parallel run in cross validation
+                n_jobs=self.n_jobs)
             clf.fit(self.data.X, self.data.y)
             grid_scores = []
             for j in range(len(clf.cv_results_['mean_test_score'])):
@@ -419,7 +449,7 @@ class MALSS(object):
                 self.data.y,
                 cv=self.cv,
                 scoring=self.scoring,
-                n_jobs=1)  # parallel run in cross validation
+                n_jobs=self.n_jobs)  # parallel run in cross validation
             train_scores_mean = np.mean(train_scores, axis=1)
             train_scores_std = np.std(train_scores, axis=1)
             test_scores_mean = np.mean(test_scores, axis=1)

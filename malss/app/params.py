@@ -11,5 +11,9 @@ class Params:
         self.col_types_def = None
         self.col_types = None
         self.objective = None
+        self.X = None
+        self.y = None
+        self.algorithms = None
+        self.mdl = None
         self.results = None
         self.error = None

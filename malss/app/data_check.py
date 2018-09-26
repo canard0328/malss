@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QTableWidget,
 from PyQt5.QtCore import Qt
 import pandas as pd
 from .content import Content
+from .nonscroll_table import NonScrollTable
 
 
 class DataCheck(Content):
@@ -35,7 +36,8 @@ class DataCheck(Content):
                 'First {n} rows of your data.'.format(n=nr),
                 text='Confirm that the data was read correctly.')
 
-        table = QTableWidget(self.inner)
+        # table = QTableWidget(self.inner)
+        table = NonScrollTable(self.inner)
 
         table.setRowCount(nr)
         table.setColumnCount(len(data.columns))
@@ -47,9 +49,12 @@ class DataCheck(Content):
                 item.setFlags(Qt.ItemIsEnabled)
                 table.setItem(r, c, item)
 
+        table.setNonScroll()
+
         self.vbox.addWidget(table)
 
-        htable = QTableWidget(self.inner)
+        # htable = QTableWidget(self.inner)
+        htable = NonScrollTable(self.inner)
 
         htable.setRowCount(len(data.columns))
         htable.setColumnCount(4)
@@ -89,6 +94,8 @@ class DataCheck(Content):
                                  self.params.col_types_def[c]))
             self.obj_group.addButton(self.lst_obj[-1])
             self.obj_group.setId(self.lst_obj[-1], c)
+
+        htable.setNonScroll()
 
         self.vbox.addWidget(htable)
 

@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import os
 from PyQt5.QtWidgets import (QHBoxLayout, QPushButton,
                              QTableWidgetItem, QRadioButton, QButtonGroup,
                              QWidget)
@@ -16,6 +17,8 @@ class DataCheck(Content):
 
         self.button_func = button_func
 
+        path = os.path.abspath(os.path.dirname(__file__)) + '/static/'
+
         data = pd.read_csv(self.params.fpath, header=0,
                            dtype=self.make_dtype(self.params.columns,
                                                  self.params.col_types))
@@ -28,13 +31,15 @@ class DataCheck(Content):
         nr = min(5, data.shape[0])
 
         if params.lang == 'jp':
+            text = ('データの読み込み結果（先頭{n}行）を以下に示します．\n'
+                    'データを正しく読み込めていることを確認してください．'.format(n=nr))
             self.set_paragraph(
-                'First {n} rows of your data.'.format(n=nr),
-                text='データを正しく読み込めていることを確認してください。')
+                'データ読み込み結果の確認', text=text)
         else:
+            text = ('First {n} rows of your data are shown below.\n'
+                    'Confirm that the data was read correctly.'.format(n=nr))
             self.set_paragraph(
-                'First {n} rows of your data.'.format(n=nr),
-                text='Confirm that the data was read correctly.')
+                'Check data', text=text)
 
         # table = QTableWidget(self.inner)
         table = NonScrollTable(self.inner)
@@ -53,13 +58,23 @@ class DataCheck(Content):
 
         self.vbox.addWidget(table)
 
+        # Text for type checking and objective variable setting
+        path1 = path + 'categorical'
+        text = self.get_text(path1)
+        if self.params.lang == 'en':
+            self.set_paragraph(
+                'Check type of variables and set objective variable',
+                text=text)
+        else:
+            self.set_paragraph('変数タイプの確認と目的変数の設定', text=text)
+
         # htable = QTableWidget(self.inner)
         htable = NonScrollTable(self.inner)
 
         htable.setRowCount(len(data.columns))
         htable.setColumnCount(4)
         htable.setHorizontalHeaderLabels(
-            ['columns', 'categorical', 'numerical', 'objective variable'])
+            ['columns', 'categorical', 'quantitative', 'objective variable'])
 
         self.lst_cat = []
         self.lst_num = []
@@ -103,7 +118,10 @@ class DataCheck(Content):
         hbox2.setContentsMargins(10, 10, 10, 10)
 
         self.btn = QPushButton('Next', self.inner)
-        self.btn.clicked.connect(lambda: self.button_func('Analysis'))
+        if self.params.lang == 'en':
+            self.btn.clicked.connect(lambda: self.button_func('Overfitting'))
+        else:
+            self.btn.clicked.connect(lambda: self.button_func('過学習'))
         if self.obj_group.checkedButton() is None:
             self.btn.setEnabled(False)
         else:

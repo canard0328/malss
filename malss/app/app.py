@@ -9,6 +9,7 @@ from .introduction import Introduction
 from .type_of_task import TypeOfTask
 from .set_file import SetFile
 from .data_check import DataCheck
+from .overfitting import Overfitting
 from .analysis import Analysis
 from .menuview import MenuView
 from .results import Results
@@ -28,6 +29,7 @@ class App(QWidget):
                          '分析タスク': TypeOfTask, 'Task': TypeOfTask,
                          '入力データ': SetFile, 'Input data': SetFile,
                          'データの確認': DataCheck, 'Data check': DataCheck,
+                         '過学習': Overfitting, 'Overfitting': Overfitting,
                          'Analysis': Analysis, 'Results': Results,
                          'Learning curve': LearningCurve, 'Error': Error}
 

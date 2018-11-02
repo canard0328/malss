@@ -28,6 +28,8 @@ class LearningCurve(Content):
             fig = PlotLearningCurve(x, y_train, y_cv, ylim, name, self.inner)
             self.vbox.addWidget(fig)
 
+        self.vbox.addStretch(1)
+
     def __get_ylim(self, algorithms):
         ymin = float('Inf')
         ymax = -float('Inf')
@@ -50,8 +52,7 @@ class PlotLearningCurve(FigureCanvas):
         self.setParent(parent)
 
         FigureCanvas.setSizePolicy(self,
-                                   QSizePolicy.Expanding,
-                                   QSizePolicy.Fixed)
+                                   QSizePolicy.Fixed, QSizePolicy.Fixed)
         FigureCanvas.updateGeometry(self)
         self.plot(x, y_train, y_cv, ylim, title)
 

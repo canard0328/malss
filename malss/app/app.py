@@ -13,6 +13,7 @@ from .overfitting import Overfitting
 from .analysis import Analysis
 from .menuview import MenuView
 from .results import Results
+from .bias_variance import BiasVariance
 from .learning_curve import LearningCurve
 from .error import Error
 
@@ -25,13 +26,17 @@ class App(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.txt2func = {'はじめに': Introduction, 'Introduction': Introduction,
-                         '分析タスク': TypeOfTask, 'Task': TypeOfTask,
-                         '入力データ': SetFile, 'Input data': SetFile,
-                         'データの確認': DataCheck, 'Data check': DataCheck,
-                         '過学習': Overfitting, 'Overfitting': Overfitting,
-                         'Analysis': Analysis, 'Results': Results,
-                         'Learning curve': LearningCurve, 'Error': Error}
+        self.txt2func = {
+            'はじめに': Introduction, 'Introduction': Introduction,
+            '分析タスク': TypeOfTask, 'Task': TypeOfTask,
+            '入力データ': SetFile, 'Input data': SetFile,
+            'データの確認': DataCheck, 'Data check': DataCheck,
+            '過学習': Overfitting, 'Overfitting': Overfitting,
+            '分析の実行': Analysis, 'Analysis': Analysis,
+            '結果の確認': Results, 'Results': Results,
+            'バイアスとバリアンス': BiasVariance, 'Bias and Variance': BiasVariance,
+            '学習曲線': LearningCurve, 'Learning curve': LearningCurve,
+            'Error': Error}
 
         self.setMinimumSize(1280, 720)
         self.setStyleSheet('background-color: rgb(242, 242, 242)')

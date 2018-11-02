@@ -16,6 +16,21 @@ class Analysis(Content):
 
         self.button_func = button_func
 
+        if self.params.lang == 'en':
+            text = ('MALSS automatically choose algorithms and '
+                    'perform cross validation analysis with '
+                    'grid search hyper-parameter tuning.\n'
+                    'Clik "Analyze" to start.\n'
+                    '(It will take tens of minutes.)')
+            self.set_paragraph('', text=text)
+        else:
+            text = ('MALSSはデータに応じて複数のアルゴリズムを選択し，'
+                    'グリッドサーチによるハイパーパラメータチューニング，'
+                    '交差検証を自動で行います．\n'
+                    'それでは分析を始めましょう．Anayzeボタンを押してください．\n'
+                    '（分析には数分～数十分かかります）')
+            self.set_paragraph('', text=text)
+
         hbox = QHBoxLayout()
         hbox.setContentsMargins(10, 10, 10, 10)
 
@@ -44,9 +59,9 @@ class Analysis(Content):
         QScrollArea.resizeEvent(self, event)
 
     def button_clicked(self):
-        self.analyze()
+        self.analyze(True)
 
-    def analyze(self):
+    def analyze(self, clicked=False):
         self.params.data =\
                 pd.read_csv(self.params.fpath, header=0,
                             dtype=self.make_dtype(self.params.columns,
@@ -73,11 +88,17 @@ class Analysis(Content):
         else:
             self.__add_algorithm()
 
-        self.thread = AnalyzeWorker(self.params.mdl, self.params.X,
-                                    self.params.y)
-        self.thread.finSignal.connect(self.analyzed)
-        self.thread.start()
-        self.wait_ani.show()
+        if len(self.params.mdl.get_algorithms()) > 0:
+            self.thread = AnalyzeWorker(self.params.mdl, self.params.X,
+                                        self.params.y)
+            self.thread.finSignal.connect(self.analyzed)
+            self.thread.start()
+            self.wait_ani.show()
+        elif clicked:
+            if self.params.lang == 'en':
+                self.button_func('Results')
+            else:
+                self.button_func('結果の確認')
 
     def analyzed(self, signalData):
         self.wait_ani.hide()
@@ -93,7 +114,11 @@ class Analysis(Content):
                         results['grid_scores']
                     self.params.results['algorithms'][name]['learning_curve'] =\
                         results['learning_curve']
-            self.button_func('Results')
+
+            if self.params.lang == 'en':
+                self.button_func('Results')
+            else:
+                self.button_func('結果の確認')
 
     def __need_analyze(self, name, parameters):
         flg = False
@@ -117,7 +142,6 @@ class Analysis(Content):
                 flg = True
                 break
 
-        print('{},{},{},{}'.format(flg, param_dic, name, parameters))
         return flg
 
     def __add_algorithm(self):

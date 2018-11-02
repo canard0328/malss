@@ -1,9 +1,8 @@
 # coding: utf-8
 
-from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QWidget,
-                             QTableWidgetItem, QRadioButton, QButtonGroup,
-                             QLabel, QLineEdit, QDoubleSpinBox,
-                             QSpinBox)
+import os
+from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QTableWidgetItem,
+                             QLabel, QDoubleSpinBox, QSpinBox)
 from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtGui import QColor
 import numpy as np
@@ -16,6 +15,15 @@ class Results(Content):
         super().__init__(parent, 'Results', params)
 
         self.button_func = button_func
+
+        path = os.path.abspath(os.path.dirname(__file__)) + '/static/'
+
+        path1 = path + 'results'
+        text = self.get_text(path1)
+        if self.params.lang == 'en':
+            self.set_paragraph('', text=text)
+        else:
+            self.set_paragraph('', text=text)
 
         self.sb_list_from = []
         self.sb_list_to = []
@@ -95,13 +103,21 @@ class Results(Content):
         self.vbox.addStretch()
 
         btn_re = QPushButton('Re-analyze', self.inner)
-        btn_re.clicked.connect(lambda: self.button_func('Analysis'))
+        if self.params.lang == 'en':
+            btn_re.clicked.connect(lambda: self.button_func('Analysis'))
+        else:
+            btn_re.clicked.connect(lambda: self.button_func('分析の実行'))
 
-        btn_next = QPushButton('Continue without changes', self.inner)
-        btn_next.clicked.connect(lambda: self.button_func('Learning curve'))
+        self.btn_next = QPushButton('Continue without any changes', self.inner)
+        if self.params.lang == 'en':
+            self.btn_next.clicked.connect(lambda: self.button_func(
+                'Bias and Variance'))
+        else:
+            self.btn_next.clicked.connect(lambda: self.button_func(
+                'バイアスとバリアンス'))
 
         self.vbox.addWidget(btn_re)
-        self.vbox.addWidget(btn_next)
+        self.vbox.addWidget(self.btn_next)
 
     def __make_spinbox(self, name, param_name, idx, min_, max_, val, step,
                        prefix=None, is_double=False):
@@ -141,6 +157,8 @@ class Results(Content):
             if name == algo_name:
                 if param_name in params[0]:
                     params[0][param_name] = from_to
+
+        self.btn_next.setEnabled(False)
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Wheel and 'SpinBox' in str(obj):

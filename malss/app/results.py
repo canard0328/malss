@@ -96,7 +96,9 @@ class Results(Content):
 
         btn_re = QPushButton('Re-analyze', self.inner)
         btn_re.clicked.connect(lambda: self.button_func('Analysis'))
+
         btn_next = QPushButton('Continue without changes', self.inner)
+        btn_next.clicked.connect(lambda: self.button_func('Learning curve'))
 
         self.vbox.addWidget(btn_re)
         self.vbox.addWidget(btn_next)

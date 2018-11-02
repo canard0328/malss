@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import os
 from PyQt5.QtWidgets import (QHBoxLayout, QPushButton,
                              QRadioButton, QButtonGroup)
 from .content import Content
@@ -12,13 +13,31 @@ class TypeOfTask(Content):
 
         self.button_func = button_func
 
+        path = os.path.abspath(os.path.dirname(__file__)) + '/static/'
+
+        # Text for machine learning tasks
+        path1 = path + 'task'
+        text = self.get_text(path1)
+        if self.params.lang == 'en':
+            self.set_paragraph('Type of task', text=text)
+        else:
+            self.set_paragraph('分析タスク', text=text, img=path1)
+
+        # Text for supervised learning
+        path2 = path + 'supervised_learning'
+        text = self.get_text(path2)
+        if self.params.lang == 'en':
+            self.set_paragraph('Supervised learning', text=text)
+        else:
+            self.set_paragraph('教師あり学習', text=text, img=path2)
+
         if params.lang == 'jp':
             self.set_paragraph(
-                'Type of task',
+                'タスクの選択',
                 text='あなたの機械学習のタスクを選択してください。')
         else:
             self.set_paragraph(
-                'Type of task',
+                'Task selection',
                 text='Choose your machine learning taks.')
 
         hbox1 = QHBoxLayout()
@@ -47,7 +66,10 @@ class TypeOfTask(Content):
         hbox2.setContentsMargins(10, 10, 10, 10)
 
         self.btn = QPushButton('Next', self.inner)
-        self.btn.clicked.connect(lambda: self.button_func('File selection'))
+        if self.params.lang == 'en':
+            self.btn.clicked.connect(lambda: self.button_func('Input data'))
+        else:
+            self.btn.clicked.connect(lambda: self.button_func('入力データ'))
         if params.task is None:
             self.btn.setEnabled(False)
 

@@ -13,21 +13,22 @@ class Introduction(Content):
         self.button_func = button_func
 
         path = os.path.abspath(os.path.dirname(__file__)) + '/static/'
-        if self.params.lang == 'en':
-            path += 'introduction_en.txt'
-        else:
-            path += 'introduction_jp.txt'
+        path += 'introduction'
 
         text = self.get_text(path)
 
-        self.set_paragraph('Introduction', text=text)
+        self.set_paragraph('MALSS interactive', text=text)
 
         # hbox = QHBoxLayout(self.inner)  # raise warning
         hbox = QHBoxLayout()
         hbox.setContentsMargins(10, 10, 10, 10)
 
         btn = QPushButton('Next', self.inner)
-        btn.clicked.connect(lambda: self.button_func('Task'))
+
+        if self.params.lang == 'en':
+            btn.clicked.connect(lambda: self.button_func('Task'))
+        else:
+            btn.clicked.connect(lambda: self.button_func('分析タスク'))
 
         hbox.addStretch(1)
         hbox.addWidget(btn)

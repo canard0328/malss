@@ -84,7 +84,9 @@ ENV/
 
 *.txt
 !LICENSE.txt
+!malss/app/static/*.txt
 *.png
+!malss/app/static/*.png
 *.html
 test*/
 data/

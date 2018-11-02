@@ -1,9 +1,9 @@
 # coding: utf-8
 
 from PyQt5.QtWidgets import (QScrollArea, QWidget, QVBoxLayout,
-                             QLabel, QFrame)
+                             QLabel, QFrame, QStyle)
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPalette
+from PyQt5.QtGui import QPalette, QPixmap
 
 
 class Content(QScrollArea):
@@ -12,6 +12,9 @@ class Content(QScrollArea):
         super().__init__(parent)
 
         self.params = params
+
+        self.lbl_img_list = []
+        self.pixmap_list = []
 
         self.H1_HEIGHT = 50
         self.H2_HEIGHT = 50
@@ -65,15 +68,34 @@ class Content(QScrollArea):
 
         if text != '':
             lbl_txt = QLabel(text, self.inner)
+            lbl_txt.setWordWrap(True)
             fnt = lbl_txt.font()
             fnt.setPointSize(self.TEXT_FONT_SIZE)
             lbl_txt.setFont(fnt)
             lbl_txt.setMargin(self.SIDE_MARGIN)
             self.vbox.addWidget(lbl_txt)
 
+        if img is not None:
+            if self.params.lang == 'en':
+                img += '_en.png'
+            else:
+                img += '_jp.png'
+            pixmap = QPixmap(img)
+            if not pixmap.isNull():
+                lbl_img = QLabel(self.inner)
+                lbl_img.setPixmap(pixmap)
+                self.lbl_img_list.append(lbl_img)
+                self.pixmap_list.append(pixmap.scaledToWidth(pixmap.width()))
+                self.vbox.addWidget(lbl_img)
+
         self.inner.setLayout(self.vbox)
 
     def get_text(self, path):
+        if self.params.lang == 'en':
+            path += '_en.txt'
+        else:
+            path += '_jp.txt'
+
         try:
             text = open(path, encoding='utf8').read()
         except FileNotFoundError:
@@ -88,3 +110,18 @@ class Content(QScrollArea):
         for c, d in zip(columns, dtypes):
             dic[c] = d
         return dic
+
+    def resizeEvent(self, event):
+        # Resize images only if the width of the scroll area
+        # is shorter than that of images
+        for i, lbl in enumerate(self.lbl_img_list):
+            w = self.width() - QStyle.PM_ScrollBarExtent
+            if w < self.pixmap_list[i].width():
+                lbl.setPixmap(
+                        self.pixmap_list[i].scaledToWidth(
+                            w, Qt.SmoothTransformation))
+            else:
+                lbl.setPixmap(
+                        self.pixmap_list[i].scaledToWidth(
+                            self.pixmap_list[i].width()))
+        return super().resizeEvent(event)

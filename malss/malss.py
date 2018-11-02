@@ -393,6 +393,10 @@ class MALSS(object):
             self.results['algorithms'][algorithm.name]['grid_scores'] =\
                 algorithm.grid_scores
 
+            if dname is None:
+                self.results['algorithms'][algorithm.name]['learning_curve'] =\
+                    self.__calc_learning_curve(algorithm)
+
         if self.verbose:
             print('Done.')
         return self
@@ -437,6 +441,21 @@ class MALSS(object):
             est = self.algorithms[i].estimator
             self.algorithms[i].classification_report =\
                 classification_report(self.data.y, est.predict(self.data.X))
+
+    def __calc_learning_curve(self, algorithm):
+        estimator = algorithm.estimator
+        train_sizes, train_scores, test_scores = learning_curve(
+            estimator,
+            self.data.X,
+            self.data.y,
+            cv=self.cv,
+            scoring=self.scoring,
+            n_jobs=self.n_jobs)  # parallel run in cross validation
+        train_scores_mean = np.mean(train_scores, axis=1)
+        test_scores_mean = np.mean(test_scores, axis=1)
+
+        return {'x': train_sizes, 'y_train': train_scores_mean,
+                'y_cv': test_scores_mean}
 
     def __plot_learning_curve(self, dname=None):
         for alg in self.algorithms:

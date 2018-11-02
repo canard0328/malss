@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QTableWidget,
+from PyQt5.QtWidgets import (QHBoxLayout, QPushButton,
                              QTableWidgetItem, QRadioButton, QButtonGroup,
                              QWidget)
 from PyQt5.QtCore import Qt

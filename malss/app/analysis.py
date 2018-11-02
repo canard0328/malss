@@ -68,7 +68,7 @@ class Analysis(Content):
             # self.params.mdl.remove_algorithm(-1)
             self.params.mdl.remove_algorithm(0)
             self.params.mdl.remove_algorithm(0)
-            # self.params.mdl.remove_algorithm(0)
+            self.params.mdl.remove_algorithm(0)
             self.params.algorithms = self.params.mdl.get_algorithms()
         else:
             self.__add_algorithm()
@@ -91,6 +91,8 @@ class Analysis(Content):
                 for name, results in signalData['algorithms'].items():
                     self.params.results['algorithms'][name]['grid_scores'] =\
                         results['grid_scores']
+                    self.params.results['algorithms'][name]['learning_curve'] =\
+                        results['learning_curve']
             self.button_func('Results')
 
     def __need_analyze(self, name, parameters):

@@ -59,7 +59,10 @@ class MenuView(QScrollArea):
         self.vbox.addWidget(topframe)
 
         self.list_button = []
-        self.add_button('Introduction')
+        if self.params.lang == 'en':
+            self.add_button('Introduction')
+        else:
+            self.add_button('はじめに')
 
         self.inner.setLayout(self.vbox)
 

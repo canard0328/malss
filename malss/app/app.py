@@ -12,6 +12,7 @@ from .data_check import DataCheck
 from .analysis import Analysis
 from .menuview import MenuView
 from .results import Results
+from .learning_curve import LearningCurve
 from .error import Error
 
 
@@ -23,10 +24,12 @@ class App(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.txt2func = {'Introduction': Introduction, 'Task': TypeOfTask,
-                         'File selection': SetFile, 'Data check': DataCheck,
+        self.txt2func = {'はじめに': Introduction, 'Introduction': Introduction,
+                         '分析タスク': TypeOfTask, 'Task': TypeOfTask,
+                         '入力データ': SetFile, 'Input data': SetFile,
+                         'データの確認': DataCheck, 'Data check': DataCheck,
                          'Analysis': Analysis, 'Results': Results,
-                         'Error': Error}
+                         'Learning curve': LearningCurve, 'Error': Error}
 
         self.setMinimumSize(1280, 720)
         self.setStyleSheet('background-color: rgb(242, 242, 242)')

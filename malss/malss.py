@@ -364,7 +364,7 @@ class MALSS(object):
                 algorithm.classification_report is None
 
         if algorithm_selection_only:
-            return self
+            return (self.data.X, self.data.y)
 
         if isinstance(self.cv, int):
             if self.task == 'classification':

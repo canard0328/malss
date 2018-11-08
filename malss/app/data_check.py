@@ -21,7 +21,7 @@ class DataCheck(Content):
 
         data = pd.read_csv(self.params.fpath, header=0,
                            dtype=self.make_dtype(self.params.columns,
-                                                 self.params.col_types))
+                                                   self.params.col_types))
         if self.params.data is None:
             self.params.data = data
             self.params.columns = data.columns
@@ -198,3 +198,5 @@ class DataCheck(Content):
             self.params.objective =\
                 self.params.columns[self.obj_group.checkedId()]
             self.btn.setEnabled(True)
+
+        self.params.col_types_changed = True

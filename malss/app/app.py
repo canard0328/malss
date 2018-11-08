@@ -15,6 +15,7 @@ from .menuview import MenuView
 from .results import Results
 from .bias_variance import BiasVariance
 from .learning_curve import LearningCurve
+from .feature_selection import FeatureSelection
 from .error import Error
 
 
@@ -36,6 +37,7 @@ class App(QWidget):
             '結果の確認': Results, 'Results': Results,
             'バイアスとバリアンス': BiasVariance, 'Bias and Variance': BiasVariance,
             '学習曲線': LearningCurve, 'Learning curve': LearningCurve,
+            '特徴量選択': FeatureSelection, 'Feature selection': FeatureSelection,
             'Error': Error}
 
         self.setMinimumSize(1280, 720)

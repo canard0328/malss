@@ -11,9 +11,14 @@ class Params:
         self.col_types_def = None
         self.col_types = None
         self.objective = None
+        self.col_types_changed = True
         self.X = None
         self.y = None
         self.algorithms = None
         self.mdl = None
         self.results = None
         self.error = None
+        # Parameters for feature selection
+        self.mdl_fs = None
+        self.X_fs = None
+        self.not_deleted = False

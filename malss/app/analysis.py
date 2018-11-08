@@ -44,7 +44,7 @@ class Analysis(Content):
 
         self.vbox.addStretch(1)
 
-        # To be modified.
+        # "parent.parent()" must be modified.
         self.wait_ani = WaitingAnimation(parent.parent())
         self.wait_ani.hide()
 
@@ -62,31 +62,54 @@ class Analysis(Content):
         self.analyze(True)
 
     def analyze(self, clicked=False):
-        self.params.data =\
-                pd.read_csv(self.params.fpath, header=0,
-                            dtype=self.make_dtype(self.params.columns,
-                                                  self.params.col_types))
-        col_cat = [self.params.columns[i]
-                   for i in range(len(self.params.columns))
-                   if self.params.col_types[i] == 'object']
-        data_tidy = pd.get_dummies(self.params.data, columns=col_cat,
-                                   drop_first=True)
-        self.params.X = data_tidy.drop(self.params.objective, axis=1)
-        self.params.y = data_tidy.loc[:, self.params.objective]
+        if self.params.col_types_changed:
+            # self.params.data =\
+            data = pd.read_csv(self.params.fpath, header=0,
+                               dtype=self.make_dtype(self.params.columns,
+                                                     self.params.col_types))
+            self.params.col_types_changed = False
 
-        if self.params.mdl is None:
-            self.params.mdl = MALSS(self.params.task.lower())
-            self.params.mdl.fit(self.params.X, self.params.y,
-                                algorithm_selection_only=True)
-            # self.params.mdl.remove_algorithm(-1)
-            # self.params.mdl.remove_algorithm(-1)
-            # self.params.mdl.remove_algorithm(-1)
-            self.params.mdl.remove_algorithm(0)
-            self.params.mdl.remove_algorithm(0)
-            self.params.mdl.remove_algorithm(0)
-            self.params.algorithms = self.params.mdl.get_algorithms()
+            X = data.drop(self.params.objective, axis=1)
+            y = data.loc[:, self.params.objective]
+
+            if self.params.mdl is None:
+                self.params.mdl = MALSS(self.params.task.lower())
+                self.params.X, self.params.y =\
+                    self.params.mdl.fit(X, y,
+                                        algorithm_selection_only=True)
+
+                # self.params.mdl.remove_algorithm(-1)
+                # self.params.mdl.remove_algorithm(-1)
+                # self.params.mdl.remove_algorithm(-1)
+                self.params.mdl.remove_algorithm(0)
+                self.params.mdl.remove_algorithm(0)
+                self.params.mdl.remove_algorithm(0)
+                self.params.algorithms = self.params.mdl.get_algorithms()
         else:
             self.__add_algorithm()
+
+        # col_cat = [self.params.columns[i]
+        #            for i in range(len(self.params.columns))
+        #            if self.params.col_types[i] == 'object'
+        #            and self.params.columns[i] != self.params.objective]
+        # data_tidy = pd.get_dummies(self.params.data, columns=col_cat,
+        #                            drop_first=True)
+        # self.params.X = data_tidy.drop(self.params.objective, axis=1)
+        # self.params.y = data_tidy.loc[:, self.params.objective]
+
+        # if self.params.mdl is None:
+        #     self.params.mdl = MALSS(self.params.task.lower())
+        #     self.params.mdl.fit(self.params.X, self.params.y,
+        #                         algorithm_selection_only=True)
+        #     # self.params.mdl.remove_algorithm(-1)
+        #     # self.params.mdl.remove_algorithm(-1)
+        #     # self.params.mdl.remove_algorithm(-1)
+        #     self.params.mdl.remove_algorithm(0)
+        #     self.params.mdl.remove_algorithm(0)
+        #     self.params.mdl.remove_algorithm(0)
+        #     self.params.algorithms = self.params.mdl.get_algorithms()
+        # else:
+        #     self.__add_algorithm()
 
         if len(self.params.mdl.get_algorithms()) > 0:
             self.thread = AnalyzeWorker(self.params.mdl, self.params.X,

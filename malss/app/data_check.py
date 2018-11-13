@@ -19,16 +19,21 @@ class DataCheck(Content):
 
         path = os.path.abspath(os.path.dirname(__file__)) + '/static/'
 
-        data = pd.read_csv(self.params.fpath, header=0,
-                           dtype=self.make_dtype(self.params.columns,
-                                                   self.params.col_types))
-        if self.params.data is None:
-            self.params.data = data
+        if self.params.data5 is None:
+            data = pd.read_csv(
+                self.params.fpath, header=0,
+                dtype=self.make_dtype(self.params.columns,
+                                      self.params.col_types))
+            self.params.data5 = data.head(min(5, data.shape[0]))
+
             self.params.columns = data.columns
             self.params.col_types_def =\
                 list(map(str, data.dtypes.get_values()))
-            self.params.col_types = list(map(str, data.dtypes.get_values()))
-        nr = min(5, data.shape[0])
+            self.params.col_types =\
+                list(map(str, data.dtypes.get_values()))
+
+        # nr = min(5, data.shape[0])
+        nr = len(self.params.data5)
 
         if params.lang == 'jp':
             text = ('データの読み込み結果（先頭{n}行）を以下に示します．\n'
@@ -41,16 +46,15 @@ class DataCheck(Content):
             self.set_paragraph(
                 'Check data', text=text)
 
-        # table = QTableWidget(self.inner)
         table = NonScrollTable(self.inner)
 
         table.setRowCount(nr)
-        table.setColumnCount(len(data.columns))
-        table.setHorizontalHeaderLabels(data.columns)
+        table.setColumnCount(len(self.params.columns))
+        table.setHorizontalHeaderLabels(self.params.columns)
 
         for r in range(nr):
-            for c in range(data.shape[1]):
-                item = QTableWidgetItem(str(data.iat[r, c]))
+            for c in range(len(self.params.columns)):
+                item = QTableWidgetItem(str(self.params.data5.iat[r, c]))
                 item.setFlags(Qt.ItemIsEnabled)
                 table.setItem(r, c, item)
 
@@ -71,7 +75,7 @@ class DataCheck(Content):
         # htable = QTableWidget(self.inner)
         htable = NonScrollTable(self.inner)
 
-        htable.setRowCount(len(data.columns))
+        htable.setRowCount(len(self.params.columns))
         htable.setColumnCount(4)
         htable.setHorizontalHeaderLabels(
             ['columns', 'categorical', 'quantitative', 'objective variable'])
@@ -80,9 +84,9 @@ class DataCheck(Content):
         self.lst_num = []
         self.lst_obj = []
         self.obj_group = QButtonGroup(self.inner)
-        for c in range(data.shape[1]):
+        for c in range(len(self.params.columns)):
             # col 1
-            item = QTableWidgetItem(data.columns[c])
+            item = QTableWidgetItem(self.params.columns[c])
             item.setFlags(Qt.ItemIsEnabled)
             htable.setItem(c, 0, item)
 

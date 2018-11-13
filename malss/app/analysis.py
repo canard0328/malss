@@ -1,11 +1,13 @@
 # coding: utf-8
 
 import pandas as pd
-from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QScrollArea)
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtWidgets import (QHBoxLayout, QPushButton, QScrollArea,
+                             QTableWidgetItem)
+from PyQt5.QtCore import QThread, pyqtSignal, Qt
+from multiprocessing import Process, Queue
 from ..malss import MALSS
 from .content import Content
-from multiprocessing import Process, Queue
+from .nonscroll_table import NonScrollTable
 from .waiting_animation import WaitingAnimation
 
 
@@ -15,6 +17,41 @@ class Analysis(Content):
         super().__init__(parent, 'Analysis', params)
 
         self.button_func = button_func
+
+        self.preprocess()
+
+        if self.params.lang == 'en':
+            text = ('First 5 rows of your features are shown below.\n'
+                    'Confirm that the data was normalized and\n'
+                    'categorical variables (if any) are converted into dummy '
+                    'variables.\n'
+                    '(Categorical variable A that has values X, Y, and Z are '
+                    'converted into dummy variables, A_X, A_Y, and A_Z.)')
+            self.set_paragraph('Features', text=text)
+        else:
+            text = ('説明変数の先頭5行を以下に示します．\n'
+                    'データの正規化（Normalization）が行われていること，\n'
+                    'カテゴリ変数があればダミー変数を用いて量的変数に変換されていることを確認してください．\n'
+                    '（X, Y, Zという値をとるカテゴリ変数AはA_X, A_Y, A_Zという変数に変換されます）')
+            self.set_paragraph('説明変数', text=text)
+
+        nr = 5
+
+        table1 = NonScrollTable(self.inner)
+
+        table1.setRowCount(nr)
+        table1.setColumnCount(len(self.params.X.columns))
+        table1.setHorizontalHeaderLabels(self.params.X.columns)
+
+        for r in range(nr):
+            for c in range(len(self.params.X.columns)):
+                item = QTableWidgetItem(str(round(self.params.X.iat[r, c], 4)))
+                item.setFlags(Qt.ItemIsEnabled)
+                table1.setItem(r, c, item)
+
+        table1.setNonScroll()
+
+        self.vbox.addWidget(table1)
 
         if self.params.lang == 'en':
             text = ('MALSS automatically choose algorithms and '
@@ -48,8 +85,8 @@ class Analysis(Content):
         self.wait_ani = WaitingAnimation(parent.parent())
         self.wait_ani.hide()
 
-        if self.params.algorithms is not None:
-            self.analyze()
+        # if self.params.algorithms is not None:
+        #     self.analyze()
 
     def resizeEvent(self, event):
         # To be modified.
@@ -61,9 +98,8 @@ class Analysis(Content):
     def button_clicked(self):
         self.analyze(True)
 
-    def analyze(self, clicked=False):
+    def preprocess(self):
         if self.params.col_types_changed:
-            # self.params.data =\
             data = pd.read_csv(self.params.fpath, header=0,
                                dtype=self.make_dtype(self.params.columns,
                                                      self.params.col_types))
@@ -88,29 +124,7 @@ class Analysis(Content):
         else:
             self.__add_algorithm()
 
-        # col_cat = [self.params.columns[i]
-        #            for i in range(len(self.params.columns))
-        #            if self.params.col_types[i] == 'object'
-        #            and self.params.columns[i] != self.params.objective]
-        # data_tidy = pd.get_dummies(self.params.data, columns=col_cat,
-        #                            drop_first=True)
-        # self.params.X = data_tidy.drop(self.params.objective, axis=1)
-        # self.params.y = data_tidy.loc[:, self.params.objective]
-
-        # if self.params.mdl is None:
-        #     self.params.mdl = MALSS(self.params.task.lower())
-        #     self.params.mdl.fit(self.params.X, self.params.y,
-        #                         algorithm_selection_only=True)
-        #     # self.params.mdl.remove_algorithm(-1)
-        #     # self.params.mdl.remove_algorithm(-1)
-        #     # self.params.mdl.remove_algorithm(-1)
-        #     self.params.mdl.remove_algorithm(0)
-        #     self.params.mdl.remove_algorithm(0)
-        #     self.params.mdl.remove_algorithm(0)
-        #     self.params.algorithms = self.params.mdl.get_algorithms()
-        # else:
-        #     self.__add_algorithm()
-
+    def analyze(self, clicked=False):
         if len(self.params.mdl.get_algorithms()) > 0:
             self.thread = AnalyzeWorker(self.params.mdl, self.params.X,
                                         self.params.y)

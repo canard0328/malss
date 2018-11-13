@@ -6,12 +6,20 @@ class Params:
         self.lang = lang
         self.task = None
         self.fpath = None
-        self.data = None
+        """
+        First 5 lines of original data
+        """
+        self.data5 = None
         self.columns = None
         self.col_types_def = None
         self.col_types = None
         self.objective = None
         self.col_types_changed = True
+        """
+        Note that X was transformed
+        (i.e. some features may be transformed to dummy variables)
+        while columns(_def) and col_types(_def) represent original ones.
+        """
         self.X = None
         self.y = None
         self.algorithms = None

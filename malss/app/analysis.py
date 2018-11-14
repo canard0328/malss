@@ -54,15 +54,40 @@ class Analysis(Content):
         self.vbox.addWidget(table1)
 
         if self.params.lang == 'en':
-            text = ('MALSS automatically choose algorithms and '
-                    'perform cross validation analysis with '
-                    'grid search hyper-parameter tuning.\n'
+            text = ('MALSS selected appropriate algorithms '
+                    'according to your task and data.\n'
+                    'Selected algorithms are shown below.')
+            self.set_paragraph('Features', text=text)
+        else:
+            text = ('MALSSは分析タスクとデータに応じて適切なアルゴリズムを選択します．\n'
+                    'アルゴリズム選択結果を以下の示します．')
+            self.set_paragraph('説明変数', text=text)
+
+        nr = len(self.params.algorithms)
+
+        table2 = NonScrollTable(self.inner)
+
+        table2.setRowCount(nr)
+        table2.setColumnCount(1)
+        table2.setHorizontalHeaderLabels(['Algorithms'])
+
+        for r in range(nr):
+            item = QTableWidgetItem(self.params.algorithms[r][0])
+            item.setFlags(Qt.ItemIsEnabled)
+            table2.setItem(r, 0, item)
+
+        table2.setNonScroll()
+
+        self.vbox.addWidget(table2)
+
+        if self.params.lang == 'en':
+            text = ('MALSS automatically perform cross validation analysis '
+                    'with grid search hyper-parameter tuning.\n'
                     'Clik "Analyze" to start.\n'
                     '(It will take tens of minutes.)')
             self.set_paragraph('', text=text)
         else:
-            text = ('MALSSはデータに応じて複数のアルゴリズムを選択し，'
-                    'グリッドサーチによるハイパーパラメータチューニング，'
+            text = ('MALSSはグリッドサーチによるハイパーパラメータチューニング，'
                     '交差検証を自動で行います．\n'
                     'それでは分析を始めましょう．Anayzeボタンを押してください．\n'
                     '（分析には数分～数十分かかります）')

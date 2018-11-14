@@ -211,7 +211,8 @@ def test_change_algorithms():
                                random_state=0)
     X = pd.DataFrame(X)
     y = pd.Series(y)
-    cls = MALSS('classification').fit(X, y, algorithm_selection_only=True)
+    cls = MALSS('classification')
+    cls.fit(X, y, algorithm_selection_only=True)
     algorithms = cls.get_algorithms()
 
     assert algorithms[0][0] == 'Support Vector Machine (RBF Kernel)'

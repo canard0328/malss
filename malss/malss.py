@@ -359,7 +359,7 @@ class MALSS(object):
             for algorithm in self.algorithms:
                 algorithm.best_score is None
                 algorithm.best_params is None
-                algorithm.is_bset_algorithm = False
+                algorithm.is_best_algorithm = False
                 algorithm.grid_scores is None
                 algorithm.classification_report is None
 
@@ -397,13 +397,22 @@ class MALSS(object):
                 self.results['algorithms'][algorithm.name]['learning_curve'] =\
                     self.__calc_learning_curve(algorithm)
 
+            if algorithm.is_best_algorithm:
+                self.results['best_algorithm'] = {}
+                self.results['best_algorithm']['estimator'] =\
+                    algorithm.estimator
+                self.results['best_algorithm']['score'] = algorithm.best_score
+
         if self.verbose:
             print('Done.')
         return self
 
-    def predict(self, X):
-        return self.algorithms[self.best_index].estimator.predict(
-            self.data.transform(X))
+    def predict(self, X, estimator=None):
+        if estimator is None:
+            return self.algorithms[self.best_index].estimator.predict(
+                self.data.transform(X))
+        else:
+            return estimator.predict(self.data.transform(X))
 
     def __search_best_algorithm(self):
         self.best_score = float('-Inf')
@@ -411,8 +420,8 @@ class MALSS(object):
         for i in range(len(self.algorithms)):
             if self.algorithms[i].best_score > self.best_score:
                 self.best_score = self.algorithms[i].best_score
-                self.best_index = i
-        self.algorithms[self.best_index].is_best_algorithm = True
+                best_index = i
+        self.algorithms[best_index].is_best_algorithm = True
 
     def __tune_parameters(self):
         for i in range(len(self.algorithms)):

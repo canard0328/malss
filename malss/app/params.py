@@ -27,6 +27,11 @@ class Params:
         self.results = None
         self.error = None
         # Parameters for feature selection
-        self.mdl_fs = None
         self.X_fs = None
+        self.algorithms_fs = None
+        self.mdl_fs = None
+        self.results_fs = None
         self.not_deleted = False
+
+        self.out_dir = None
+        self.path_pred = None

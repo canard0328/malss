@@ -12,10 +12,11 @@ from .data_check import DataCheck
 from .overfitting import Overfitting
 from .analysis import Analysis
 from .menuview import MenuView
-from .results import Results
+from .results import Results, Results2
 from .bias_variance import BiasVariance
-from .learning_curve import LearningCurve
+from .learning_curve import LearningCurve, LearningCurve2
 from .feature_selection import FeatureSelection
+from .prediction import Prediction
 from .error import Error
 
 
@@ -38,6 +39,9 @@ class App(QWidget):
             'バイアスとバリアンス': BiasVariance, 'Bias and Variance': BiasVariance,
             '学習曲線': LearningCurve, 'Learning curve': LearningCurve,
             '特徴量選択': FeatureSelection, 'Feature selection': FeatureSelection,
+            '結果の確認２': Results2, 'Results 2': Results2,
+            '学習曲線２': LearningCurve2, 'Learning curve 2': LearningCurve2,
+            '予測': Prediction, 'Prediction': Prediction,
             'Error': Error}
 
         self.setMinimumSize(1280, 720)

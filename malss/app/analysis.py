@@ -124,12 +124,12 @@ class Analysis(Analyzer):
                     self.params.mdl.fit(X, y,
                                         algorithm_selection_only=True)
 
-                # self.params.mdl.remove_algorithm(-1)
-                # self.params.mdl.remove_algorithm(-1)
-                # self.params.mdl.remove_algorithm(-1)
-                self.params.mdl.remove_algorithm(0)
-                self.params.mdl.remove_algorithm(0)
-                self.params.mdl.remove_algorithm(0)
+                self.params.mdl.remove_algorithm(-1)
+                self.params.mdl.remove_algorithm(-1)
+                self.params.mdl.remove_algorithm(-1)
+                # self.params.mdl.remove_algorithm(0)
+                # self.params.mdl.remove_algorithm(0)
+                # self.params.mdl.remove_algorithm(0)
                 self.params.algorithms = self.params.mdl.get_algorithms()
         else:
             self.add_algorithm(self.params.mdl, self.params.algorithms,
@@ -157,7 +157,7 @@ class Analysis(Analyzer):
                     self.params.results['best_algorithm']['estimator'] =\
                         signalData['best_algorithm']['estimator']
                     self.params.results['best_algorithm']['score'] =\
-                        signalData['bset_algorithm']['score']
+                        signalData['best_algorithm']['score']
 
             if self.params.lang == 'en':
                 self.button_func('Results')

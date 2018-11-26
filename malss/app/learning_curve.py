@@ -2,6 +2,7 @@
 
 import os
 import numpy as np
+import copy
 from PyQt5.QtWidgets import (QPushButton, QScrollArea)
 from PyQt5.QtCore import QThread, pyqtSignal
 from sklearn.ensemble import RandomForestClassifier as RFc
@@ -66,8 +67,9 @@ class LearningCurve(LearningCurveBase):
         else:
             rf = RFc(random_state=0, oob_score=True, n_estimators=50)
 
-        self.thread = FeatureSelectionWorker(rf, self.params.X.copy(deep=True),
-                                             self.params.y)
+        self.mdl_fs = copy.deepcopy(self.params.mdl)
+
+        self.thread = FeatureSelectionWorker(self.mdl_fs)
         self.thread.finSignal.connect(self.__feature_selected)
         self.thread.start()
         self.wait_ani.show()
@@ -78,21 +80,18 @@ class LearningCurve(LearningCurveBase):
             self.params.error = signalData['error']
             self.button_func('Error')
         else:
-            if len(signalData['col']) < len(self.params.X.columns):
+            if len(signalData['mdl'].data.X.columns) < len(self.params.X.columns):
                 # some features deleted
-                self.params.X_fs = self.params.X[signalData['col']]
+                self.params.X_fs = signalData['mdl'].data.X
 
-                self.params.mdl_fs = MALSS(self.params.task.lower())
-                self.params.mdl_fs.fit(self.params.X_fs,
-                                       self.params.y,
-                                       algorithm_selection_only=True)
+                self.params.mdl_fs = signalData['mdl']
 
-                # self.params.mdl_fs.remove_algorithm(-1)
-                # self.params.mdl_fs.remove_algorithm(-1)
-                # self.params.mdl_fs.remove_algorithm(-1)
-                self.params.mdl_fs.remove_algorithm(0)
-                self.params.mdl_fs.remove_algorithm(0)
-                self.params.mdl_fs.remove_algorithm(0)
+                self.params.mdl_fs.remove_algorithm(-1)
+                self.params.mdl_fs.remove_algorithm(-1)
+                self.params.mdl_fs.remove_algorithm(-1)
+                # self.params.mdl_fs.remove_algorithm(0)
+                # self.params.mdl_fs.remove_algorithm(0)
+                # self.params.mdl_fs.remove_algorithm(0)
                 self.params.algorithms_fs = self.params.mdl_fs.get_algorithms()
                 if self.params.lang == 'en':
                     self.button_func('Feature selection')
@@ -150,46 +149,26 @@ class LearningCurve2(LearningCurveBase):
 class FeatureSelectionWorker(QThread):
     finSignal = pyqtSignal(dict)
 
-    def __init__(self, mdl, X, y):
+    def __init__(self, mdl):
         super().__init__()
         self.mdl = mdl
-        self.X = X
-        self.y = y
 
     def run(self):
         q = Queue()
         job = Process(target=FeatureSelectionWorker.sub_job,
-                      args=(self.mdl, self.X, self.y, q))
+                      args=(self.mdl, q))
         job.start()
-        job.join()
         rtn = q.get()
+        job.join()
         self.finSignal.emit(rtn)
 
     @staticmethod
-    def sub_job(mdl, X, y, q):
+    def sub_job(mdl, q):
         rtn = {}
         try:
-            while True:
-                col, X = FeatureSelectionWorker.drop_col(X, y, mdl)
-                if col is None:
-                    break
-            rtn['col'] = list(X.columns)
+            mdl.select_features()
+            rtn['mdl'] = mdl
         except Exception as e:
             import traceback
             rtn['error'] = traceback.format_exc()
         q.put(rtn)
-
-    @staticmethod
-    def drop_col(X, y, rf, k=10, thr=0.0):
-        col = None
-        rf.fit(X, y)
-        np.random.seed(0)
-        imp = oob_importances(rf, X, y, n_samples=len(X))
-        for i in range(1, k):
-            imp += oob_importances(rf, X, y, n_samples=len(X))
-        imp /= k
-        if imp['Importance'].min() < thr:
-            col = imp['Importance'].idxmin()
-            print('Drop {}'.format(col))
-            X = X.drop(col, axis=1)
-        return col, X

@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn.utils import shuffle as sk_shuffle
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.preprocessing import StandardScaler
+from .rfpimp import oob_importances
 
 
 class Data(object):
@@ -12,6 +13,9 @@ class Data(object):
         self.shuffle = shuffle
         self.standardize = standardize
         self.random_state = random_state
+        self.X = None
+        self.y = None
+        self.columns = None
 
     def fit_transform(self, X, y):
         if isinstance(X, np.ndarray):
@@ -48,7 +52,40 @@ class Data(object):
         Xtrans, del_columns = self.__encode(Xtrans)
         if self.standardize:
             Xtrans = self.__standardize(Xtrans)
+        
+        if self.columns is not None:
+            Xtrans = Xtrans[self.columns]
+
         return Xtrans
+
+    def drop_col(self, mdl):
+        print('Start feature selection.')
+        X = self.X.copy(deep=True)
+
+        while True:
+            col, X = self.__drop_col_sub(X, self.y, mdl)
+            if col is None:
+                break
+        
+        if len(X.columns) == len(self.X.columns):
+            print('No features dropped.')
+        else:
+            self.X = X
+            self.columns = X.columns
+
+    def __drop_col_sub(self, X, y, rf, k=10, thr=0.0):
+        col = None
+        rf.fit(X, y)
+        np.random.seed(0)
+        imp = oob_importances(rf, X, y, n_samples=len(X))
+        for i in range(1, k):
+            imp += oob_importances(rf, X, y, n_samples=len(X))
+        imp /= k
+        if imp['Importance'].min() < thr:
+            col = imp['Importance'].idxmin()
+            print('  Drop {}'.format(col))
+            X = X.drop(col, axis=1)
+        return col, X
 
     def __impute(self, X):
         fill = pd.Series([X[c].value_counts().index[0]

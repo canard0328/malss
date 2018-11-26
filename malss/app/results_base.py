@@ -146,7 +146,7 @@ class ResultsBase(Content):
                 self.sb_list_div.append(
                         self.__make_spinbox(algo_param,
                                             name, param_name, idx_algo, 2,
-                                            5, div, 1))
+                                            9, div, 1))
 
                 hbox.addWidget(lbl)
                 hbox.addWidget(lbl_from)

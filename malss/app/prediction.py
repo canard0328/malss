@@ -153,22 +153,30 @@ class Prediction(Content):
         table1 = NonScrollTable(self.inner)
 
         table1.setRowCount(1)
-        table1.setColumnCount(len(self.best_params) + 2)
+        table1.setColumnCount(len(self.best_params) + 3)
         table1.setHorizontalHeaderLabels(
-            ['Algorithm'] + self.best_param_names + ['Score'])
+            ['Algorithm', 'Feature selection'] + self.best_param_names +
+            ['Score'])
 
         item = QTableWidgetItem(self.best_algo_name)
         item.setFlags(Qt.ItemIsEnabled)
         table1.setItem(0, 0, item)
 
+        if self.best_is_fs:
+            item = QTableWidgetItem('Yes')
+        else:
+            item = QTableWidgetItem('No')
+        item.setFlags(Qt.ItemIsEnabled)
+        table1.setItem(0, 1, item)
+
         for c, v in enumerate(self.best_params):
             item = QTableWidgetItem(str(round(v, 4)))
             item.setFlags(Qt.ItemIsEnabled)
-            table1.setItem(0, c + 1, item)
+            table1.setItem(0, c + 2, item)
 
         item = QTableWidgetItem(str(round(self.best_score, 4)))
         item.setFlags(Qt.ItemIsEnabled)
-        table1.setItem(0, len(self.best_params) + 1, item)
+        table1.setItem(0, len(self.best_params) + 2, item)
 
         table1.setNonScroll()
 

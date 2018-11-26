@@ -114,6 +114,8 @@ class MALSS(object):
             raise ValueError('lang:%s is no supported' % lang)
         self.lang = lang
 
+        self.data = None
+
         self.algorithms = []
 
         warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
@@ -560,6 +562,22 @@ class MALSS(object):
         fo = io.open(fname, 'w', encoding='utf-8')
         fo.write(html.decode('utf-8'))
         fo.close()
+
+    def select_features(self):
+        if self.data is None:
+            warnings.warn("'drop_col' must be used after 'fit' has used.")
+            return
+
+        if self.task == 'regression':
+            rf = RandomForestRegressor(random_state=0, oob_score=True, n_estimators=50)
+        else:
+            rf = RandomForestClassifier(random_state=0, oob_score=True, n_estimators=50)
+        
+        num_col = len(self.data.X.columns)
+        self.data.drop_col(rf)
+        if len(self.data.X.columns) < num_col:
+            self.algorithms = self.__choose_algorithm()
+            self.is_ready = True
 
 
 if __name__ == "__main__":

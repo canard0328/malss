@@ -97,3 +97,5 @@ module_sample.py
 # Pycharm project settings
 .idea/
 
+# Visual Studio Code settings
+.vscode/

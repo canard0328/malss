@@ -18,15 +18,17 @@ class Prediction(Content):
         self.button_func = button_func
 
         if params.lang == 'jp':
-            self.set_paragraph(
-                '最良のモデル',
-                text=('最も性能のよいモデルは以下のアルゴリズム，'
-                      'ハイパーパラメータでした．'))
+            text=('最も性能のよいモデルは以下のアルゴリズム，'
+                  'ハイパーパラメータでした．')
+            if self.params.not_deleted:
+                text += '\n（特徴量選択の結果，説明変数は削減されませんでした．）'
+            self.set_paragraph('最良のモデル', text=text)
         else:
-            self.set_paragraph(
-                'Best model',
-                text=('Algorithm and hyper-parameters of the best model '
-                      'are shown below.'))
+            text=('Algorithm and hyper-parameters of the best model '
+                  'are shown below.')
+            if self.params.not_deleted:
+                text += '\n(No features were deleted by feature selection.)'
+            self.set_paragraph('Best model', text=text)
 
         self.show_best_algorithm()
 

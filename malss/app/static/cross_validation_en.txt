@@ -1,0 +1,11 @@
+Getting more data would help to avoid overfitting.
+And some machine learning algorithms have hyper parameters that is effective for avoiding overfitting.
+
+So, how we can check whether the model is overfitted or not?
+We want to estimate the performance of the model for unknown data.
+To estimate that, cross validation method is commonly used.
+In the cross validation, the data is partitioned into k equal sized subset of the data.
+Of the k subsets, a single subset is retained as the validation set for testing the model, and the remaining k-1 subsets are used for training the model.
+This process is repeated k times, with each of the k subsets used exactly once as the validation data.
+Finally, the averaged value of the k results is used as the estimated score for unknown data.
+This is called k-fold cross validation.

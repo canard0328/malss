@@ -1,0 +1,4 @@
+The input data need to be a csv file with the format shown below.
+Each column represents each feature (variable to be used for prediction) or target (variable to be predicted).
+The first row represents the names of the columns (features and target) (i.e. header).
+Values such as NaN, NA, N/A, NULL, null, and nan are handled as missing values.

@@ -1,0 +1,7 @@
+Let's check the learning curves after feature selection.
+
+If the score is relatively low and the gap between the score of training data and that of cross validation data is small, the state of the model is "high-bias".
+In case of the "high-bias", increasing the number of features and changing algorithm would help to improve the performance of the model.
+
+If the gap between the score of training data and that of cross validation data is large and adding more training samples seems to likely increase the cross validation score, the state of the model is "high-variance".
+In case of the "high-variance", getting more data, and deletion of features by feature selection would help to improve the performance of the model.

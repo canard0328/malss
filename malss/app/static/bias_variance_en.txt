@@ -1,0 +1,7 @@
+"High bias" represents that the model cannot capture the underlying the pattern of the data (i.e. underfitting).
+Since the model is underfitting to even the training data, the difference between the score for the training data and that of test data is small.
+In case of high bias, increasing the number of features and changing the algorithm would help to improve the performance.
+
+"Hibh variance" represents that tha model is overfitting to the traning data.
+Therefore the difference between the score for the training data and that of test data is large.
+In case of high variance, getting more data and feature selection would help to improve the performance.

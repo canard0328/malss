@@ -1,0 +1,6 @@
+Check the types of features (categorical or numerical) in the table below are correctly classified.
+Some features may have to be handled as the categorical feature even though they are looks like numerical features.
+(e.g. Country names may be being replaced to country codes.)
+If tha data has such features, change the checked state of the features from "numerical" to "categorical" in the table below.
+
+Finally, set the column of "target" of target variable checked.

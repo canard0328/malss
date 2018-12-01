@@ -18,7 +18,7 @@ class Overfitting(Content):
         path1 = path + 'hyperparameter'
         text = self.get_text(path1)
         if self.params.lang == 'en':
-            self.set_paragraph('Hyper-parameter tuning', text=text)
+            self.set_paragraph('Hyper-parameter tuning', text=text, img=path1)
         else:
             self.set_paragraph('ハイパーパラメータチューニング', text=text, img=path1)
 
@@ -26,7 +26,7 @@ class Overfitting(Content):
         path2 = path + 'overfitting'
         text = self.get_text(path2)
         if self.params.lang == 'en':
-            self.set_paragraph('Overfitting', text=text)
+            self.set_paragraph('Overfitting', text=text, img=path2)
         else:
             self.set_paragraph('過学習', text=text, img=path2)
 
@@ -34,7 +34,7 @@ class Overfitting(Content):
         path3 = path + 'cross_validation'
         text = self.get_text(path3)
         if self.params.lang == 'en':
-            self.set_paragraph('Cross validation', text=text)
+            self.set_paragraph('Cross validation', text=text, img=path3)
         else:
             self.set_paragraph('交差検証', text=text, img=path3)
 

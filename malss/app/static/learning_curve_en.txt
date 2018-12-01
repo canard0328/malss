@@ -1,0 +1,6 @@
+What should we do to improve the performance of the model?
+Although there are some choices such as getting more data, and increasing the number of features, it's not a good choice to try some ideas blindly.
+"Learning curve" helps us to know what is effective for the model to improve the performance.
+
+Learning curve is a graph that plots training scores and cross validation scores over a varying number of training instances.
+Learning curve tells us whether the model is in the state of "high-bias" or that of "high-variance".

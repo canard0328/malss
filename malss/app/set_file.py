@@ -19,7 +19,7 @@ class SetFile(Content):
         path1 = path + 'format'
         text = self.get_text(path1)
         if self.params.lang == 'en':
-            self.set_paragraph('Data format', text=text)
+            self.set_paragraph('Data format', text=text, img=path1)
         else:
             self.set_paragraph('入力データフォーマット', text=text, img=path1)
 
@@ -27,7 +27,7 @@ class SetFile(Content):
         path2 = path + 'dummy'
         text = self.get_text(path2)
         if self.params.lang == 'en':
-            self.set_paragraph('Dummy variables', text=text)
+            self.set_paragraph('Dummy variables', text=text, img=path2)
         else:
             self.set_paragraph('ダミー変数', text=text, img=path2)
 

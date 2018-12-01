@@ -1,0 +1,4 @@
+Check the results of algorithms below.
+If values of hyper-parameters with the highest test score (the row colored pink) is the maximum/minimum value of the set, you should change the set of hyper-parameters.
+If so, change values of spin boxes below the tables of the results of the algorithms, then click "Re-analyze".
+If not, click "Continue without any changes".

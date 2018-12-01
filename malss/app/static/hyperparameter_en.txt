@@ -1,0 +1,4 @@
+Most of all machine learning algorithms have parameters that change the performance of the model, which is called hyper-parameters.
+To optimize hyper-parameters, grid search method is often used.
+Although MALSS automatically selects sets of hyper-parameters for the grid search, you can also change them manually.
+If values of hyper-parameters with the highest test score is the maximum/minimum value of the set, you should change the set of hyper-parameters.

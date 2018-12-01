@@ -19,7 +19,7 @@ class TypeOfTask(Content):
         path1 = path + 'task'
         text = self.get_text(path1)
         if self.params.lang == 'en':
-            self.set_paragraph('Type of task', text=text)
+            self.set_paragraph('Type of task', text=text, img=path1)
         else:
             self.set_paragraph('分析タスク', text=text, img=path1)
 
@@ -27,7 +27,7 @@ class TypeOfTask(Content):
         path2 = path + 'supervised_learning'
         text = self.get_text(path2)
         if self.params.lang == 'en':
-            self.set_paragraph('Supervised learning', text=text)
+            self.set_paragraph('Supervised learning', text=text, img=path2)
         else:
             self.set_paragraph('教師あり学習', text=text, img=path2)
 

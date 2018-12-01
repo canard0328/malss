@@ -1,0 +1,8 @@
+There are two types of features, numerical feature and categorical feature.
+In the categorical feature, each observation is one of a discrete set of possible values.
+Note that some features may have to be handled as the categorical feature even though they are looks like numerical features.
+(e.g. Country names may be being replaced to country codes.)
+
+Most machine learning algorithms cannot handle the categorical feature directly.
+So, the categorical features commonly transform to the numerical features.
+MALSS automatically transform the categorical features to the numerical features using dummy variables.

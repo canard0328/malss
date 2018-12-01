@@ -78,7 +78,8 @@ setup(
         ],
     include_package_data=True,
     package_data={"malss": ["template/*.tmp",
-                            "app/static/*.txt"]},
+                            "app/static/*.txt",
+                            "app/static/*.png"]},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",

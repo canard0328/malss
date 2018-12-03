@@ -86,12 +86,6 @@ class LearningCurve(LearningCurveBase):
 
                 self.params.mdl_fs = signalData['mdl']
 
-                self.params.mdl_fs.remove_algorithm(-1)
-                self.params.mdl_fs.remove_algorithm(-1)
-                self.params.mdl_fs.remove_algorithm(-1)
-                # self.params.mdl_fs.remove_algorithm(0)
-                # self.params.mdl_fs.remove_algorithm(0)
-                # self.params.mdl_fs.remove_algorithm(0)
                 self.params.algorithms_fs = self.params.mdl_fs.get_algorithms()
                 if self.params.lang == 'en':
                     self.button_func('Feature selection')

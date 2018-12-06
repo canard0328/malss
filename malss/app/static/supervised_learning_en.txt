@@ -1,2 +1,2 @@
-There are two types of supervised learning, classification and regression.
-Purpose of classification is to predict labels, and that of regression is to predict numeric values.
+There are two types of supervised learning, <font color="#1E90FF"><strong>classification</strong></font> and <font color="#1E90FF"><strong>regression</strong></font>.<br>
+Purpose of classification is to <strong>predict labels</strong>, and that of regression is to <strong>predict numeric values</strong>.

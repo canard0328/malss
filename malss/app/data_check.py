@@ -3,9 +3,8 @@
 import os
 from PyQt5.QtWidgets import (QHBoxLayout, QPushButton,
                              QTableWidgetItem, QRadioButton, QButtonGroup,
-                             QWidget)
+                             QWidget, QLabel)
 from PyQt5.QtCore import Qt
-import pandas as pd
 from .content import Content
 from .nonscroll_table import NonScrollTable
 
@@ -18,19 +17,6 @@ class DataCheck(Content):
         self.button_func = button_func
 
         path = os.path.abspath(os.path.dirname(__file__)) + '/static/'
-
-        if self.params.data5 is None:
-            data = pd.read_csv(
-                self.params.fpath, header=0,
-                dtype=self.make_dtype(self.params.columns,
-                                      self.params.col_types))
-            self.params.data5 = data.head(min(5, data.shape[0]))
-
-            self.params.columns = data.columns
-            self.params.col_types_def =\
-                list(map(str, data.dtypes.get_values()))
-            self.params.col_types =\
-                list(map(str, data.dtypes.get_values()))
 
         # nr = min(5, data.shape[0])
         nr = len(self.params.data5)
@@ -78,7 +64,7 @@ class DataCheck(Content):
         htable.setRowCount(len(self.params.columns))
         htable.setColumnCount(4)
         htable.setHorizontalHeaderLabels(
-            ['columns', 'categorical', 'quantitative', 'objective variable'])
+            ['columns', 'categorical', 'numerical', 'target'])
 
         self.lst_cat = []
         self.lst_num = []
@@ -118,10 +104,28 @@ class DataCheck(Content):
 
         self.vbox.addWidget(htable)
 
-        hbox2 = QHBoxLayout()
-        hbox2.setContentsMargins(10, 10, 10, 10)
+        if self.params.lang == 'jp':
+            self.txt_cnf = ('<font color="red">目的変数を１つ選択し，'
+                    'targetの列にチェックをいれてください。')
+            if self.params.task.lower() == 'classification':
+                self.txt_cnf += '<br>目的変数はカテゴリ変数である必要があります。</font>'
+            else:
+                self.txt_cnf += '<br>目的変数は量的変数である必要があります。</font>'
+        else:
+            self.txt_cnf = ('<font color="red">Select one variable as target variable,'
+                            'then set the column of "target" of the variable checked.')
+            if self.params.task.lower() == 'classification':
+                self.txt_cnf += '<br>Target variable must be a categorical variable.</font>'
+            else:
+                self.txt_cnf += '<br>Target variable must be a numerical variable.</font>'
+        self.lbl_cnf = QLabel(self.txt_cnf, self.inner)
+
+        self.vbox.addWidget(self.lbl_cnf)
+
+        self.vbox.addStretch(1)
 
         self.btn = QPushButton('Next', self.inner)
+        self.btn.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             self.btn.clicked.connect(lambda: self.button_func('Overfitting'))
         else:
@@ -131,12 +135,7 @@ class DataCheck(Content):
         else:
             self.btn.setEnabled(True)
 
-        hbox2.addStretch(1)
-        hbox2.addWidget(self.btn)
-
-        self.vbox.addLayout(hbox2)
-
-        self.vbox.addStretch(1)
+        self.vbox.addWidget(self.btn)
 
     def __make_cell(self, c, name, col_type, col_type_def):
         cell = QWidget(self.inner)
@@ -197,10 +196,12 @@ class DataCheck(Content):
 
         if self.obj_group.checkedButton() is None:
             self.params.objective = None
+            self.lbl_cnf.setText(self.txt_cnf)
             self.btn.setEnabled(False)
         else:
             self.params.objective =\
                 self.params.columns[self.obj_group.checkedId()]
+            self.lbl_cnf.setText('<br>')
             self.btn.setEnabled(True)
 
         self.params.col_types_changed = True

@@ -39,19 +39,14 @@ class BiasVariance(Content):
                     'Nextボタンを押してください．')
             self.set_paragraph('', text=text)
 
-        hbox2 = QHBoxLayout()
-        hbox2.setContentsMargins(10, 10, 10, 10)
+        self.vbox.addStretch(1)
 
         self.btn = QPushButton('Next', self.inner)
+        self.btn.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             self.btn.clicked.connect(lambda: self.button_func(
                 'Learning curve'))
         else:
             self.btn.clicked.connect(lambda: self.button_func('学習曲線'))
 
-        hbox2.addStretch(1)
-        hbox2.addWidget(self.btn)
-
-        self.vbox.addLayout(hbox2)
-
-        self.vbox.addStretch(1)
+        self.vbox.addWidget(self.btn)

@@ -60,9 +60,9 @@ class MenuView(QScrollArea):
 
         self.list_button = []
         if self.params.lang == 'en':
-            self.add_button('Introduction')
+            self.edit_button('Introduction')
         else:
-            self.add_button('はじめに')
+            self.edit_button('はじめに')
 
         self.inner.setLayout(self.vbox)
 
@@ -72,7 +72,17 @@ class MenuView(QScrollArea):
         if self.update_func is not None:
             self.update_func(text)
 
-    def add_button(self, text):
+    def edit_button(self, text, delete=False):
+        if delete:
+            for i in range(self.vbox.count()):
+                widget = self.vbox.itemAt(i).widget()
+                if type(widget) == QPushButton:
+                    if widget.text() == '-' + text:
+                        self.vbox.removeWidget(widget)
+                        widget.deleteLater()
+                        widget = None
+            return
+
         if text not in self.list_button:
             self.list_button.append(text)
             btn = QPushButton('-' + text, self.inner)

@@ -86,10 +86,10 @@ class FeatureSelection(Analyzer):
                     '（分析には数分～数十分かかります）')
             self.set_paragraph('', text=text)
 
-        hbox = QHBoxLayout()
-        hbox.setContentsMargins(10, 10, 10, 10)
+        self.vbox.addStretch(1)
 
         btn = QPushButton('Analyze', self.inner)
+        btn.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             next_page = 'Results 2'
         else:
@@ -97,12 +97,7 @@ class FeatureSelection(Analyzer):
         btn.clicked.connect(lambda: self.button_clicked(
             self.params.mdl_fs, self.params.X_fs, self.params.y, next_page))
 
-        hbox.addStretch(1)
-        hbox.addWidget(btn)
-
-        self.vbox.addLayout(hbox)
-
-        self.vbox.addStretch(1)
+        self.vbox.addWidget(btn)
 
     def preprocess(self):
         if self.params.results_fs is not None:

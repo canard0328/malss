@@ -38,18 +38,13 @@ class Overfitting(Content):
         else:
             self.set_paragraph('交差検証', text=text, img=path3)
 
-        hbox2 = QHBoxLayout()
-        hbox2.setContentsMargins(10, 10, 10, 10)
+        self.vbox.addStretch(1)
 
         self.btn = QPushButton('Next', self.inner)
+        self.btn.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             self.btn.clicked.connect(lambda: self.button_func('Analysis'))
         else:
             self.btn.clicked.connect(lambda: self.button_func('分析の実行'))
 
-        hbox2.addStretch(1)
-        hbox2.addWidget(self.btn)
-
-        self.vbox.addLayout(hbox2)
-
-        self.vbox.addStretch(1)
+        self.vbox.addWidget(self.btn)

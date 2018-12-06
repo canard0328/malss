@@ -105,6 +105,7 @@ class Prediction(Content):
         hbox3.setContentsMargins(10, 10, 10, 10)
 
         self.btn = QPushButton('Output', self.inner)
+        self.btn.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         self.btn.clicked.connect(self.__button_clicked)
         self.btn.setEnabled(False)
 
@@ -309,8 +310,15 @@ class Prediction(Content):
             if self.params.columns[i] != self.params.objective:
                 columns.append(self.params.columns[i])
                 col_types.append(self.params.col_types[i])
-        X = pd.read_csv(self.params.path_pred, header=0,
-                        dtype=self.make_dtype(columns, col_types))
+        try:
+            # engine='python' is to avoid pandas's bug.
+            X = pd.read_csv(self.params.path_pred, header=0, engine='python',
+                            dtype=self.make_dtype(columns, col_types))
+        except Exception:
+            import traceback
+            self.params.error = traceback.format_exc()
+            self.button_func('Error')
+            return
 
         if self.best_is_fs:
             estimator = self.params.results_fs['best_algorithm']['estimator']

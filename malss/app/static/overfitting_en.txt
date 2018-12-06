@@ -1,3 +1,4 @@
-The purpose of data analysis using machine learning is to predict future observations accurately.
-If you tune hyper-parameters so as to improve the evaluation score for the training data, the model corresponds too closely to training data, and therefore fail to predict future observations reliably.
-The state of the model is called "overfitting".
+The purpose of data analysis using machine learning is <strong>to predict future observations accurately</strong>.<br>
+The ability to predict future observations is called <font color="#1E90FF"><strong>generalization ability</strong></font>.<br>
+If you tune hyper-parameters so as to improve the evaluation score for the training data, the model corresponds too closely to training data, and therefore fail to predict future observations reliably (i.e. losing generalization ability).<br>
+The state of the model is called <font color="#1E90FF"><strong>overfitting</strong></font>.

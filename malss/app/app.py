@@ -64,7 +64,7 @@ class App(QWidget):
         self.menuview.setWidgetResizable(True)
 
         self.contentview = Introduction(self.splitter,
-                                        self.menuview.add_button, self.params)
+                                        self.menuview.edit_button, self.params)
         self.contentview.setWidgetResizable(True)
 
         self.splitter.addWidget(self.menuview)
@@ -75,8 +75,8 @@ class App(QWidget):
 
         self.setLayout(vbox)
 
-        # self.center()
-        self.showMaximized()
+        self.center()
+        # self.showMaximized()
         self.setWindowTitle('MALSS interactive')
         self.show()
 
@@ -99,7 +99,7 @@ class App(QWidget):
 
                 self.contentview =\
                     self.txt2func[text](self.splitter,
-                                        self.menuview.add_button,
+                                        self.menuview.edit_button,
                                         self.params)
                 self.contentview.setWidgetResizable(True)
                 self.splitter.addWidget(self.contentview)

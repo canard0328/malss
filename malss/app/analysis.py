@@ -90,10 +90,10 @@ class Analysis(Analyzer):
                     '（分析には数分～数十分かかります）')
             self.set_paragraph('', text=text)
 
-        hbox = QHBoxLayout()
-        hbox.setContentsMargins(10, 10, 10, 10)
+        self.vbox.addStretch(1)
 
         btn = QPushButton('Analyze', self.inner)
+        btn.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             next_page = 'Results'
         else:
@@ -101,18 +101,21 @@ class Analysis(Analyzer):
         btn.clicked.connect(lambda: self.button_clicked(
             self.params.mdl, self.params.X, self.params.y, next_page))
 
-        hbox.addStretch(1)
-        hbox.addWidget(btn)
-
-        self.vbox.addLayout(hbox)
-
-        self.vbox.addStretch(1)
+        self.vbox.addWidget(btn)
 
     def preprocess(self):
         if self.params.col_types_changed:
-            data = pd.read_csv(self.params.fpath, header=0,
-                               dtype=self.make_dtype(self.params.columns,
-                                                     self.params.col_types))
+            try:
+                # engine='python' is to avoid pandas's bug.
+                data = pd.read_csv(self.params.fpath, header=0, engine='python',
+                                dtype=self.make_dtype(self.params.columns,
+                                                        self.params.col_types))
+            except Exception:
+                import traceback
+                self.params.error = traceback.format_exc()
+                self.button_func('Error')
+                return
+
             self.params.col_types_changed = False
 
             X = data.drop(self.params.objective, axis=1)

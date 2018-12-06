@@ -37,6 +37,7 @@ class LearningCurve(LearningCurveBase):
         btn_fs.clicked.connect(self.__button_clicked)
 
         self.btn_next = QPushButton('Continue', self.inner)
+        self.btn_next.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             self.btn_next.clicked.connect(lambda: self.button_func(
                 'Prediction'))
@@ -130,6 +131,7 @@ class LearningCurve2(LearningCurveBase):
         self.vbox.addStretch()
 
         self.btn_next = QPushButton('Next', self.inner)
+        self.btn_next.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             self.btn_next.clicked.connect(lambda: self.button_func(
                 'Prediction'))

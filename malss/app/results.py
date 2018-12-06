@@ -16,12 +16,14 @@ class Results(ResultsBase):
         self.vbox.addStretch()
 
         btn_re = QPushButton('Re-analyze', self.inner)
+        btn_re.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             btn_re.clicked.connect(lambda: self.button_func('Analysis'))
         else:
             btn_re.clicked.connect(lambda: self.button_func('分析の実行'))
 
         self.btn_next = QPushButton('Continue without any changes', self.inner)
+        self.btn_next.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             self.btn_next.clicked.connect(lambda: self.button_func(
                 'Bias and Variance'))
@@ -53,6 +55,7 @@ class Results2(ResultsBase):
                 lambda: self.button_func('特徴量選択'))
 
         self.btn_next = QPushButton('Continue without any changes', self.inner)
+        self.btn_next.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             self.btn_next.clicked.connect(lambda: self.button_func(
                 'Learning curve 2'))

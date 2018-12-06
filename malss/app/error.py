@@ -19,15 +19,10 @@ class Error(Content):
 
         self.set_paragraph('Traceback log', text=self.params.error)
 
-        hbox = QHBoxLayout()
-        hbox.setContentsMargins(10, 10, 10, 10)
+        self.vbox.addStretch(1)
 
         btn = QPushButton('Exit', self.inner)
+        btn.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         btn.clicked.connect(QCoreApplication.instance().quit)
 
-        hbox.addStretch(1)
-        hbox.addWidget(btn)
-
-        self.vbox.addLayout(hbox)
-
-        self.vbox.addStretch(1)
+        self.vbox.addWidget(btn)

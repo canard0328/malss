@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import os
-from PyQt5.QtWidgets import (QHBoxLayout, QPushButton,
+from PyQt5.QtWidgets import (QVBoxLayout, QHBoxLayout, QPushButton,
                              QRadioButton, QButtonGroup)
 from .content import Content
 
@@ -40,12 +40,15 @@ class TypeOfTask(Content):
                 'Task selection',
                 text='Choose your machine learning taks.')
 
-        hbox1 = QHBoxLayout()
-        hbox1.setContentsMargins(10, 10, 10, 10)
+        vbox1 = QVBoxLayout()
+        vbox1.setContentsMargins(10, 10, 10, 10)
+        vbox1.setSpacing(10)
 
         rbtn_cls = QRadioButton('Classification', self.inner)
+        rbtn_cls.setStyleSheet('QRadioButton{font: 15pt;};')
         rbtn_cls.clicked.connect(self.rbtn_clicked)
         rbtn_reg = QRadioButton('Regression', self.inner)
+        rbtn_reg.setStyleSheet('QRadioButton{font: 15pt;};')
         rbtn_reg.clicked.connect(self.rbtn_clicked)
         if params.task == 'Classification':
             rbtn_cls.setChecked(True)
@@ -56,16 +59,16 @@ class TypeOfTask(Content):
         self.btn_group.addButton(rbtn_cls, 1)
         self.btn_group.addButton(rbtn_reg, 1)
 
-        hbox1.addWidget(rbtn_cls)
-        hbox1.addWidget(rbtn_reg)
-        hbox1.addStretch(1)
+        vbox1.addWidget(rbtn_cls)
+        vbox1.addWidget(rbtn_reg)
+        vbox1.addStretch(1)
 
-        self.vbox.addLayout(hbox1)
+        self.vbox.addLayout(vbox1)
 
-        hbox2 = QHBoxLayout()
-        hbox2.setContentsMargins(10, 10, 10, 10)
+        self.vbox.addStretch(1)
 
         self.btn = QPushButton('Next', self.inner)
+        self.btn.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             self.btn.clicked.connect(lambda: self.button_func('Input data'))
         else:
@@ -73,12 +76,7 @@ class TypeOfTask(Content):
         if params.task is None:
             self.btn.setEnabled(False)
 
-        hbox2.addStretch(1)
-        hbox2.addWidget(self.btn)
-
-        self.vbox.addLayout(hbox2)
-
-        self.vbox.addStretch(1)
+        self.vbox.addWidget(self.btn)
 
     def rbtn_clicked(self):
         self.params.task = self.btn_group.checkedButton().text()

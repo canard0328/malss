@@ -1,4 +1,5 @@
-MALSS interactive supports "supervised learning".
-Supervised learning is the learning method that learns the model for predicting unseen data from existing data.
-Existing data consists of explanatory variables (features) and objective variable.
-Explanatory variables is the variables used for predicting the objective variables.
+MALSS interactive supports <font color="#1E90FF"><strong>supervised learning</strong></font>.<br>
+Supervised learning is the learning method that learns the model for predicting unseen data from existing data.<br>
+Existing data consists of explanatory variables (<font color="#1E90FF"><strong>features</strong></font>) and <font color="#1E90FF"><strong>target variable</strong></font>.<br>
+Features are variables used for predicting the target variable.<br>
+(Machine learning with only features (without target variable) is called <font color="#1E90FF"><strong>unspervised learning</strong></font>.)

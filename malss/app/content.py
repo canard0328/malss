@@ -13,6 +13,8 @@ class Content(QScrollArea):
 
         self.params = params
 
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
         self.lbl_img_list = []
         self.pixmap_list = []
 

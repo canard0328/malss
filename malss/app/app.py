@@ -44,7 +44,7 @@ class App(QWidget):
             '予測': Prediction, 'Prediction': Prediction,
             'Error': Error}
 
-        self.setMinimumSize(1280, 720)
+        self.setMinimumSize(1280, 960)
         self.setStyleSheet('background-color: rgb(242, 242, 242)')
 
         vbox = QVBoxLayout(self)

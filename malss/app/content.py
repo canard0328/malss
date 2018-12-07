@@ -29,7 +29,7 @@ class Content(QScrollArea):
         self.inner = QWidget(self)
 
         self.vbox = QVBoxLayout(self.inner)
-        self.vbox.setSpacing(0)
+        self.vbox.setSpacing(10)
         self.vbox.setContentsMargins(0, 0, 0, 0)
 
         topframe = QFrame()

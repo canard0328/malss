@@ -103,6 +103,15 @@ class Analysis(Analyzer):
 
         self.vbox.addWidget(btn)
 
+        lists = ['task', 'supervised_learning', 'dummy', 'hyperparameter',
+                 'overfitting', 'cross_validation', 'learning_curve',
+                 'bias_variance']
+        if self.params.lang == 'jp':
+            lists = [l + '_jp' for l in lists]
+        else:
+            lists = [l + '_en' for l in lists]
+        self.wait_ani.set_lists(lists)
+
     def preprocess(self):
         if self.params.col_types_changed:
             try:

@@ -47,6 +47,7 @@ class Results2(ResultsBase):
         self.vbox.addStretch()
 
         btn_re = QPushButton('Re-analyze', self.inner)
+        btn_re.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             btn_re.clicked.connect(
                 lambda: self.button_func('Feature selection'))

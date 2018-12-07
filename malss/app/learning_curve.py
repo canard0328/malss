@@ -34,6 +34,7 @@ class LearningCurve(LearningCurveBase):
         self.vbox.addStretch()
 
         btn_fs = QPushButton('Try feature selection', self.inner)
+        btn_fs.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         btn_fs.clicked.connect(self.__button_clicked)
 
         self.btn_next = QPushButton('Continue', self.inner)
@@ -51,6 +52,15 @@ class LearningCurve(LearningCurveBase):
         # "parent.parent()" must be modified.
         self.wait_ani = WaitingAnimation(parent.parent())
         self.wait_ani.hide()
+
+        lists = ['task', 'supervised_learning', 'dummy', 'hyperparameter',
+                 'overfitting', 'cross_validation', 'learning_curve',
+                 'bias_variance']
+        if self.params.lang == 'jp':
+            lists = [l + '_jp' for l in lists]
+        else:
+            lists = [l + '_en' for l in lists]
+        self.wait_ani.set_lists(lists)
 
     def resizeEvent(self, event):
         # To be modified.

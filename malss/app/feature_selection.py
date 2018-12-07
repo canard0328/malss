@@ -99,6 +99,15 @@ class FeatureSelection(Analyzer):
 
         self.vbox.addWidget(btn)
 
+        lists = ['task', 'supervised_learning', 'dummy', 'hyperparameter',
+                 'overfitting', 'cross_validation', 'learning_curve',
+                 'bias_variance']
+        if self.params.lang == 'jp':
+            lists = [l + '_jp' for l in lists]
+        else:
+            lists = [l + '_en' for l in lists]
+        self.wait_ani.set_lists(lists)
+
     def preprocess(self):
         if self.params.results_fs is not None:
             self.add_algorithm(self.params.mdl_fs, self.params.algorithms_fs,

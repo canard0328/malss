@@ -145,13 +145,14 @@ class MALSS(object):
                             ('http://scikit-learn.org/stable/modules/'
                              'generated/'
                              'sklearn.ensemble.RandomForestClassifier.html')))
-                algorithms.append(
-                    Algorithm(
-                        LinearSVC(random_state=self.random_state),
-                        [{'C': [0.1, 1, 10, 100]}],
-                        'Support Vector Machine (Linear Kernel)',
-                        ('http://scikit-learn.org/stable/modules/generated/'
-                         'sklearn.svm.LinearSVC.html')))
+                else:
+                    algorithms.append(
+                        Algorithm(
+                            LinearSVC(random_state=self.random_state),
+                            [{'C': [0.1, 1, 10, 100]}],
+                            'Support Vector Machine (Linear Kernel)',
+                            ('http://scikit-learn.org/stable/modules/generated/'
+                            'sklearn.svm.LinearSVC.html')))
                 algorithms.append(
                     Algorithm(
                         LogisticRegression(random_state=self.random_state),

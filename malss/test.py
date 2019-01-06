@@ -24,7 +24,7 @@ def test_classification_2classes_small():
     pred = cls.predict(X)
     print(f1_score(y, pred, average=None))
 
-    assert len(cls.algorithms) == 6
+    assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
 
 
@@ -44,7 +44,7 @@ def test_classification_2classes_small_jp():
     pred = cls.predict(X)
     print(f1_score(y, pred, average=None))
 
-    assert len(cls.algorithms) == 6
+    assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
 
 
@@ -64,7 +64,7 @@ def test_classification_multiclass_small():
     pred = cls.predict(X)
     print(f1_score(y, pred, average=None))
 
-    assert len(cls.algorithms) == 6
+    assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
 
 
@@ -180,7 +180,7 @@ def test_classification_categorical():
     from sklearn.metrics import f1_score
     print(f1_score(y, pred, average=None))
 
-    assert len(cls.algorithms) == 6
+    assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
 
 
@@ -199,7 +199,7 @@ def test_ndarray():
     pred = cls.predict(np.array(data))
     print(f1_score(y, pred, average=None))
 
-    assert len(cls.algorithms) == 6
+    assert len(cls.algorithms) == 5
     assert cls.algorithms[0].best_score is not None
 
 
@@ -217,18 +217,16 @@ def test_change_algorithms():
 
     assert algorithms[0][0] == 'Support Vector Machine (RBF Kernel)'
     assert algorithms[1][0] == 'Random Forest'
-    assert algorithms[2][0] == 'Support Vector Machine (Linear Kernel)'
-    assert algorithms[3][0] == 'Logistic Regression'
-    assert algorithms[4][0] == 'Decision Tree'
-    assert algorithms[5][0] == 'k-Nearest Neighbors'
+    assert algorithms[2][0] == 'Logistic Regression'
+    assert algorithms[3][0] == 'Decision Tree'
+    assert algorithms[4][0] == 'k-Nearest Neighbors'
 
     cls.remove_algorithm(0)
     cls.remove_algorithm()
     algorithms = cls.get_algorithms()
     assert algorithms[0][0] == 'Random Forest'
-    assert algorithms[1][0] == 'Support Vector Machine (Linear Kernel)'
-    assert algorithms[2][0] == 'Logistic Regression'
-    assert algorithms[3][0] == 'Decision Tree'
+    assert algorithms[1][0] == 'Logistic Regression'
+    assert algorithms[2][0] == 'Decision Tree'
 
     from sklearn.ensemble import ExtraTreesClassifier as ET
     cls.add_algorithm(ET(n_jobs=3),
@@ -238,11 +236,10 @@ def test_change_algorithms():
                       'Extremely Randomized Trees')
     algorithms = cls.get_algorithms()
     assert algorithms[0][0] == 'Random Forest'
-    assert algorithms[1][0] == 'Support Vector Machine (Linear Kernel)'
-    assert algorithms[2][0] == 'Logistic Regression'
-    assert algorithms[3][0] == 'Decision Tree'
-    assert algorithms[4][0] == 'Extremely Randomized Trees'
+    assert algorithms[1][0] == 'Logistic Regression'
+    assert algorithms[2][0] == 'Decision Tree'
+    assert algorithms[3][0] == 'Extremely Randomized Trees'
 
 
 if __name__ == "__main__":
-    test_classification_2classes_small()
+    test_classification_multiclass_small()

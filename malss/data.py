@@ -119,7 +119,7 @@ class Data(object):
                     self._label_encoder[i] = LabelEncoder().fit(Xenc.iloc[:,i])
                 col_enc = self._label_encoder[i].transform(Xenc.iloc[:,i])
                 if self._onehot_encoder[i] is None:
-                    self._onehot_encoder[i] = OneHotEncoder().fit(
+                    self._onehot_encoder[i] = OneHotEncoder(categories='auto').fit(
                         col_enc.reshape(-1, 1))
                 col_onehot = np.array(self._onehot_encoder[i].transform(
                     col_enc.reshape(-1, 1)).todense())

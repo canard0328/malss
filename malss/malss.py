@@ -97,9 +97,19 @@ class MALSS(object):
             raise ValueError("Set task ('classification' or 'regression').")
         elif task == 'classification':
             self.scoring = make_scorer(f1_weighted) if scoring is None else scoring
+            if scoring is None:
+                self.scoring_name = 'f1_weighted'
+            elif isinstance(self.scoring, str):
+                self.scoring_name = scoring
+            else:
+                self.scoring_name = scoring.__name__
         elif task == 'regression':
             self.scoring =\
                     'neg_mean_squared_error' if scoring is None else scoring
+            if isinstance(self.scoring, str):
+                self.scoring_name = scoring
+            else:
+                self.scoring_name = scoring.__name__
         else:
             raise ValueError('task:%s is not supported' % task)
         self.task = task
@@ -238,7 +248,8 @@ class MALSS(object):
                 algorithms.append(
                     Algorithm(
                         SGDRegressor(
-                            random_state=self.random_state),
+                            random_state=self.random_state,
+                            max_iter=1000, tol=1e-3),
                         [{'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
                         'SGD Regressor',
                         ('http://scikit-learn.org/stable/modules/generated/'
@@ -436,7 +447,7 @@ class MALSS(object):
             parameters = self.algorithms[i].parameters
             clf = GridSearchCV(
                 estimator, parameters, cv=self.cv, scoring=self.scoring,
-                n_jobs=self.n_jobs)
+                iid=False, n_jobs=self.n_jobs)
             clf.fit(self.data.X, self.data.y)
             grid_scores = []
             for j in range(len(clf.cv_results_['mean_test_score'])):
@@ -532,10 +543,8 @@ class MALSS(object):
         else:
             tmpl = env.get_template('report.html.tmp')
 
-        scoring_name = self.scoring if isinstance(self.scoring, str) else\
-            self.scoring.func_name
         html = tmpl.render(algorithms=self.algorithms,
-                           scoring=scoring_name,
+                           scoring=self.scoring_name,
                            task=self.task,
                            data=self.data).encode('utf-8')
         fo = io.open(dname + '/report.html', 'w', encoding='utf-8')

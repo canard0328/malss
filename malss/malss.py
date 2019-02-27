@@ -157,7 +157,7 @@ class MALSS(object):
                     Algorithm(
                         LogisticRegression(
                             random_state=self.random_state,
-                            solver='lbfgs'),
+                            solver='lbfgs', multi_class='auto'),
                         [{'C': [0.1, 0.3, 1, 3, 10]}],
                         'Logistic Regression',
                         ('http://scikit-learn.org/stable/modules/generated/'
@@ -191,7 +191,7 @@ class MALSS(object):
                     Algorithm(
                         SGDClassifier(
                             random_state=self.random_state,
-                            n_jobs=1),
+                            max_iter=1000, tol=1e-3, n_jobs=1),
                         [{'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
                         'SGD Classifier',
                         ('http://scikit-learn.org/stable/modules/generated/'

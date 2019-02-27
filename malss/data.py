@@ -23,9 +23,15 @@ class Data(object):
             self.y = pd.Series(y)
         else:
             self.X = X.copy(deep=True)
-            self.y = y.copy(deep=True)
+            if isinstance(y, pd.Series):
+                self.y = y.copy(deep=True)
+            else:
+                self.y = y.iloc[:, 0]  # Convert Dataframe to Series
         if not isinstance(self.X, pd.DataFrame):
-            raise ValueError('%s is not supported' % type(X))
+            raise ValueError(f'{type(X)} is not supported')
+        if len(X) != len(y):
+            raise ValueError(('Found input variables with inconsistent '
+                             f'numbers of samples: [{len(X)}, {len(y)}]'))
         self.shape_before = self.X.shape
 
         self.X, self.col_was_null = self.__impute(self.X)
@@ -83,7 +89,7 @@ class Data(object):
         imp /= k
         if imp['Importance'].min() < thr:
             col = imp['Importance'].idxmin()
-            print('  Drop {}'.format(col))
+            print(f'  Drop {col}')
             X = X.drop(col, axis=1)
         return col, X
 
@@ -129,6 +135,7 @@ class Data(object):
         return Xenc, del_columns
 
     def __standardize(self, X):
+        X = X.astype('float64')
         if self._standardizer is None:
             self._standardizer = StandardScaler().fit(X)
         return pd.DataFrame(self._standardizer.transform(X),

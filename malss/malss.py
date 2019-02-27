@@ -13,16 +13,18 @@ from jinja2 import Environment, FileSystemLoader
 from sklearn.model_selection import StratifiedKFold, KFold
 from sklearn.model_selection import GridSearchCV, learning_curve
 from sklearn.svm import SVC, LinearSVC, SVR
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, make_scorer
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\
     SGDClassifier
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from sklearn.exceptions import UndefinedMetricWarning
+from sklearn.exceptions import ConvergenceWarning
+warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
 from .algorithm import Algorithm
 from .data import Data
+from .metrics import f1_weighted
 
 
 class MALSS(object):
@@ -94,7 +96,7 @@ class MALSS(object):
         if task is None:
             raise ValueError("Set task ('classification' or 'regression').")
         elif task == 'classification':
-            self.scoring = 'f1_weighted' if scoring is None else scoring
+            self.scoring = make_scorer(f1_weighted) if scoring is None else scoring
         elif task == 'regression':
             self.scoring =\
                     'neg_mean_squared_error' if scoring is None else scoring
@@ -117,8 +119,6 @@ class MALSS(object):
         self.data = None
 
         self.algorithms = []
-
-        warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
 
     def __choose_algorithm(self):
         algorithms = []
@@ -155,7 +155,9 @@ class MALSS(object):
                             'sklearn.svm.LinearSVC.html')))
                 algorithms.append(
                     Algorithm(
-                        LogisticRegression(random_state=self.random_state),
+                        LogisticRegression(
+                            random_state=self.random_state,
+                            solver='lbfgs'),
                         [{'C': [0.1, 0.3, 1, 3, 10]}],
                         'Logistic Regression',
                         ('http://scikit-learn.org/stable/modules/generated/'
@@ -351,7 +353,7 @@ class MALSS(object):
 
         if not self.is_ready:
             if self.verbose:
-                print('Choose algorithm.')
+                print('Choose algorithms.')
             self.algorithms = self.__choose_algorithm()
             if self.verbose:
                 for algorithm in self.algorithms:
@@ -380,7 +382,7 @@ class MALSS(object):
                                 random_state=self.random_state)
 
         if self.verbose:
-            print('Analyze. (take some time)')
+            print('Analyze (It will take some time).')
         self.__tune_parameters()
         if self.task == 'classification':
             self.__report_classification_result()

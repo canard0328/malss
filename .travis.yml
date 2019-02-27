@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.5"
+  - "3.6"
 # Install packages
 install:
   - sudo apt-get update

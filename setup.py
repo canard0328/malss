@@ -68,6 +68,7 @@ setup(
     author_email=AUTHOR_EMAIL,
     license=LICENSE,
     url=URL,
+    python_requires='>=3.6',
     #packages=["malss", "malss.app"],
     packages=find_packages(),
     install_requires=[

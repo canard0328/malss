@@ -46,7 +46,7 @@
 	<h2>Data summary <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<ul>
 		<li>Number of rows: {{ data.shape_before[0] }}</li>
-		<li>Number of columns: {{ data.shape_before[1] }} (numeric: {{ data.shape_before[1] - data.del_columns|length }}, categorical: {{ data.del_columns|length }})</li>
+		<li>Number of columns: {{ data.shape_before[1] }} (numerical: {{ data.shape_before[1] - data.del_columns|length }}, categorical: {{ data.del_columns|length }})</li>
 		{%- if data.del_columns|length > 0 %}
 		<ul>
 			<li>Categorical values were encoded to integer features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features">one-of-K scheme</a>.</li>
@@ -65,6 +65,7 @@
 	<ul>
 		<li>Data may contain features with a mixtures of scales for various quantities.<br>Many machine learning algorithms expect that features have the same scale.<br>For feature scaling, <a href="http://en.wikipedia.org/wiki/Feature_scaling#Standardization"><strong>standardization</strong></a> is used in default settings.<br>If you don't need feature scaling, set <i>standardize=False</i> in constructor.</li>
 		<li>Data shuffling is done to avoid overfitting in default settings. If you don't need data shuffling, set <i>shuffle=False</i> in constructor.</li>
+		<li>Note that some features may have to be handled as the categorical feature even though they are looks like numerical features. In such case, you need to encode categorical features into numerical features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features">one-of-K scheme</a> by yourself before setting data to MALSS.</li>
 	</ul>
 	</details>
 	<hr>

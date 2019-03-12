@@ -436,8 +436,8 @@ class MALSS(object):
         for i in range(len(self.algorithms)):
             if self.algorithms[i].best_score > self.best_score:
                 self.best_score = self.algorithms[i].best_score
-                best_index = i
-        self.algorithms[best_index].is_best_algorithm = True
+                self.best_index = i
+        self.algorithms[self.best_index].is_best_algorithm = True
 
     def __tune_parameters(self):
         for i in range(len(self.algorithms)):

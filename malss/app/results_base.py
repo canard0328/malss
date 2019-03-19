@@ -110,7 +110,6 @@ class ResultsBase(Content):
             table.setRowCount(len(scores))
             table.setColumnCount(len(scores[0]))
             table.setHorizontalHeaderLabels(param_names + ['Score'])
-            table.setNonScroll()
 
             for r in range(len(scores)):
                 for c in range(len(scores[0])):
@@ -119,6 +118,8 @@ class ResultsBase(Content):
                     table.setItem(r, c, item)
                     if scores[r][-1] == best_score:
                         table.item(r, c).setBackground(QColor('#ffeeee'))
+
+            table.setNonScroll()
 
             self.vbox.addWidget(table)
 

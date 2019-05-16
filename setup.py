@@ -72,7 +72,7 @@ setup(
     #packages=["malss", "malss.app"],
     packages=find_packages(),
     install_requires=[
-        'scikit-learn>=0.18',
+        'scikit-learn>=0.19',
         'matplotlib>=1.5.1',
         'pandas>=0.14.1',
         'jinja2>=2.8'

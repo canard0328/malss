@@ -7,10 +7,10 @@ This module is written to be compatible with the `scikit-learn algorithms <http:
 .. image:: https://travis-ci.org/canard0328/malss.svg?branch=master
     :target: https://travis-ci.org/canard0328/malss
 
-Requirements
+Dependencies
 ************
 
-These are external packages which you will need to install before installing malss.
+malss requires:
 
 * python (>= 3.6)
 * numpy (>= 1.10.2)
@@ -19,18 +19,18 @@ These are external packages which you will need to install before installing mal
 * matplotlib (>= 1.5.1)
 * pandas (>= 0.14.1)
 * jinja2 (>= 2.8)
+* PyQt5 (>= 5.12) (only for interactive mode)
 
-I highly recommend `Anaconda <https://www.continuum.io/downloads>`_.
-Anaconda conveniently installs packages listed above.
+All modules except PyQt5 are automatically installed when installing malss.
 
 Installation
 ************
 
-If you already have a working installation of numpy and scipy:
-
   pip install malss
 
-If you have not installed numpy or scipy yet, you can also install these using pip.
+For interactive mode, you need to install PyQt5 using pip.
+
+  pip install PyQt5
 
 Example
 *******
@@ -42,7 +42,7 @@ Classification:
   from malss import MALSS
   from sklearn.datasets import load_iris
   iris = load_iris()
-  clf = MALSS('classification')
+  clf = MALSS(task='classification', lang='en')
   clf.fit(iris.data, iris.target, 'classification_result')
   clf.generate_module_sample('classification_module_sample.py')
 
@@ -53,7 +53,7 @@ Regression:
   from malss import MALSS
   from sklearn.datasets import load_boston
   boston = load_boston()
-  clf = MALSS('regression')
+  clf = MALSS(task='regression', lang='en')
   clf.fit(boston.data, boston.target, 'regression_result')
   clf.generate_module_sample('regression_module_sample.py')
 
@@ -65,11 +65,12 @@ Change algorithm:
   from sklearn.datasets import load_iris
   from sklearn.ensemble import RandomForestClassifier as RF
   iris = load_iris()
-  clf = MALSS('classification')
+  clf = MALSS(task='classification', lang='en')
   clf.fit(iris.data, iris.target, algorithm_selection_only=True)
   algorithms = clf.get_algorithms()
   # check algorithms here
-  clf.remove_algorithm(0)
+  clf.remove_algorithm(0)  # remove the first algorithm
+  # add random forest classifier
   clf.add_algorithm(RF(n_jobs=3),
                     [{'n_estimators': [10, 30, 50],
                       'max_depth': [3, 5, None],
@@ -78,6 +79,12 @@ Change algorithm:
   clf.fit(iris.data, iris.target, 'classification_result')
   clf.generate_module_sample('classification_module_sample.py')
 
-API
-***
-View the `documentation here <https://pythonhosted.org/malss/>`_.
+Interactive mode:
+
+In the interactive mode, you can interactively analyze data through a GUI.
+
+.. code-block:: python
+
+  from malss import MALSS
+
+  MALSS(lang='en', interactive=True)

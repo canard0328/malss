@@ -38,7 +38,7 @@ class TypeOfTask(Content):
         else:
             self.set_paragraph(
                 'Task selection',
-                text='Choose your machine learning taks.')
+                text='Choose your machine learning task.')
 
         vbox1 = QVBoxLayout()
         vbox1.setContentsMargins(10, 10, 10, 10)

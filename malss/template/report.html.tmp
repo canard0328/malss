@@ -31,13 +31,13 @@
 			<li><a href="http://en.wikipedia.org/wiki/Generalization_error/">Generalization error</a>: It is important to measure how well a learning machine generalizes to unseen data.</li>
 			<li>Evaluating the quality of the model on the data used to fit the model can lead to <a href="http://en.wikipedia.org/wiki/Overfitting"><strong>overfitting</strong></a>.</li>
 			<li>The solution to overfitting is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)"><strong>Cross validation</strong></a>.</br>The most common cross validation method is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation"><strong>k-fold cross validation</strong></a>: divide the dataset into k (5 by default in MALSS) parts of (roughly) equal size, then for each of these five parts, train the classifier on the other four and test on the held-out part.</li>
-			<li>You can select an appropriate cross validation method from <a href="http://scikit-learn.org/stable/modules/cross_validation.html">sklearn.cross_validation modules</a>.</br>(5-fold cross validation for regression task or Stratified 5-fold cross validation for classification task is selected by default).</li>
+			<li>You can select an appropriate cross validation method from <a href="http://scikit-learn.org/stable/modules/cross_validation.html">sklearn.cross_validation modules</a>.</br>(5-fold cross validation for regression task or Stratified 5-fold cross validation for the classification task is selected by default).</li>
 		</ul>
 		<strong>* Model evaluation:</strong>
 		<ul>
 			<li>Considering an imbalance ratio of 99 to 1, the accuracy of a classifier that classifies everything as negative is 99%.</br>Obviously, such a classifier may be of no use.</li>
 			<li>You can select an appropriate scoring function from <a href="http://scikit-learn.org/stable/modules/model_evaluation.html">sklearn.metrics modules</a>.</br>(mean squared error for regression task or f1 score for classification task is selected by default.)</li>
-			<li>All scorer objects in sklearn.metrics follow the convention that higher return values are better than lower return values. Thus metrics which measure the distance between the model and the data, like <i>mean squared error</i>, are available as <i>neg_mean_squared_error</i> which return the negated value of the metric.</li>
+			<li>All scorer objects in sklearn.metrics follow the convention that higher return values are better than lower return values. Thus, metrics that measure the distance between the model and the data, like <i>mean squared error</i>, are available as <i>neg_mean_squared_error</i>, which returns the negated value of the metric.</li>
 		</ul>
 	</p>
 	</details>
@@ -63,9 +63,9 @@
 	<details>
 	<summary><font size="+1"><strong>Descriptions (click here)</strong></font></summary>
 	<ul>
-		<li>Data may contain features with a mixtures of scales for various quantities.<br>Many machine learning algorithms expect that features have the same scale.<br>For feature scaling, <a href="http://en.wikipedia.org/wiki/Feature_scaling#Standardization"><strong>standardization</strong></a> is used in default settings.<br>If you don't need feature scaling, set <i>standardize=False</i> in constructor.</li>
-		<li>Data shuffling is done to avoid overfitting in default settings. If you don't need data shuffling, set <i>shuffle=False</i> in constructor.</li>
-		<li>Note that some features may have to be handled as the categorical feature even though they are looks like numerical features. In such case, you need to encode categorical features into numerical features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features">one-of-K scheme</a> by yourself before setting data to MALSS.</li>
+		<li>Data may contain features with a mixture of scales for various quantities.<br>Many machine learning algorithms expect features to have the same scale.<br>For feature scaling, <a href="http://en.wikipedia.org/wiki/Feature_scaling#Standardization"><strong>standardization</strong></a> is used in default settings.<br>If you don't need feature scaling, set <i>standardize=False</i> in the constructor.</li>
+		<li>Data shuffling is done to avoid overfitting in default settings. If you don't need data shuffling, set <i>shuffle=False</i> in the constructor.</li>
+		<li>Note that some features may have to be handled as the categorical feature even though they look like numerical features. In such case, you need to encode categorical features into numerical features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features">one-of-K scheme</a> by yourself before setting data to MALSS.</li>
 	</ul>
 	</details>
 	<hr>
@@ -112,7 +112,7 @@
 	<pre>{{ algorithm.classification_report }}</pre>
 	* <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_fscore_support.html">precision, recall, f1-score, support</a>
 	<ul>
-		<li>Note that above scores were made by closed test (the training data is same as the test data).</li>
+		<li>Note that above scores were made by closed test (the training data is the same as the test data).</li>
 		<li>Thus, the model may be overfitted.</li>
 	</ul>
 	{%- endif %}
@@ -128,24 +128,24 @@
 			<li>A learning curve is a plot of the training and cross-validation error as a function of the number of training points.</li>
 			<li>The algorithm shows <strong>high variance</strong> (over-fitting) if:</li>
 			<ul>
-				<li>Cross-validation score still improving as training examples increases.</li>
-				<li>Large gap between training and cross-validation score.</li>
+				<li>Cross-validation score still improves as training examples increases.</li>
+				<li>Large gap exists between training and cross-validation score.</li>
 			</ul>
 			<li>The algorithm shows <strong>high bias</strong> (under-fitting) if:</li>
 			<ul>
 				<li>Even training score is unacceptably bad.</li>
-				<li>Small gap between training and cross-validation score.</li>
+				<li>Small gap exists between training and cross-validation score.</li>
 			</ul>
 		</ul>
-		In case of <strong>high variance</strong> (over-fitting):
+		In the case of <strong>high variance</strong> (over-fitting):
 		<ul>
-			<li>Use fewer features. Using a feature selection technique may be useful, and decrease the over-fitting of the estimator.</li>
-			<li>Use more training samples. Adding training samples can reduce the effect of over-fitting, and lead to improvements in a high variance estimator.</li>
+			<li>Use fewer features. Using a feature selection technique may be useful and decrease the over-fitting of the estimator.</li>
+			<li>Use more training samples. Adding training samples can reduce the effect of over-fitting and lead to improvements in a high variance estimator.</li>
 		</ul>
-		In case of <strong>high bias</strong> (under-fitting):
+		In the case of <strong>high bias</strong> (under-fitting):
 		<ul>
 			<li>Add more features. Adding these features to the training and test sets can improve a high-bias estimator.</li>
-			<li>Use a more sophisticated model. Adding complexity to the model can help improve on bias. For a polynomial fit, this can be accomplished by increasing the degree d. Each learning technique has its own methods of adding complexity.</li>
+			<li>Use a more sophisticated model. Adding complexity to the model can help improve bias. For a polynomial fit, this can be accomplished by increasing the degree d. Each learning technique has its own methods of adding complexity.</li>
 			<li>Use fewer samples. Though this will not improve the classification, a high-bias algorithm can attain nearly the same error with a smaller training sample. For algorithms which are computationally expensive, reducing the training sample size can lead to very large improvements in speed.</li>
 		</ul>
 		See also:

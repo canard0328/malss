@@ -393,7 +393,7 @@ class MALSS(object):
                                 random_state=self.random_state)
 
         if self.verbose:
-            print('Analyze (It will take some time).')
+            print('Analyze (This will take some time).')
         self.__tune_parameters()
         if self.task == 'classification':
             self.__report_classification_result()

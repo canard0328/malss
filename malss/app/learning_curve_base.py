@@ -36,10 +36,10 @@ class LearningCurveBase(Content):
 class PlotLearningCurve(FigureCanvas):
     def __init__(self, x, y_train, y_cv, ylim, title, parent=None,
                  width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = self.fig.add_subplot(111)
 
-        FigureCanvas.__init__(self, fig)
+        FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)
 
         FigureCanvas.setSizePolicy(self,
@@ -48,16 +48,15 @@ class PlotLearningCurve(FigureCanvas):
         self.plot(x, y_train, y_cv, ylim, title)
 
     def plot(self, x, y_train, y_cv, ylim, title):
-        ax = self.figure.add_subplot(111)
-        ax.set_title(title)
-        ax.set_xlabel('Training examples')
-        ax.set_ylabel('Score')
-        ax.grid(True)
+        self.axes.set_title(title)
+        self.axes.set_xlabel('Training examples')
+        self.axes.set_ylabel('Score')
+        self.axes.grid(True)
 
-        ax.plot(x, y_train, 'o-', color='dodgerblue', label='Training score')
-        ax.plot(x, y_cv, 'o-', color='darkorange',
-                label='Cross-validation score')
-        ax.set_ylim(ylim)
-        ax.legend(loc="lower right")
+        self.axes.plot(x, y_train, 'o-', color='dodgerblue', label='Training score')
+        self.axes.plot(x, y_cv, 'o-', color='darkorange',
+                       label='Cross-validation score')
+        self.axes.set_ylim(ylim)
+        self.axes.legend(loc="lower right")
 
         self.draw()

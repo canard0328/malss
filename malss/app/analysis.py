@@ -81,7 +81,7 @@ class Analysis(Analyzer):
             text = ('MALSS automatically perform cross validation analysis '
                     'with grid search hyper-parameter tuning.\n'
                     'Clik "Analyze" to start.\n'
-                    '(It will take tens of minutes.)')
+                    '(This will take tens of minutes.)')
             self.set_paragraph('', text=text)
         else:
             text = ('MALSSはグリッドサーチによるハイパーパラメータチューニング，'

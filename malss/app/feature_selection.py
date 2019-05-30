@@ -78,7 +78,7 @@ class FeatureSelection(Analyzer):
 
         if self.params.lang == 'en':
             text = ('Clik "Analyze" to re-analyze with selected features.\n'
-                    '(It will take tens of minutes.)')
+                    '(This will take tens of minutes.)')
             self.set_paragraph('', text=text)
         else:
             text = ('それでは特徴量選択した説明変数を用いて分析をしてみましょう，\n'

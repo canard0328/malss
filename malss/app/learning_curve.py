@@ -5,9 +5,7 @@ import numpy as np
 import copy
 from PyQt5.QtWidgets import (QPushButton, QScrollArea)
 from PyQt5.QtCore import QThread, pyqtSignal
-from sklearn.ensemble import RandomForestClassifier as RFc
-from sklearn.ensemble import RandomForestRegressor as RFr
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Manager
 from ..malss import MALSS
 from .waiting_animation import WaitingAnimation
 from .rfpimp import oob_importances
@@ -73,11 +71,6 @@ class LearningCurve(LearningCurveBase):
         self.__feature_selection()
 
     def __feature_selection(self):
-        if self.params.task.lower() == 'regression':
-            rf = RFr(random_state=0, oob_score=True, n_estimators=50)
-        else:
-            rf = RFc(random_state=0, oob_score=True, n_estimators=50)
-
         self.mdl_fs = copy.deepcopy(self.params.mdl)
 
         self.thread = FeatureSelectionWorker(self.mdl_fs)
@@ -160,21 +153,19 @@ class FeatureSelectionWorker(QThread):
         self.mdl = mdl
 
     def run(self):
-        q = Queue()
-        job = Process(target=FeatureSelectionWorker.sub_job,
-                      args=(self.mdl, q))
-        job.start()
-        rtn = q.get()
-        job.join()
-        self.finSignal.emit(rtn)
+        with Manager() as manager:
+            d = manager.dict()
+            job = Process(target=FeatureSelectionWorker.sub_job,
+                        args=(self.mdl, d))
+            job.start()
+            job.join()
+            self.finSignal.emit(dict(d))
 
     @staticmethod
-    def sub_job(mdl, q):
-        rtn = {}
+    def sub_job(mdl, d):
         try:
             mdl.select_features()
-            rtn['mdl'] = mdl
+            d['mdl'] = mdl
         except Exception as e:
             import traceback
-            rtn['error'] = traceback.format_exc()
-        q.put(rtn)
+            d['error'] = traceback.format_exc()

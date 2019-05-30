@@ -13,9 +13,6 @@ class WaitingAnimation(QWidget):
         QWidget.__init__(self, parent)
         self.lists = None
         self.list_index = 0
-        # palette = QPalette(self.palette())
-        # palette.setColor(palette.Background, Qt.transparent)
-        # self.setPalette(palette)
 
     def paintEvent(self, event):
         painter = QPainter()
@@ -36,21 +33,6 @@ class WaitingAnimation(QWidget):
             dx = (rect_painter.width() - rect_image.width()) / 2.0
             dy = (rect_painter.height() - rect_image.height()) / 2.0
             painter.drawImage(dx, dy, image)
-
-        # for i in range(6):
-        #     if self.counter % 6 == i:
-        #         painter.setBrush(QBrush(QColor(204, 112, 0)))
-        #     else:
-        #         painter.setBrush(QBrush(QColor(127, 127, 127)))
-        #     painter.drawEllipse(
-        #         self.width()/2 +
-        #         40 * math.cos((2 * math.pi * i - math.pi) / 6.0) - 10,
-        #         self.height()/2 +
-        #         40 * math.sin((2 * math.pi * i - math.pi) / 6.0) - 10,
-        #         20, 20)
-
-        # painter.setPen(QColor(64, 64, 64))
-        # painter.drawText(self.rect(), Qt.AlignCenter, 'Processing...')
 
         painter.end()
 

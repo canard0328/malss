@@ -3,7 +3,9 @@
 from PyQt5.QtWidgets import QScrollArea
 from PyQt5.QtCore import QThread, pyqtSignal
 from .content import Content
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Manager
+from threading import Condition
+import sys
 from .waiting_animation import WaitingAnimation
 
 
@@ -223,23 +225,22 @@ class AnalyzeWorker(QThread):
         self.mdl = mdl
         self.X = X
         self.y = y
+        self.con = Condition()
 
     def run(self):
-        q = Queue()
-        job = Process(target=AnalyzeWorker.sub_job,
-                      args=(self.mdl, self.X, self.y, q))
-        job.start()
-        rtn = q.get()
-        job.join()
-        self.finSignal.emit(rtn)
+        with Manager() as manager:
+            d = manager.dict()
+            job = Process(target=AnalyzeWorker.sub_job,
+                        args=(self.mdl, self.X, self.y, d))
+            job.start()
+            job.join()
+            self.finSignal.emit(d['result'])
 
     @staticmethod
-    def sub_job(mdl, X, y, q):
-        rtn = {}
+    def sub_job(mdl, X, y, d):
         try:
             mdl.fit(X, y)
-            rtn = mdl.results
+            d['result'] = mdl.results
         except Exception as e:
             import traceback
-            rtn['error'] = traceback.format_exc()
-        q.put(rtn)
+            d['result']['error'] = traceback.format_exc()

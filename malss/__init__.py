@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 __author__ = 'Ryota KAMOSHIDA'
-__version__ = '2.1.3'
+__version__ = '2.2.0'
 __license__ = 'MIT License: http://www.opensource.org/licenses/mit-license.php'
 
 

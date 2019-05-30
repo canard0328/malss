@@ -329,4 +329,4 @@ class Prediction(Content):
         pred = mdl.predict(X, estimator)
         pd.Series(pred).to_csv(
             os.path.dirname(self.params.path_pred) + '/predict.csv',
-            index=False)
+            index=False, header=False)

@@ -587,7 +587,7 @@ class MALSS(object):
         if self.task == 'regression':
             rf = RandomForestRegressor(random_state=0, oob_score=True, n_estimators=50, n_jobs=self.n_jobs)
         else:
-            rf = RandomForestClassifier(random_state=0, oob_score=True, n_estimators=50, n_jobs=self.n_jbos)
+            rf = RandomForestClassifier(random_state=0, oob_score=True, n_estimators=50, n_jobs=self.n_jobs)
         
         num_col = len(self.data.X.columns)
         self.data.drop_col(rf)

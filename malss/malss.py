@@ -181,8 +181,12 @@ class MALSS(object):
                          'sklearn.tree.DecisionTreeClassifier.html')))
 
                 # Too small data doesn't suit for kNN.
+                if isinstance(self.cv, int):
+                    num_cv = self.cv
+                else:
+                    num_cv = self.cv.get_n_splits()
                 min_nn = int(
-                    0.1 * (self.cv - 1) * self.data.X.shape[0] / self.cv)
+                    0.1 * (num_cv - 1) * self.data.X.shape[0] / num_cv)
                 # where 0.1 means smallest data size ratio of learning_curve
                 # function.
                 # The value of min_nn isn't accurate when cv is stratified.

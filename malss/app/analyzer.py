@@ -243,4 +243,4 @@ class AnalyzeWorker(QThread):
             d['result'] = mdl.results
         except Exception as e:
             import traceback
-            d['result']['error'] = traceback.format_exc()
+            d['result'] = {'error': traceback.format_exc()}

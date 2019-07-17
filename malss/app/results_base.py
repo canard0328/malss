@@ -61,12 +61,20 @@ class ResultsBase(Content):
         else:
             raise Exception('Wrong prefix.')
 
+        from_to = self._correct_param(param_name, from_to)
+
         for name, params in algorithms:
             if name == algo_name:
                 if param_name in params[0]:
                     params[0][param_name] = from_to
 
         self.btn_next.setEnabled(False)
+
+    def _correct_param(self, name, values):
+        if name == 'n_neighbors':
+            return list(set(map(int, map(round, values))))
+        else:
+            return values
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Wheel and 'SpinBox' in str(obj):

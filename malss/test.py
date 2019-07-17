@@ -166,7 +166,7 @@ def test_regression_big():
 
 
 def test_classification_categorical():
-    data = pd.read_csv('http://www-bcf.usc.edu/~gareth/ISL/Heart.csv',
+    data = pd.read_csv('http://faculty.marshall.usc.edu/gareth-james/ISL/Heart.csv',
                        index_col=0, na_values=[''])
 
     y = data['AHD']
@@ -185,7 +185,7 @@ def test_classification_categorical():
 
 
 def test_ndarray():
-    data = pd.read_csv('http://www-bcf.usc.edu/~gareth/ISL/Heart.csv',
+    data = pd.read_csv('http://faculty.marshall.usc.edu/gareth-james/ISL/Heart.csv',
                        index_col=0, na_values=[''])
 
     y = data['AHD']
@@ -242,4 +242,4 @@ def test_change_algorithms():
 
 
 if __name__ == "__main__":
-    test_classification_multiclass_small()
+    test_ndarray()

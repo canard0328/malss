@@ -110,6 +110,8 @@ class MALSS(object):
                 self.scoring_name = scoring
             else:
                 self.scoring_name = scoring.__name__
+        elif task == 'clustering':
+            raise NotImplementedError('clustering has not implemented yet.')
         else:
             raise ValueError('task:%s is not supported' % task)
         self.task = task

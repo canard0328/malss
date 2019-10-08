@@ -69,6 +69,7 @@ class ResultsBase(Content):
                     params[0][param_name] = from_to
 
         self.btn_next.setEnabled(False)
+        self.btn_re.setEnabled(True)
 
     def _correct_param(self, name, values):
         if name == 'n_neighbors':

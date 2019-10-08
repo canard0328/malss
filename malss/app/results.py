@@ -15,12 +15,13 @@ class Results(ResultsBase):
 
         self.vbox.addStretch()
 
-        btn_re = QPushButton('Re-analyze', self.inner)
-        btn_re.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
+        self.btn_re = QPushButton('Re-analyze', self.inner)
+        self.btn_re.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
-            btn_re.clicked.connect(lambda: self.button_func('Analysis'))
+            self.btn_re.clicked.connect(lambda: self.button_func('Analysis'))
         else:
-            btn_re.clicked.connect(lambda: self.button_func('分析の実行'))
+            self.btn_re.clicked.connect(lambda: self.button_func('分析の実行'))
+        self.btn_re.setEnabled(False)
 
         self.btn_next = QPushButton('Continue without any changes', self.inner)
         self.btn_next.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
@@ -31,7 +32,7 @@ class Results(ResultsBase):
             self.btn_next.clicked.connect(lambda: self.button_func(
                 'バイアスとバリアンス'))
 
-        self.vbox.addWidget(btn_re)
+        self.vbox.addWidget(self.btn_re)
         self.vbox.addWidget(self.btn_next)
 
 
@@ -46,14 +47,15 @@ class Results2(ResultsBase):
 
         self.vbox.addStretch()
 
-        btn_re = QPushButton('Re-analyze', self.inner)
-        btn_re.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
+        self.btn_re = QPushButton('Re-analyze', self.inner)
+        self.btn_re.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
             btn_re.clicked.connect(
                 lambda: self.button_func('Feature selection'))
         else:
             btn_re.clicked.connect(
                 lambda: self.button_func('特徴量選択'))
+        self.btn_re.setEnabled(False)
 
         self.btn_next = QPushButton('Continue without any changes', self.inner)
         self.btn_next.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
@@ -64,5 +66,5 @@ class Results2(ResultsBase):
             self.btn_next.clicked.connect(lambda: self.button_func(
                 '学習曲線２'))
 
-        self.vbox.addWidget(btn_re)
+        self.vbox.addWidget(self.btn_re)
         self.vbox.addWidget(self.btn_next)

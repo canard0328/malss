@@ -36,6 +36,7 @@ class Content(QScrollArea):
         topframe.setStyleSheet('background-color: white')
         topframe.setFixedHeight(self.H1_HEIGHT)
 
+        self.title = title
         lbl_h1 = QLabel(title, topframe)
         fnt = lbl_h1.font()
         fnt.setPointSize(self.H1_FONT_SIZE)

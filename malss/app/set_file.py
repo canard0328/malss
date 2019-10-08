@@ -12,6 +12,8 @@ class SetFile(Content):
     def __init__(self, parent=None, button_func=None, params=None):
         super().__init__(parent, 'Input data', params)
 
+        self.fpath = None
+
         self.button_func = button_func
 
         path = os.path.abspath(os.path.dirname(__file__)) + '/static/'
@@ -63,6 +65,7 @@ class SetFile(Content):
 
         if self.params.fpath is not None:
             self.le.setText(self.params.fpath)
+            self.fpath = self.params.fpath
         else:
             self.btn.setEnabled(False)
 
@@ -72,32 +75,32 @@ class SetFile(Content):
         fname = QFileDialog.getOpenFileName(self, 'Open', '')
         self.le.setText(fname[0])
         self.btn.setEnabled(True)
-        # self.params.fpath = fname[0]
         self.fpath = fname[0]
 
     def button_clicked(self):
         if self.params.fpath != self.fpath:
-            self.button_func('Error', delete=True)
+            self.params.initialize(is_task=False)
+            self.button_func(self.title, delete_after=True)
             self.params.fpath = self.fpath
-            if self.params.data5 is None:
-                try:
-                    # engine='python' is to avoid pandas's bug.
-                    data = pd.read_csv(
-                        self.params.fpath, header=0, engine='python',
-                        dtype=self.make_dtype(self.params.columns,
-                                            self.params.col_types))
-                except Exception:
-                    import traceback
-                    self.params.error = traceback.format_exc()
-                    self.button_func('Error')
-                    return
-                self.params.data5 = data.head(min(5, data.shape[0]))
 
-                self.params.columns = data.columns
-                self.params.col_types_def =\
-                    list(map(str, data.dtypes.get_values()))
-                self.params.col_types =\
-                    list(map(str, data.dtypes.get_values()))
+            try:
+                # engine='python' is to avoid pandas's bug.
+                data = pd.read_csv(
+                    self.params.fpath, header=0, engine='python',
+                    dtype=self.make_dtype(self.params.columns,
+                                        self.params.col_types))
+            except Exception:
+                import traceback
+                self.params.error = traceback.format_exc()
+                self.button_func('Error')
+                return
+            self.params.data5 = data.head(min(5, data.shape[0]))
+
+            self.params.columns = data.columns
+            self.params.col_types_def =\
+                list(map(str, data.dtypes.get_values()))
+            self.params.col_types =\
+                list(map(str, data.dtypes.get_values()))
 
         if self.params.lang == 'jp':
             self.button_func('データの確認')

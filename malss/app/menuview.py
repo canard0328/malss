@@ -72,8 +72,11 @@ class MenuView(QScrollArea):
         if self.update_func is not None:
             self.update_func(text)
 
-    def edit_button(self, text, delete=False):
+    def edit_button(self, text, delete=False, delete_after=False):
         if delete:
+            """
+            Delete a specific page with 'text'.
+            """
             for i in range(self.vbox.count()):
                 widget = self.vbox.itemAt(i).widget()
                 if type(widget) == QPushButton:
@@ -81,6 +84,29 @@ class MenuView(QScrollArea):
                         self.vbox.removeWidget(widget)
                         widget.deleteLater()
                         widget = None
+            return
+        
+        if delete_after:
+            """
+            Delete pages after the 'text' page.
+            """
+            delete_flag = False
+            del_widgets = []
+            for i in range(self.vbox.count()):
+                widget = self.vbox.itemAt(i).widget()
+                if type(widget) == QPushButton:
+                    if widget.text() == '-' + text:
+                        delete_flag = True
+                        continue
+                    if delete_flag:
+                        del_widgets.append(widget)
+            for widget in del_widgets:
+                text = widget.text()[1:]
+                if text in self.list_button:
+                    self.list_button.remove(text)
+                self.vbox.removeWidget(widget)
+                widget.deleteLater()
+                widget = None
             return
 
         if text not in self.list_button:

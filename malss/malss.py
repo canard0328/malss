@@ -131,133 +131,144 @@ class MALSS(object):
         self.algorithms = []
 
     def __choose_algorithm(self):
-        algorithms = []
         if self.task == 'classification':
-            if self.data.X.shape[0] * self.data.X.shape[1] <= 1e+06:
-                if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
-                    algorithms.append(
-                        Algorithm(
-                            SVC(random_state=self.random_state, kernel='rbf'),
-                            [{'C': [1, 10, 100, 1000],
-                              'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
-                            'Support Vector Machine (RBF Kernel)',
-                            ('http://scikit-learn.org/stable/modules/'
-                             'generated/sklearn.svm.SVC.html')))
-                    algorithms.append(
-                        Algorithm(
-                            RandomForestClassifier(
-                                random_state=self.random_state,
-                                n_estimators=500,
-                                n_jobs=1),
-                            [{'max_features': [0.3, 0.6, 0.9],
-                              'max_depth': [3, 7, 11]}],
-                            'Random Forest',
-                            ('http://scikit-learn.org/stable/modules/'
-                             'generated/'
-                             'sklearn.ensemble.RandomForestClassifier.html')))
-                else:
-                    algorithms.append(
-                        Algorithm(
-                            LinearSVC(random_state=self.random_state),
-                            [{'C': [0.1, 1, 10, 100]}],
-                            'Support Vector Machine (Linear Kernel)',
-                            ('http://scikit-learn.org/stable/modules/generated/'
-                            'sklearn.svm.LinearSVC.html')))
-                algorithms.append(
-                    Algorithm(
-                        LogisticRegression(
-                            random_state=self.random_state,
-                            solver='lbfgs', multi_class='auto'),
-                        [{'C': [0.1, 0.3, 1, 3, 10]}],
-                        'Logistic Regression',
-                        ('http://scikit-learn.org/stable/modules/generated/'
-                         'sklearn.linear_model.LogisticRegression.html')))
-                algorithms.append(
-                    Algorithm(
-                        DecisionTreeClassifier(random_state=self.random_state),
-                        [{'max_depth': [3, 5, 7, 9, 11]}],
-                        'Decision Tree',
-                        ('http://scikit-learn.org/stable/modules/generated/'
-                         'sklearn.tree.DecisionTreeClassifier.html')))
+            algorithms = self.__choose_algorithm_for_classification()
+        elif self.task == 'regression':
+            algorithms = self.__choose_algorithm_for_regression()
+        return algorithms
 
-                # Too small data doesn't suit for kNN.
-                if isinstance(self.cv, int):
-                    num_cv = self.cv
-                else:
-                    num_cv = self.cv.get_n_splits()
-                min_nn = int(
-                    0.1 * (num_cv - 1) * self.data.X.shape[0] / num_cv)
-                # where 0.1 means smallest data size ratio of learning_curve
-                # function.
-                # The value of min_nn isn't accurate when cv is stratified.
-                if min_nn >= 11:
-                    algorithms.append(
-                        Algorithm(
-                            KNeighborsClassifier(),
-                            [{'n_neighbors': list(range(2, min(20, min_nn + 1),
-                                                        4))}],
-                            'k-Nearest Neighbors',
-                            ('http://scikit-learn.org/stable/modules/'
-                             'generated/sklearn.neighbors.KNeighborsClassifier'
-                             '.html')))
+    def __choose_algorithm_for_classification(self):
+        algorithms = []
+        if self.data.X.shape[0] * self.data.X.shape[1] <= 1e+06:
+            if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
+                algorithms.append(
+                    Algorithm(
+                        SVC(random_state=self.random_state, kernel='rbf'),
+                        [{'C': [1, 10, 100, 1000],
+                            'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
+                        'Support Vector Machine (RBF Kernel)',
+                        ('http://scikit-learn.org/stable/modules/'
+                            'generated/sklearn.svm.SVC.html')))
+                algorithms.append(
+                    Algorithm(
+                        RandomForestClassifier(
+                            random_state=self.random_state,
+                            n_estimators=500,
+                            n_jobs=1),
+                        [{'max_features': [0.3, 0.6, 0.9],
+                            'max_depth': [3, 7, 11]}],
+                        'Random Forest',
+                        ('http://scikit-learn.org/stable/modules/'
+                            'generated/'
+                            'sklearn.ensemble.RandomForestClassifier.html')))
             else:
                 algorithms.append(
                     Algorithm(
-                        SGDClassifier(
-                            random_state=self.random_state,
-                            max_iter=1000, tol=1e-3, n_jobs=1),
-                        [{'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
-                        'SGD Classifier',
+                        LinearSVC(random_state=self.random_state),
+                        [{'C': [0.1, 1, 10, 100]}],
+                        'Support Vector Machine (Linear Kernel)',
                         ('http://scikit-learn.org/stable/modules/generated/'
-                         'sklearn.linear_model.SGDClassifier.html')))
-        if self.task == 'regression':
-            if self.data.X.shape[0] * self.data.X.shape[1] <= 1e+06:
-                if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
-                    algorithms.append(
-                        Algorithm(
-                            SVR(kernel='rbf'),
-                            [{'C': [1, 10, 100, 1000],
-                              'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
-                            'Support Vector Machine (RBF Kernel)',
-                            ('http://scikit-learn.org/stable/modules/'
-                             'generated/sklearn.svm.SVR.html')))
-                    algorithms.append(
-                        Algorithm(
-                            RandomForestRegressor(
-                                random_state=self.random_state,
-                                n_estimators=500,
-                                n_jobs=1),
-                            [{'max_features': [0.3, 0.6, 0.9],
-                              'max_depth': [3, 7, 11]}],
-                            'Random Forest',
-                            ('http://scikit-learn.org/stable/modules/'
-                             'generated/'
-                             'sklearn.ensemble.RandomForestRegressor.html')))
-                algorithms.append(
-                    Algorithm(
-                        Ridge(),
-                        [{'alpha':
-                            [0.01, 0.1, 1, 10, 100]}],
-                        'Ridge Regression',
-                        ('http://scikit-learn.org/stable/modules/generated/'
-                         'sklearn.linear_model.Ridge.html')))
-                algorithms.append(
-                    Algorithm(
-                        DecisionTreeRegressor(random_state=self.random_state),
-                        [{'max_depth': [3, 5, 7, 9, 11]}],
-                        'Decision Tree',
-                        ('http://scikit-learn.org/stable/modules/generated/'
-                         'sklearn.tree.DecisionTreeRegressor.html')))
+                        'sklearn.svm.LinearSVC.html')))
+            algorithms.append(
+                Algorithm(
+                    LogisticRegression(
+                        random_state=self.random_state,
+                        solver='lbfgs', multi_class='auto'),
+                    [{'C': [0.1, 0.3, 1, 3, 10]}],
+                    'Logistic Regression',
+                    ('http://scikit-learn.org/stable/modules/generated/'
+                        'sklearn.linear_model.LogisticRegression.html')))
+            algorithms.append(
+                Algorithm(
+                    DecisionTreeClassifier(random_state=self.random_state),
+                    [{'max_depth': [3, 5, 7, 9, 11]}],
+                    'Decision Tree',
+                    ('http://scikit-learn.org/stable/modules/generated/'
+                        'sklearn.tree.DecisionTreeClassifier.html')))
+
+            # Too small data doesn't suit for kNN.
+            if isinstance(self.cv, int):
+                num_cv = self.cv
             else:
+                num_cv = self.cv.get_n_splits()
+            min_nn = int(
+                0.1 * (num_cv - 1) * self.data.X.shape[0] / num_cv)
+            # where 0.1 means smallest data size ratio of learning_curve
+            # function.
+            # The value of min_nn isn't accurate when cv is stratified.
+            if min_nn >= 11:
                 algorithms.append(
                     Algorithm(
-                        SGDRegressor(
+                        KNeighborsClassifier(),
+                        [{'n_neighbors': list(range(2, min(20, min_nn + 1),
+                                                    4))}],
+                        'k-Nearest Neighbors',
+                        ('http://scikit-learn.org/stable/modules/'
+                            'generated/sklearn.neighbors.KNeighborsClassifier'
+                            '.html')))
+        else:
+            algorithms.append(
+                Algorithm(
+                    SGDClassifier(
+                        random_state=self.random_state,
+                        max_iter=1000, tol=1e-3, n_jobs=1),
+                    [{'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
+                    'SGD Classifier',
+                    ('http://scikit-learn.org/stable/modules/generated/'
+                        'sklearn.linear_model.SGDClassifier.html')))
+        
+        return algorithms
+
+    def __choose_algorithm_for_regression(self):
+        algorithms = []
+        if self.data.X.shape[0] * self.data.X.shape[1] <= 1e+06:
+            if self.data.X.shape[0] ** 2 * self.data.X.shape[1] <= 1e+09:
+                algorithms.append(
+                    Algorithm(
+                        SVR(kernel='rbf'),
+                        [{'C': [1, 10, 100, 1000],
+                            'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
+                        'Support Vector Machine (RBF Kernel)',
+                        ('http://scikit-learn.org/stable/modules/'
+                            'generated/sklearn.svm.SVR.html')))
+                algorithms.append(
+                    Algorithm(
+                        RandomForestRegressor(
                             random_state=self.random_state,
-                            max_iter=1000, tol=1e-3),
-                        [{'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
-                        'SGD Regressor',
-                        ('http://scikit-learn.org/stable/modules/generated/'
-                         'sklearn.linear_model.SGDRegressor.html')))
+                            n_estimators=500,
+                            n_jobs=1),
+                        [{'max_features': [0.3, 0.6, 0.9],
+                            'max_depth': [3, 7, 11]}],
+                        'Random Forest',
+                        ('http://scikit-learn.org/stable/modules/'
+                            'generated/'
+                            'sklearn.ensemble.RandomForestRegressor.html')))
+            algorithms.append(
+                Algorithm(
+                    Ridge(),
+                    [{'alpha':
+                        [0.01, 0.1, 1, 10, 100]}],
+                    'Ridge Regression',
+                    ('http://scikit-learn.org/stable/modules/generated/'
+                        'sklearn.linear_model.Ridge.html')))
+            algorithms.append(
+                Algorithm(
+                    DecisionTreeRegressor(random_state=self.random_state),
+                    [{'max_depth': [3, 5, 7, 9, 11]}],
+                    'Decision Tree',
+                    ('http://scikit-learn.org/stable/modules/generated/'
+                        'sklearn.tree.DecisionTreeRegressor.html')))
+        else:
+            algorithms.append(
+                Algorithm(
+                    SGDRegressor(
+                        random_state=self.random_state,
+                        max_iter=1000, tol=1e-3),
+                    [{'alpha': [1e-05, 3e-05, 1e-04, 3e-04, 1e-03]}],
+                    'SGD Regressor',
+                    ('http://scikit-learn.org/stable/modules/generated/'
+                        'sklearn.linear_model.SGDRegressor.html')))
+        
         return algorithms
 
     def add_algorithm(self, estimator, param_grid, name, link=None):

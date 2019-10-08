@@ -133,6 +133,7 @@ class DataCheck(Content):
         if self.obj_group.checkedButton() is None:
             self.btn.setEnabled(False)
         else:
+            self.lbl_cnf.setText('<br>')
             self.btn.setEnabled(True)
 
         self.vbox.addWidget(self.btn)

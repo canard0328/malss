@@ -137,7 +137,7 @@ class Analysis(Analyzer):
                                         algorithm_selection_only=True)
 
                 self.params.algorithms = self.params.mdl.get_algorithms()
-        else:
+        elif self.params.results is not None:
             self.add_algorithm(self.params.mdl, self.params.algorithms,
                                self.params.results)
 

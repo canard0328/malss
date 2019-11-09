@@ -19,6 +19,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\
     SGDClassifier
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.cluster import KMeans
 from sklearn.exceptions import ConvergenceWarning
 warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
@@ -30,7 +31,7 @@ from .metrics import f1_weighted
 class MALSS(object):
     def __init__(self, task=None, shuffle=True, standardize=True, scoring=None,
                  cv=5, n_jobs=-1, random_state=0, lang='en', verbose=True,
-                 interactive=False):
+                 interactive=False, min_clusters=2, max_clusters=10):
         """
         Initialize parameters.
 
@@ -38,7 +39,7 @@ class MALSS(object):
         ----------
         task : string
             Specifies the task of the analysis. It must be one of
-            'classification', 'regression'.
+            'classification', 'regression', and 'clustering'.
         shuffle : boolean, optional (default=True)
             Whether to shuffle the data.
         standardize : boolean, optional (default=True)
@@ -55,6 +56,12 @@ class MALSS(object):
             (for classification task) is used by default.
             Specific cross-validation objects can be passed, see
             sklearn.model_selection module for the list of possible objects.
+        min_clusters : integer (default=2).
+            Minimum number of search conditions of the number of clusters.
+            This number is used for only clustering task.
+        max_clusters : integer (default=10).
+            Maximum number of search conditions of the number of clusters.
+            This number is used for only clustering task.
         n_jobs : integer, optional (default=-1)
             The number of jobs to run in parallel. If -1, then the number of
             jobs is set to the number of cores - 1.
@@ -111,7 +118,7 @@ class MALSS(object):
             else:
                 self.scoring_name = scoring.__name__
         elif task == 'clustering':
-            raise NotImplementedError('clustering has not implemented yet.')
+            pass
         else:
             raise ValueError('task:%s is not supported' % task)
         self.task = task
@@ -123,6 +130,9 @@ class MALSS(object):
             self.n_jobs = n_jobs
         self.random_state = random_state
         self.verbose = verbose
+
+        if task == 'clustering':
+            self.min_clusters, self.max_clusters = sorted([min_clusters, max_clusters])
 
         if lang != 'en' and lang != 'jp':
             raise ValueError('lang:%s is no supported' % lang)
@@ -270,6 +280,18 @@ class MALSS(object):
                     'SGD Regressor',
                     ('http://scikit-learn.org/stable/modules/generated/'
                         'sklearn.linear_model.SGDRegressor.html')))
+        
+        return algorithms
+
+    def __choose_algorithm_for_clustering(self):
+        algorithms = []
+        algorithms.append(
+            Algorithm(
+                KMeans(),
+                [{'n_clusters': list(range(self.min_clusters, self.max_clusters+1))}],
+                'K-Means',
+                ('https://scikit-learn.org/stable/modules/generated/'
+                 'sklearn.cluster.KMeans.html')))
         
         return algorithms
 

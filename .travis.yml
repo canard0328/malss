@@ -26,4 +26,4 @@ install:
   - source activate test-environment
   - python setup.py install
 
-script: travis_wait 60 nosetests -a '!slow'
+script: travis_wait 60 nosetests -a '!local'

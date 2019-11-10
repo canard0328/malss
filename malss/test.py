@@ -68,7 +68,7 @@ def test_classification_multiclass_small():
     assert cls.algorithms[0].best_score is not None
 
 
-@attr(slow=True)
+@attr(local=True)
 def test_classification_2classes_medium():
     X, y = make_classification(n_samples=100000,
                                n_features=10,
@@ -240,6 +240,8 @@ def test_change_algorithms():
     assert algorithms[2][0] == 'Decision Tree'
     assert algorithms[3][0] == 'Extremely Randomized Trees'
 
+
+@attr(local=True)
 def test_clustering():
     from sklearn.datasets import load_iris
     iris = load_iris()

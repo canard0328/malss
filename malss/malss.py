@@ -389,13 +389,17 @@ class MALSS(object):
         self : object
             Returns self.
         """
-
         if self.task == 'clustering' and y is not None:
             print('Warning: target values y is ignored for clustering.')
         elif (self.task == 'classification' or self.task == 'regression') and y is None:
             raise ValueError(f'Target values y must be set in {self.task}.')
 
+        if self.task == 'classification' or self.task == 'regression':
+            self.__fit_supervised(X, y, dname, algorithm_selection_only)
+        elif self.task == 'clustering':
+            self.__fit_clustering(X, dname)
 
+    def __fit_supervised(self, X, y, dname, algorithm_selection_only):
         if self.verbose:
             print('Set data.')
         self.data = Data(self.shuffle, self.standardize, self.random_state)
@@ -461,6 +465,22 @@ class MALSS(object):
         if self.verbose:
             print('Done.')
         return self
+    
+    def __fit_clustering(self, X, dname):
+        if self.verbose:
+            print('Set data.')
+        self.data = Data(self.shuffle, self.standardize, self.random_state)
+        self.data.fit_transform(X)
+
+        if self.verbose:
+            print('Choose algorithms.')
+        self.algorithms = self.__choose_algorithm()
+        if self.verbose:
+            for algorithm in self.algorithms:
+                print('    %s' % algorithm.name)
+
+        if self.verbose:
+            print('Analyze (This will take some time).')
 
     def predict(self, X, estimator=None):
         if estimator is None:

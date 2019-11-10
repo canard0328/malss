@@ -19,13 +19,13 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression, Ridge, SGDRegressor,\
     SGDClassifier
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from sklearn.cluster import KMeans
 from sklearn.exceptions import ConvergenceWarning
 warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
 from .algorithm import Algorithm
 from .data import Data
 from .metrics import f1_weighted
+from .clustering import Clustering
 
 
 class MALSS(object):
@@ -147,6 +147,8 @@ class MALSS(object):
             algorithms = self.__choose_algorithm_for_classification()
         elif self.task == 'regression':
             algorithms = self.__choose_algorithm_for_regression()
+        elif self.task == 'clustering':
+            algorithms = self.__choose_algorithm_for_clustering()
         return algorithms
 
     def __choose_algorithm_for_classification(self):
@@ -284,16 +286,7 @@ class MALSS(object):
         return algorithms
 
     def __choose_algorithm_for_clustering(self):
-        algorithms = []
-        algorithms.append(
-            Algorithm(
-                KMeans(),
-                [{'n_clusters': list(range(self.min_clusters, self.max_clusters+1))}],
-                'K-Means',
-                ('https://scikit-learn.org/stable/modules/generated/'
-                 'sklearn.cluster.KMeans.html')))
-        
-        return algorithms
+        return Clustering.choose_algorithm(self.min_clusters, self.max_clusters)
 
     def add_algorithm(self, estimator, param_grid, name, link=None):
         """
@@ -373,7 +366,7 @@ class MALSS(object):
             rtn.append((algorithm.name, algorithm.parameters))
         return rtn
 
-    def fit(self, X, y, dname=None, algorithm_selection_only=False):
+    def fit(self, X, y=None, dname=None, algorithm_selection_only=False):
         """
         Tune parameters and search best algorithm
 
@@ -396,6 +389,13 @@ class MALSS(object):
         self : object
             Returns self.
         """
+
+        if self.task == 'clustering' and y is not None:
+            print('Warning: target values y is ignored for clustering.')
+        elif (self.task == 'classification' or self.task == 'regression') and y is None:
+            raise ValueError(f'Target values y must be set in {self.task}.')
+
+
         if self.verbose:
             print('Set data.')
         self.data = Data(self.shuffle, self.standardize, self.random_state)

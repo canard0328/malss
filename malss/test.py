@@ -240,6 +240,12 @@ def test_change_algorithms():
     assert algorithms[2][0] == 'Decision Tree'
     assert algorithms[3][0] == 'Extremely Randomized Trees'
 
+def test_clustering():
+    from sklearn.datasets import load_iris
+    iris = load_iris()
+    cls = MALSS(task='clustering')
+    cls.fit(iris.data, None)
+
 
 if __name__ == "__main__":
-    test_ndarray()
+    test_clustering()

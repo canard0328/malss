@@ -17,19 +17,21 @@ class Data(object):
         self.y = None
         self.columns = None
 
-    def fit_transform(self, X, y):
+    def fit_transform(self, X, y=None):
         if isinstance(X, np.ndarray):
             self.X = pd.DataFrame(X)
-            self.y = pd.Series(y)
+            if y is not None:
+                self.y = pd.Series(y)
         else:
             self.X = X.copy(deep=True)
-            if isinstance(y, pd.Series):
-                self.y = y.copy(deep=True)
-            else:
-                self.y = y.iloc[:, 0]  # Convert Dataframe to Series
+            if y is not None:
+                if isinstance(y, pd.Series):
+                    self.y = y.copy(deep=True)
+                else:
+                    self.y = y.iloc[:, 0]  # Convert Dataframe to Series
         if not isinstance(self.X, pd.DataFrame):
             raise ValueError(f'{type(X)} is not supported')
-        if len(X) != len(y):
+        if y is not None and len(X) != len(y):
             raise ValueError(('Found input variables with inconsistent '
                              f'numbers of samples: [{len(X)}, {len(y)}]'))
         self.shape_before = self.X.shape
@@ -45,8 +47,11 @@ class Data(object):
             self.X = self.__standardize(self.X)
 
         if self.shuffle:
-            self.X, self.y = sk_shuffle(self.X, self.y,
-                                        random_state=self.random_state)
+            if self.y is not None:
+                self.X, self.y = sk_shuffle(self.X, self.y,
+                                            random_state=self.random_state)
+            else:
+                self.X = sk_shuffle(self.X, random_state=self.random_state)
 
     def transform(self, X):
         if isinstance(X, np.ndarray):

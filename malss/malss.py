@@ -395,9 +395,9 @@ class MALSS(object):
             raise ValueError(f'Target values y must be set in {self.task}.')
 
         if self.task == 'classification' or self.task == 'regression':
-            self.__fit_supervised(X, y, dname, algorithm_selection_only)
+            return self.__fit_supervised(X, y, dname, algorithm_selection_only)
         elif self.task == 'clustering':
-            self.__fit_clustering(X, dname)
+            return self.__fit_clustering(X, dname)
 
     def __fit_supervised(self, X, y, dname, algorithm_selection_only):
         if self.verbose:
@@ -481,6 +481,7 @@ class MALSS(object):
 
         if self.verbose:
             print('Analyze (This will take some time).')
+        self.__clustering()
 
     def predict(self, X, estimator=None):
         if estimator is None:
@@ -586,6 +587,12 @@ class MALSS(object):
                             estimator.__class__.__name__,
                             bbox_inches='tight', dpi=75)
             plt.close()
+
+    def __clustering(self):
+        for i in range(len(self.algorithms)):
+            if self.verbose:
+                print('    %s' % self.algorithms[i].name)
+            label = self.algorithms[i].estimator.fit_transform(self.data.X)
 
     def __make_report(self, dname='report'):
         if not os.path.exists(dname):

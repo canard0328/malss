@@ -592,7 +592,9 @@ class MALSS(object):
         for i in range(len(self.algorithms)):
             if self.verbose:
                 print('    %s' % self.algorithms[i].name)
-            label = self.algorithms[i].estimator.fit_transform(self.data.X)
+            for nc in range(self.min_clusters, self.max_clusters + 1):
+                self.algorithms[i].estimator.n_clusters = nc
+                label = self.algorithms[i].estimator.fit_transform(self.data.X)
 
     def __make_report(self, dname='report'):
         if not os.path.exists(dname):

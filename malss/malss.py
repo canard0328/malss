@@ -286,7 +286,7 @@ class MALSS(object):
         return algorithms
 
     def __choose_algorithm_for_clustering(self):
-        return Clustering.choose_algorithm(self.min_clusters, self.max_clusters)
+        return Clustering.choose_algorithm(self.min_clusters, self.max_clusters, self.random_state)
 
     def add_algorithm(self, estimator, param_grid, name, link=None):
         """
@@ -589,12 +589,7 @@ class MALSS(object):
             plt.close()
 
     def __clustering(self):
-        for i in range(len(self.algorithms)):
-            if self.verbose:
-                print('    %s' % self.algorithms[i].name)
-            for nc in range(self.min_clusters, self.max_clusters + 1):
-                self.algorithms[i].estimator.n_clusters = nc
-                label = self.algorithms[i].estimator.fit_transform(self.data.X)
+        Clustering.analyze(self.algorithms, self.data, self.min_clusters, self.max_clusters, self.random_state, self.verbose)
 
     def __make_report(self, dname='report'):
         if not os.path.exists(dname):

@@ -29,6 +29,7 @@ class Clustering(object):
             else:
                 X = data.X
             gap = Clustering.calc_gap(algorithms[i].estimator, X, min_clusters, max_clusters, random_state)
+            algorithms[i].results['gap'] = gap
     
     @staticmethod
     def calc_inertia(a, X):
@@ -55,3 +56,7 @@ class Clustering(object):
             inertia_ref.append(np.mean(inertia_ref_sub))
         
         return np.log(inertia_ref) - np.log(inertia_data)
+    
+    @classmethod
+    def make_report(cls, dname):
+        pass

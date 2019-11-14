@@ -12,3 +12,4 @@ class Algorithm(object):
         self.classification_report = None
         self.name = name
         self.link = link
+        self.results = {}

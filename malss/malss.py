@@ -481,7 +481,12 @@ class MALSS(object):
 
         if self.verbose:
             print('Analyze (This will take some time).')
-        self.__clustering()
+        Clustering.analyze(self.algorithms, self.data, self.min_clusters, self.max_clusters, self.random_state, self.verbose)
+
+        if dname is not None:
+            if self.verbose:
+                print('Make report.')
+            self.__make_report(dname)
 
     def predict(self, X, estimator=None):
         if estimator is None:
@@ -588,10 +593,13 @@ class MALSS(object):
                             bbox_inches='tight', dpi=75)
             plt.close()
 
-    def __clustering(self):
-        Clustering.analyze(self.algorithms, self.data, self.min_clusters, self.max_clusters, self.random_state, self.verbose)
+    def __make_report(self, dname):
+        if self.task == 'classification' or self.task == 'regression':
+            self.__make_report_supervised(dname)
+        elif self.task == 'clustering':
+            Clustering.make_report(dname)
 
-    def __make_report(self, dname='report'):
+    def __make_report_supervised(self, dname):
         if not os.path.exists(dname):
             os.mkdir(dname)
 
@@ -613,7 +621,7 @@ class MALSS(object):
         fo = io.open(dname + '/report.html', 'w', encoding='utf-8')
         fo.write(html.decode('utf-8'))
         fo.close()
-
+    
     def generate_module_sample(self, fname='module_sample.py'):
         """
         Generate a module sample to be able to add in the model

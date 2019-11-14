@@ -246,7 +246,7 @@ def test_clustering():
     from sklearn.datasets import load_iris
     iris = load_iris()
     cls = MALSS(task='clustering')
-    cls.fit(iris.data, None)
+    cls.fit(iris.data, None, 'report')
 
 
 if __name__ == "__main__":

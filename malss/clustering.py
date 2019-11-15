@@ -1,7 +1,10 @@
+import os
+import io
 import numpy as np
 import pandas
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, pairwise_distances
+from jinja2 import Environment, FileSystemLoader
 
 from .algorithm import Algorithm
 
@@ -58,5 +61,18 @@ class Clustering(object):
         return np.log(inertia_ref) - np.log(inertia_data)
     
     @classmethod
-    def make_report(cls, dname):
-        pass
+    def make_report(cls, dname, lang):
+        if not os.path.exists(dname):
+            os.mkdir(dname)
+
+        env = Environment(
+            loader=FileSystemLoader(
+                os.path.abspath(
+                    os.path.dirname(__file__)) + '/template', encoding='utf8'))
+        if lang == 'jp':
+            tmpl = env.get_template('report_clustering_jp.html.tmp')
+
+        html = tmpl.render().encode('utf-8')
+        fo = io.open(dname + '/report.html', 'w', encoding='utf-8')
+        fo.write(html.decode('utf-8'))
+        fo.close()

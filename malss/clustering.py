@@ -2,6 +2,7 @@ import os
 import io
 import numpy as np
 import pandas
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, pairwise_distances
 from jinja2 import Environment, FileSystemLoader
@@ -61,9 +62,11 @@ class Clustering(object):
         return np.log(inertia_ref) - np.log(inertia_data)
     
     @classmethod
-    def make_report(cls, dname, lang):
+    def make_report(cls, algorithms, dname, lang):
         if not os.path.exists(dname):
             os.mkdir(dname)
+
+        Clustering.plot_gap(algorithms, dname)
 
         env = Environment(
             loader=FileSystemLoader(
@@ -76,3 +79,25 @@ class Clustering(object):
         fo = io.open(dname + '/report.html', 'w', encoding='utf-8')
         fo.write(html.decode('utf-8'))
         fo.close()
+    
+    @classmethod
+    def plot_gap(cls, algorithms, dname):
+        if dname is None:
+            return
+        if not os.path.exists(dname):
+            os.mkdir(dname)
+
+        for alg in algorithms:
+            estimator = alg.estimator
+
+            plt.figure()
+            plt.title(estimator.__class__.__name__)
+            plt.xlabel("X")
+            plt.ylabel("Y")
+            plt.grid()
+
+            plt.plot(alg.results['gap'])
+            plt.savefig('%s/gap_%s.png' %
+                        (dname, estimator.__class__.__name__),
+                        bbox_inches='tight', dpi=75)
+            plt.close()

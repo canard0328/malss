@@ -7,6 +7,29 @@
 
 <body>
 	<h1 id="top">分析結果</h1>
+
+	<h2>クラスタリング <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<p>
+		<ul>
+			<li>クラスタリングは一般的に正解が与えられない（教師なし学習）ため，人が分析結果の妥当性を判断する必要があります．</li>
+			<li>多くのクラスタリングアルゴリズム（MALSSが採用するものも）は，想定されるクラスタ数を人が設定してやる必要があります．しかし，真のクラスタ数は一般に未知です．そこでMALSSでは，あらかじめ与えられた複数のクラスタ数候補に対して分析を行います．適切なクラスタ数を判断する指標の一つとして<strong>Gap統計量</strong>（後述）を用いる方法が提案されています．</li>
+		</ul>
+	</p>
+	<hr>
+
+	<h2>データ概要 <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<hr>
+
+	<h2>k-means <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<p>
+		<ul>
+			<li>k-meansクラスタリングは最もポピュラーなクラスタリングアルゴリズムの１つです．</li>
+			<li>k-meansクラスタリングは，<strong>各クラスタのサイズが同じである</strong>ことを仮定していることに注意が必要です．この仮定が妥当でないデータにk-meansクラスタリングを適用した場合，望ましいクラスタリング結果が得られない可能性があります．</li>
+		</ul>
+	</p>
+
+	<h3>Gap統計量（Gap statistics）</h3>
+	<img border="0" src="gap_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">
     
 </body>
 </html>

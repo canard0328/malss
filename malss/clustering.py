@@ -32,34 +32,85 @@ class Clustering(object):
                 X = data.X.to_numpy()
             else:
                 X = data.X
-            gap = Clustering.calc_gap(algorithms[i].estimator, X, min_clusters, max_clusters, random_state)
+            gap, sk, nc = Clustering.calc_gap(algorithms[i].estimator, X, min_clusters,
+                                              max_clusters, random_state=random_state)
             algorithms[i].results['gap'] = gap
+            algorithms[i].results['gap_sk'] = sk
+            algorithms[i].results['nc'] = nc
+            algorithms[i].results['min_nc'] = min_clusters
+            algorithms[i].results['max_nc'] = max_clusters
     
     @staticmethod
-    def calc_inertia(a, X):
-        W = [np.mean(pairwise_distances(X[a == c, :])) for c in np.unique(a)]
-        return np.mean(W)
+    def calc_inertia(data, labels):
+        inertia = 0
+        for nc in np.unique(labels):
+            x = data[labels == nc, :]
+            N = x.shape[0]
+            s = 0
+            for i1 in range(N - 1):
+                for i2 in range(i1, N):
+                    if i1 == i2: continue
+                    s += np.sum((x[i1] - x[i2]) ** 2)
+            inertia += s / N
+        return inertia
     
     @classmethod
-    def calc_gap(cls, algorithm, X, min_clusters, max_clusters, random_state):
-        np.random.seed(random_state)
-        inertia_data = []
-        inertia_ref = []
-        for nc in range(min_clusters, max_clusters + 1):
-            algorithm.n_clusters = nc
-
-            pred_labels = algorithm.fit_predict(X)
-            inertia_data.append(Clustering.calc_inertia(pred_labels, X))
-
-            inertia_ref_sub = []
-            for _ in range(5):
-                ref = np.random.rand(*X.shape)
-                ref = (ref * (X.max(axis=0) - X.min(axis=0))) + X.min(axis=0)
-                pred_labels = algorithm.fit_predict(ref)
-                inertia_ref_sub.append(Clustering.calc_inertia(pred_labels, ref))
-            inertia_ref.append(np.mean(inertia_ref_sub))
+    def calc_gap(cls, model, data, min_clusters, max_clusters, num_iter=50, random_state=0, svd=True):
+        if svd:
+            U, s, V = np.linalg.svd(data, full_matrices=True)
+            X = np.dot(data, V)
+        else:
+            X = data
+        X_max = X.max(axis=0)
+        X_min = X.min(axis=0)
         
-        return np.log(inertia_ref) - np.log(inertia_data)
+        gap = []
+        sk = []
+        gap_star = []
+        sk_star = []
+        for nc in range(min_clusters, max_clusters+1):
+            # model = algorithm(n_clusters=nc, random_state=random_state)
+            model.n_clusters = nc
+            model.random_state = random_state
+            pred_labels = model.fit_predict(data)
+            if hasattr(model, 'inertia_'):
+                dispersion = model.inertia_
+            else:
+                dispersion = calc_inertia(data, pred_labels)
+
+
+            ref_dispersions = []
+            for iter in range(num_iter):
+                np.random.seed(random_state + iter)
+                ref = np.random.rand(*data.shape)
+                ref = (ref * (X_max - X_min)) + X_min
+                if svd:
+                    ref = np.dot(ref, V)
+                model.n_clusters = nc
+                pred_labels = model.fit_predict(ref)
+                if hasattr(model, 'inertia_'):
+                    ref_dispersions.append(model.inertia_)
+                else:
+                    ref_dispersions.append(calc_inertia(ref, pred_labels))
+            ref_log_dispersion = np.mean(np.log(ref_dispersions))
+            log_dispersion = np.log(dispersion)
+            gap.append(ref_log_dispersion - log_dispersion)
+            sd = np.std(np.log(ref_dispersions), ddof=0)
+            sk.append(np.sqrt(1 + 1 /num_iter) * sd)
+
+            gap_star.append(np.mean(ref_dispersions) - dispersion)
+            sdk_star = np.std(ref_dispersions)
+            sk_star.append(np.sqrt(1.0 + 1.0 / num_iter) * sdk_star)
+        
+        nc = -1
+        for i in range(len(gap) - 1):
+            if gap[i] >= gap[i + 1] - sk[i + 1]:
+                nc = min_clusters + i
+                break
+        if nc == -1:
+            nc = max_clusters
+
+        return gap, sk, nc
     
     @classmethod
     def make_report(cls, algorithms, dname, lang):
@@ -92,11 +143,15 @@ class Clustering(object):
 
             plt.figure()
             plt.title(estimator.__class__.__name__)
-            plt.xlabel("X")
-            plt.ylabel("Y")
+            plt.xlabel("Number of clusters")
+            plt.ylabel("Gap statistic")
             plt.grid()
 
-            plt.plot(alg.results['gap'])
+            plt.plot(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
+                     alg.results['gap'], 'o-', color='dodgerblue')
+            plt.errorbar(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
+                         alg.results['gap'], alg.results['gap_sk'], capsize=3)
+            plt.axvline(x=alg.results['nc'], ls='--', C='gray', zorder=0)
             plt.savefig('%s/gap_%s.png' %
                         (dname, estimator.__class__.__name__),
                         bbox_inches='tight', dpi=75)

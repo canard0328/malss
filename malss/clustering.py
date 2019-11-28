@@ -145,7 +145,6 @@ class Clustering(object):
             plt.title(estimator.__class__.__name__)
             plt.xlabel("Number of clusters")
             plt.ylabel("Gap statistic")
-            plt.grid()
 
             plt.plot(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
                      alg.results['gap'], 'o-', color='dodgerblue')

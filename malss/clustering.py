@@ -4,7 +4,7 @@ import numpy as np
 import pandas
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score, pairwise_distances
+from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
 from jinja2 import Environment, FileSystemLoader
 
 from .algorithm import Algorithm
@@ -36,9 +36,18 @@ class Clustering(object):
                                               max_clusters, random_state=random_state)
             algorithms[i].results['gap'] = gap
             algorithms[i].results['gap_sk'] = sk
-            algorithms[i].results['nc'] = nc
+            algorithms[i].results['gap_nc'] = nc
             algorithms[i].results['min_nc'] = min_clusters
             algorithms[i].results['max_nc'] = max_clusters
+
+            sil, sil_nc, dav, dav_nc, cal, cal_nc = Clustering.calc_scores(
+                algorithms[i].estimator, X, min_clusters, max_clusters, random_state=random_state)
+            algorithms[i].results['silhouette'] = sil
+            algorithms[i].results['silhouette_nc'] = sil_nc
+            algorithms[i].results['davies'] = dav
+            algorithms[i].results['davies_nc'] = dav_nc
+            algorithms[i].results['calinski'] = cal
+            algorithms[i].results['calinski_nc'] = cal_nc
     
     @staticmethod
     def calc_inertia(data, labels):
@@ -78,7 +87,6 @@ class Clustering(object):
             else:
                 dispersion = calc_inertia(data, pred_labels)
 
-
             ref_dispersions = []
             for iter in range(num_iter):
                 np.random.seed(random_state + iter)
@@ -113,25 +121,6 @@ class Clustering(object):
         return gap, sk, nc
     
     @classmethod
-    def make_report(cls, algorithms, dname, lang):
-        if not os.path.exists(dname):
-            os.mkdir(dname)
-
-        Clustering.plot_gap(algorithms, dname)
-
-        env = Environment(
-            loader=FileSystemLoader(
-                os.path.abspath(
-                    os.path.dirname(__file__)) + '/template', encoding='utf8'))
-        if lang == 'jp':
-            tmpl = env.get_template('report_clustering_jp.html.tmp')
-
-        html = tmpl.render(algorithms=algorithms).encode('utf-8')
-        fo = io.open(dname + '/report.html', 'w', encoding='utf-8')
-        fo.write(html.decode('utf-8'))
-        fo.close()
-    
-    @classmethod
     def plot_gap(cls, algorithms, dname):
         if dname is None:
             return
@@ -150,8 +139,118 @@ class Clustering(object):
                      alg.results['gap'], 'o-', color='dodgerblue')
             plt.errorbar(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
                          alg.results['gap'], alg.results['gap_sk'], capsize=3)
-            plt.axvline(x=alg.results['nc'], ls='--', C='gray', zorder=0)
+            plt.axvline(x=alg.results['gap_nc'], ls='--', C='gray', zorder=0)
             plt.savefig('%s/gap_%s.png' %
                         (dname, estimator.__class__.__name__),
                         bbox_inches='tight', dpi=75)
             plt.close()
+    
+    @classmethod
+    def calc_scores(cls, model, data, min_clusters, max_clusters, random_state=0):
+        silhouettes = []
+        davieses = []
+        calinskies = []
+        for nc in range(min_clusters, max_clusters + 1):
+            model.n_clusters = nc
+            model.random_state = random_state
+            pred_labels = model.fit_predict(data)
+            silhouettes.append(silhouette_score(data, pred_labels, random_state=random_state))
+            davieses.append(davies_bouldin_score(data, pred_labels))
+            calinskies.append(calinski_harabasz_score(data, pred_labels))
+
+        sil_nc = np.argmax(silhouettes) + min_clusters
+        dav_nc = np.argmin(davieses) + min_clusters
+        cal_nc = np.argmax(calinskies) + min_clusters
+
+        return silhouettes, sil_nc, davieses, dav_nc, calinskies, cal_nc
+    
+    @classmethod
+    def plot_silhouette(cls, algorithms, dname):
+        if dname is None:
+            return
+        if not os.path.exists(dname):
+            os.mkdir(dname)
+
+        for alg in algorithms:
+            estimator = alg.estimator
+
+            plt.figure()
+            plt.title(estimator.__class__.__name__)
+            plt.xlabel("Number of clusters")
+            plt.ylabel("Silhouette score")
+
+            plt.plot(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
+                     alg.results['silhouette'], 'o-', color='darkorange')
+            plt.axvline(x=alg.results['silhouette_nc'], ls='--', C='gray', zorder=0)
+            plt.savefig('%s/silhouette_%s.png' %
+                        (dname, estimator.__class__.__name__),
+                        bbox_inches='tight', dpi=75)
+            plt.close()
+
+    @classmethod
+    def plot_davies(cls, algorithms, dname):
+        if dname is None:
+            return
+        if not os.path.exists(dname):
+            os.mkdir(dname)
+
+        for alg in algorithms:
+            estimator = alg.estimator
+
+            plt.figure()
+            plt.title(estimator.__class__.__name__)
+            plt.xlabel("Number of clusters")
+            plt.ylabel("Davies-Bouldin score")
+
+            plt.plot(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
+                     alg.results['davies'], 'o-', color='limegreen')
+            plt.axvline(x=alg.results['davies_nc'], ls='--', C='gray', zorder=0)
+            plt.savefig('%s/davies_%s.png' %
+                        (dname, estimator.__class__.__name__),
+                        bbox_inches='tight', dpi=75)
+            plt.close()
+
+    @classmethod
+    def plot_calinski(cls, algorithms, dname):
+        if dname is None:
+            return
+        if not os.path.exists(dname):
+            os.mkdir(dname)
+
+        for alg in algorithms:
+            estimator = alg.estimator
+
+            plt.figure()
+            plt.title(estimator.__class__.__name__)
+            plt.xlabel("Number of clusters")
+            plt.ylabel("Calinski and Harabasz score")
+
+            plt.plot(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
+                     alg.results['calinski'], 'o-', color='crimson')
+            plt.axvline(x=alg.results['calinski_nc'], ls='--', C='gray', zorder=0)
+            plt.savefig('%s/calinski_%s.png' %
+                        (dname, estimator.__class__.__name__),
+                        bbox_inches='tight', dpi=75)
+            plt.close()
+
+    @classmethod
+    def make_report(cls, algorithms, data, dname, lang):
+        if not os.path.exists(dname):
+            os.mkdir(dname)
+
+        Clustering.plot_gap(algorithms, dname)
+        Clustering.plot_silhouette(algorithms, dname)
+        Clustering.plot_davies(algorithms, dname)
+        Clustering.plot_calinski(algorithms, dname)
+
+        env = Environment(
+            loader=FileSystemLoader(
+                os.path.abspath(
+                    os.path.dirname(__file__)) + '/template', encoding='utf8'))
+        if lang == 'jp':
+            tmpl = env.get_template('report_clustering_jp.html.tmp')
+
+        html = tmpl.render(algorithms=algorithms, data=data).encode('utf-8')
+        fo = io.open(dname + '/report.html', 'w', encoding='utf-8')
+        fo.write(html.decode('utf-8'))
+        fo.close()

@@ -597,7 +597,7 @@ class MALSS(object):
         if self.task == 'classification' or self.task == 'regression':
             self.__make_report_supervised(dname)
         elif self.task == 'clustering':
-            Clustering.make_report(self.algorithms, dname, self.lang)
+            Clustering.make_report(self.algorithms, self.data, dname, self.lang)
 
     def __make_report_supervised(self, dname):
         if not os.path.exists(dname):

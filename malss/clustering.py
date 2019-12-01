@@ -8,6 +8,8 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_har
 from jinja2 import Environment, FileSystemLoader
 
 from .algorithm import Algorithm
+from .hierarchy import HierarchicalClustering
+
 
 class Clustering(object):
     @staticmethod
@@ -16,10 +18,21 @@ class Clustering(object):
         algorithms.append(
             Algorithm(
                 KMeans(random_state=random_state),
-                [{'n_clusters': list(range(min_clusters, max_clusters+1))}],
+                [{'n_clusters': (min_clusters, max_clusters)}],
                 'K-Means',
                 ('https://scikit-learn.org/stable/modules/generated/'
-                    'sklearn.cluster.KMeans.html')))
+                 'sklearn.cluster.KMeans.html')
+            )
+        )
+        algorithms.append(
+            Algorithm(
+                HierarchicalClustering(random_state=random_state),
+                [{'n_cluters': (min_clusters, max_clusters)}],
+                'Hierarchical Clustering',
+                ('https://docs.scipy.org/doc/scipy/reference/generated/'
+                 'scipy.cluster.hierarchy.linkage.html')
+            )
+        )
         
         return algorithms
     
@@ -85,7 +98,7 @@ class Clustering(object):
             if hasattr(model, 'inertia_'):
                 dispersion = model.inertia_
             else:
-                dispersion = calc_inertia(data, pred_labels)
+                dispersion = Clustering.calc_inertia(data, pred_labels)
 
             ref_dispersions = []
             for iter in range(num_iter):
@@ -99,7 +112,7 @@ class Clustering(object):
                 if hasattr(model, 'inertia_'):
                     ref_dispersions.append(model.inertia_)
                 else:
-                    ref_dispersions.append(calc_inertia(ref, pred_labels))
+                    ref_dispersions.append(Clustering.calc_inertia(ref, pred_labels))
             ref_log_dispersion = np.mean(np.log(ref_dispersions))
             log_dispersion = np.log(dispersion)
             gap.append(ref_log_dispersion - log_dispersion)

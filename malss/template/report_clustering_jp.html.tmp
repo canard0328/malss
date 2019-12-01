@@ -65,5 +65,19 @@
 	<h3>Calinski and Harabasz score</h3>
 	<img border="0" src="calinski_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="calinski_harabasz_score">
     
+	<h2>階層的クラスタリング (Hierarchical clustering) <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+
+	<h3>Gap統計量（Gap statistics）</h3>
+	<img border="0" src="gap_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">
+
+	<h3>Silhouette score</h3>
+	<img border="0" src="silhouette_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="silhouette_score">
+    
+	<h3>Davies-Bouldin score</h3>
+	<img border="0" src="davies_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="davies_bouldin_score">
+    
+	<h3>Calinski and Harabasz score</h3>
+	<img border="0" src="calinski_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="calinski_harabasz_score">
+    
 </body>
 </html>

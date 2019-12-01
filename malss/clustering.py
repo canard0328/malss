@@ -18,7 +18,7 @@ class Clustering(object):
         algorithms.append(
             Algorithm(
                 KMeans(random_state=random_state),
-                [{'n_clusters': (min_clusters, max_clusters)}],
+                [],
                 'K-Means',
                 ('https://scikit-learn.org/stable/modules/generated/'
                  'sklearn.cluster.KMeans.html')
@@ -27,7 +27,7 @@ class Clustering(object):
         algorithms.append(
             Algorithm(
                 HierarchicalClustering(random_state=random_state),
-                [{'n_cluters': (min_clusters, max_clusters)}],
+                [],
                 'Hierarchical Clustering',
                 ('https://docs.scipy.org/doc/scipy/reference/generated/'
                  'scipy.cluster.hierarchy.linkage.html')
@@ -45,6 +45,7 @@ class Clustering(object):
                 X = data.X.to_numpy()
             else:
                 X = data.X
+            
             gap, sk, nc = Clustering.calc_gap(algorithms[i].estimator, X, min_clusters,
                                               max_clusters, random_state=random_state)
             algorithms[i].results['gap'] = gap

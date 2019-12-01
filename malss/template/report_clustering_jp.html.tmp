@@ -8,6 +8,30 @@
 <body>
 	<h1 id="top">分析結果</h1>
 
+	<table border="1" cellspacing="0" cellpadding="5">
+		<tr>
+			<th rowspan=2>アルゴリズム</th>
+			<th colspan=4>Estimated number of clusters</th>
+		</th>
+		<tr>
+			<th>Gap統計量</th>
+			<th>Silhouetteスコア</th>
+			<th>Davies-Bouldinスコア</th>
+			<th>Calinski and Harabaszスコア</th>
+		</tr>
+
+	{%- for algorithm in algorithms %}
+		<tr>
+			<td><a href="#{{ algorithm.name }}">{{ algorithm.name }}</a></td>
+			<td>{{ algorithm.results['gap_nc'] }}</td>
+			<td>{{ algorithm.results['silhouette_nc'] }}</td>
+			<td>{{ algorithm.results['davies_nc'] }}</td>
+			<td>{{ algorithm.results['calinski_nc'] }}</td>
+		</tr>
+	{%- endfor %}
+	</table>
+	<br>
+
 	<h2>クラスタリング <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<p>
 		<ul>
@@ -45,7 +69,7 @@
 	</details>
 	<hr>
 
-	<h2>k-means <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<h2 id="{{ algorithms[0].name }}"><a href="{{ algorithms[0].link }}">k-meansクラスタリング</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<p>
 		<ul>
 			<li>k-meansクラスタリングは最もポピュラーなクラスタリングアルゴリズムの１つです．</li>
@@ -65,7 +89,7 @@
 	<h3>Calinski and Harabasz score</h3>
 	<img border="0" src="calinski_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="calinski_harabasz_score">
     
-	<h2>階層的クラスタリング (Hierarchical clustering) <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<h2 id="{{ algorithms[1].name }}"><a href="{{ algorithms[1].link }}">階層的クラスタリング (Hierarchical clustering)</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 
 	<h3>Gap統計量（Gap statistics）</h3>
 	<img border="0" src="gap_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">

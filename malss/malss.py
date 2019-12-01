@@ -241,7 +241,7 @@ class MALSS(object):
                     Algorithm(
                         SVR(kernel='rbf'),
                         [{'C': [1, 10, 100, 1000],
-                            'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
+                          'gamma': [1e-3, 1e-2, 1e-1, 1.0]}],
                         'Support Vector Machine (RBF Kernel)',
                         ('http://scikit-learn.org/stable/modules/'
                             'generated/sklearn.svm.SVR.html')))
@@ -252,7 +252,7 @@ class MALSS(object):
                             n_estimators=500,
                             n_jobs=1),
                         [{'max_features': [0.3, 0.6, 0.9],
-                            'max_depth': [3, 7, 11]}],
+                          'max_depth': [3, 7, 11]}],
                         'Random Forest',
                         ('http://scikit-learn.org/stable/modules/'
                             'generated/'

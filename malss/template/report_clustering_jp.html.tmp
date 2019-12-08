@@ -30,6 +30,9 @@
 		</tr>
 	{%- endfor %}
 	</table>
+	<p>
+	多数決から推定されるクラスタ数は<strong>{{ nc }}</strong>です．
+	</p>
 	<br>
 
 	<h2>クラスタリング <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>

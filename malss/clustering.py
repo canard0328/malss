@@ -251,6 +251,15 @@ class Clustering(object):
     def make_report(cls, algorithms, data, dname, lang):
         if not os.path.exists(dname):
             os.mkdir(dname)
+        
+        # Estimate number of clusters
+        votes = np.zeros(algorithms[0].results['max_nc'] + 1)
+        for alg in algorithms:
+            votes[alg.results['gap_nc']] += 1
+            votes[alg.results['silhouette_nc']] += 1
+            votes[alg.results['davies_nc']] += 1
+            votes[alg.results['calinski_nc']] += 1
+        nc = ', '.join(map(str, np.where(votes == votes.max())[0]))
 
         Clustering.plot_gap(algorithms, dname)
         Clustering.plot_silhouette(algorithms, dname)
@@ -264,7 +273,7 @@ class Clustering(object):
         if lang == 'jp':
             tmpl = env.get_template('report_clustering_jp.html.tmp')
 
-        html = tmpl.render(algorithms=algorithms, data=data).encode('utf-8')
+        html = tmpl.render(algorithms=algorithms, data=data, nc=nc).encode('utf-8')
         fo = io.open(dname + '/report.html', 'w', encoding='utf-8')
         fo.write(html.decode('utf-8'))
         fo.close()

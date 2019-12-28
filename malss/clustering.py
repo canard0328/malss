@@ -272,6 +272,8 @@ class Clustering(object):
                     os.path.dirname(__file__)) + '/template', encoding='utf8'))
         if lang == 'jp':
             tmpl = env.get_template('report_clustering_jp.html.tmp')
+        else:
+            tmpl = env.get_template('report_clustering.html.tmp')
 
         html = tmpl.render(algorithms=algorithms, data=data, nc=nc).encode('utf-8')
         fo = io.open(dname + '/report.html', 'w', encoding='utf-8')

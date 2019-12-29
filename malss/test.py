@@ -245,7 +245,7 @@ def test_change_algorithms():
 def test_clustering():
     from sklearn.datasets import load_iris
     iris = load_iris()
-    cls = MALSS(task='clustering', lang='en')
+    cls = MALSS(task='clustering', lang='jp')
     cls.fit(iris.data, None, '../report')
 
 

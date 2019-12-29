@@ -38,10 +38,20 @@
 	<h2>クラスタリング <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<p>
 		<ul>
-			<li>クラスタリングは一般的に正解が与えられない（教師なし学習）ため，人が分析結果の妥当性を判断する必要があります．</li>
-			<li>多くのクラスタリングアルゴリズム（MALSSが採用するものも）は，想定されるクラスタ数を人が設定してやる必要があります．しかし，真のクラスタ数は一般に未知です．そこでMALSSでは，あらかじめ与えられた複数のクラスタ数候補に対して分析を行います．</li>
+			<li>クラスタリングとは，データをある共通の特徴をもつ部分集合（クラスタ）に分割する分析手法です．</li>
+			<li>クラスタリングは一般的に正解が与えられない（教師なし学習）ため，<strong>人が分析結果の妥当性を判断する必要があります</strong>．</li>
+			<li>多くのクラスタリングアルゴリズム（MALSSが採用するものも）は，想定されるクラスタ数を人が設定してやる必要があります．
+			    しかし，真のクラスタ数は一般に未知です．</br>
+			    そこでMALSSでは，あらかじめ与えられた複数のクラスタ数候補に対して分析を行います．
+			</li>
 			<li>適切なクラスタ数を判断する様々な指標が提案されています．MALSSでは，<strong>複数の指標から多数決でクラスタ数を推定</strong>します．</li>
-			<li>MALSSがクラスタ数の判断に用いる指標は，Gap統計量，Silhouetteスコア，Davies-Bouldinスコア，Calinski and Harabaszスコアの４つです．</li>
+			<li>MALSSがクラスタ数の判断に用いる指標は，
+			    <a href="https://statweb.stanford.edu/~gwalther/gap" target="new">Gap統計量</a>，
+				<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html" target="new">Silhouetteスコア</a>，
+				<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.davies_bouldin_score.html" target="new">Davies-Bouldinスコア</a>，
+				<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.calinski_harabasz_score.html" target="new">Calinski and Harabaszスコア</a>
+				の４つです．
+			</li>
 		</ul>
 	</p>
 	<hr>
@@ -75,7 +85,7 @@
 	<h2 id="{{ algorithms[0].name }}"><a href="{{ algorithms[0].link }}">k-meansクラスタリング</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<p>
 		<ul>
-			<li>k-meansクラスタリングは最もポピュラーなクラスタリングアルゴリズムの１つです．</li>
+			<li><a href="https://ja.wikipedia.org/wiki/K%E5%B9%B3%E5%9D%87%E6%B3%95" target="new">k-meansクラスタリング</a>は最もポピュラーなクラスタリングアルゴリズムの１つです．</li>
 			<li>k-meansクラスタリングは，<strong>各クラスタのサイズが同じである</strong>ことを仮定していることに注意が必要です．この仮定が妥当でないデータにk-meansクラスタリングを適用した場合，望ましいクラスタリング結果が得られない可能性があります．</li>
 		</ul>
 	</p>
@@ -93,6 +103,22 @@
 	<img border="0" src="calinski_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="calinski_harabasz_score">
     
 	<h2 id="{{ algorithms[1].name }}"><a href="{{ algorithms[1].link }}">階層的クラスタリング (Hierarchical clustering)</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<p>
+		<ul>
+			<li><a href="https://en.wikipedia.org/wiki/Hierarchical_clustering" target="new">階層的クラスタリング</a>は，k-meansクラスタリングと並んで最もポピュラーなクラスタリングアルゴリズムの１つです．</li>
+			<li>階層的クラスタリング手法は，<strong>データ一つ一つを順次併合していく凝集型（agglomerative）</strong>と，<strong>データ全体を順次分割していく分割型（divisive）</strong>に大別されます．</br>
+			    MALSSでは凝集型階層的クラスタリングをサポートしています．
+            </li>
+			<li>階層的クラスタリングには，分析結果を<strong>デンドログラム（dendrogram）</strong>という樹形図で可視化できるという利点があります．</br>
+			    しかし，デンドログラムを見る際には，以下の点に注意する必要があります．
+				<ul>
+					<li>デンドログラムの縦軸はクラスタ間の距離を表すが，横軸の描画方法には任意性があり<strong>近くのデータと類似しているとは限らない</strong>．</li>
+					<li>デンドログラムは常に階層構造を示すが，<strong>データに本当にそのような階層構造が存在するとは限らない</strong>．</li>
+					<li>デンドログラムの形状はクラスタ間の距離の計算方法（linkage criteria）に強く依存します．</br>MALSSではlinkage criteriaに完全連結法（complete linkage method）を採用しています．</li>
+				</ul>
+            </li>
+		</ul>
+	</p>
 
 	<h3>Gap統計量（Gap statistics）</h3>
 	<img border="0" src="gap_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">

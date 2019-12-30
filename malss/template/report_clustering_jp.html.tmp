@@ -120,6 +120,9 @@
 		</ul>
 	</p>
 
+	<h3>デンドログラム（Dendrogram）</h3>
+	<img border="0" src="dendrogram_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="400" alt="dendrogram">
+
 	<h3>Gap統計量（Gap statistics）</h3>
 	<img border="0" src="gap_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">
 

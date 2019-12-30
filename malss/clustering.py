@@ -54,7 +54,7 @@ class Clustering(object):
             algorithms[i].results['min_nc'] = min_clusters
             algorithms[i].results['max_nc'] = max_clusters
 
-            sil, sil_nc, dav, dav_nc, cal, cal_nc = Clustering.calc_scores(
+            sil, sil_nc, dav, dav_nc, cal, cal_nc, Z = Clustering.calc_scores(
                 algorithms[i].estimator, X, min_clusters, max_clusters, random_state=random_state)
             algorithms[i].results['silhouette'] = sil
             algorithms[i].results['silhouette_nc'] = sil_nc
@@ -62,6 +62,7 @@ class Clustering(object):
             algorithms[i].results['davies_nc'] = dav_nc
             algorithms[i].results['calinski'] = cal
             algorithms[i].results['calinski_nc'] = cal_nc
+            algorithms[i].results['linkage'] = Z
     
     @staticmethod
     def calc_inertia(data, labels):
@@ -92,7 +93,6 @@ class Clustering(object):
         gap_star = []
         sk_star = []
         for nc in range(min_clusters, max_clusters+1):
-            # model = algorithm(n_clusters=nc, random_state=random_state)
             model.n_clusters = nc
             model.random_state = random_state
             pred_labels = model.fit_predict(data)
@@ -135,39 +135,43 @@ class Clustering(object):
         return gap, sk, nc
     
     @classmethod
-    def plot_gap(cls, algorithms, dname):
+    def plot_gap(cls, algorithm, dname):
         if dname is None:
             return
         if not os.path.exists(dname):
             os.mkdir(dname)
 
-        for alg in algorithms:
-            estimator = alg.estimator
+        plt.figure()
+        plt.title(algorithm.estimator.__class__.__name__)
+        plt.xlabel("Number of clusters")
+        plt.ylabel("Gap statistic")
 
-            plt.figure()
-            plt.title(estimator.__class__.__name__)
-            plt.xlabel("Number of clusters")
-            plt.ylabel("Gap statistic")
-
-            plt.plot(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
-                     alg.results['gap'], 'o-', color='dodgerblue')
-            plt.errorbar(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
-                         alg.results['gap'], alg.results['gap_sk'], capsize=3)
-            plt.axvline(x=alg.results['gap_nc'], ls='--', C='gray', zorder=0)
-            plt.savefig('%s/gap_%s.png' %
-                        (dname, estimator.__class__.__name__),
-                        bbox_inches='tight', dpi=75)
-            plt.close()
+        plt.plot(range(algorithm.results['min_nc'], algorithm.results['max_nc'] + 1),
+                    algorithm.results['gap'], 'o-', color='dodgerblue')
+        plt.errorbar(range(algorithm.results['min_nc'], algorithm.results['max_nc'] + 1),
+                        algorithm.results['gap'], algorithm.results['gap_sk'], capsize=3)
+        plt.axvline(x=algorithm.results['gap_nc'], ls='--', C='gray', zorder=0)
+        plt.savefig('%s/gap_%s.png' %
+                    (dname, algorithm.estimator.__class__.__name__),
+                    bbox_inches='tight', dpi=75)
+        plt.close()
     
     @classmethod
     def calc_scores(cls, model, data, min_clusters, max_clusters, random_state=0):
         silhouettes = []
         davieses = []
         calinskies = []
+        if model.__class__.__name__ == 'HierarchicalClustering':
+            linkage_matrix = model.fit(data)
+        else:
+            linkage_matrix = None
         for nc in range(min_clusters, max_clusters + 1):
             model.n_clusters = nc
             model.random_state = random_state
-            pred_labels = model.fit_predict(data)
+            if model.__class__.__name__ == 'HierarchicalClustering':
+                pred_labels = model.predict(data)
+            else:
+                pred_labels = model.fit_predict(data)
             silhouettes.append(silhouette_score(data, pred_labels, random_state=random_state))
             davieses.append(davies_bouldin_score(data, pred_labels))
             calinskies.append(calinski_harabasz_score(data, pred_labels))
@@ -176,76 +180,87 @@ class Clustering(object):
         dav_nc = np.argmin(davieses) + min_clusters
         cal_nc = np.argmax(calinskies) + min_clusters
 
-        return silhouettes, sil_nc, davieses, dav_nc, calinskies, cal_nc
+        return silhouettes, sil_nc, davieses, dav_nc, calinskies, cal_nc, linkage_matrix
     
     @classmethod
-    def plot_silhouette(cls, algorithms, dname):
+    def plot_silhouette(cls, algorithm, dname):
         if dname is None:
             return
         if not os.path.exists(dname):
             os.mkdir(dname)
 
-        for alg in algorithms:
-            estimator = alg.estimator
+        plt.figure()
+        plt.title(algorithm.estimator.__class__.__name__)
+        plt.xlabel("Number of clusters")
+        plt.ylabel("Silhouette score")
 
-            plt.figure()
-            plt.title(estimator.__class__.__name__)
-            plt.xlabel("Number of clusters")
-            plt.ylabel("Silhouette score")
-
-            plt.plot(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
-                     alg.results['silhouette'], 'o-', color='darkorange')
-            plt.axvline(x=alg.results['silhouette_nc'], ls='--', C='gray', zorder=0)
-            plt.savefig('%s/silhouette_%s.png' %
-                        (dname, estimator.__class__.__name__),
-                        bbox_inches='tight', dpi=75)
-            plt.close()
+        plt.plot(range(algorithm.results['min_nc'], algorithm.results['max_nc'] + 1),
+                    algorithm.results['silhouette'], 'o-', color='darkorange')
+        plt.axvline(x=algorithm.results['silhouette_nc'], ls='--', C='gray', zorder=0)
+        plt.savefig('%s/silhouette_%s.png' %
+                    (dname, algorithm.estimator.__class__.__name__),
+                    bbox_inches='tight', dpi=75)
+        plt.close()
 
     @classmethod
-    def plot_davies(cls, algorithms, dname):
+    def plot_davies(cls, algorithm, dname):
         if dname is None:
             return
         if not os.path.exists(dname):
             os.mkdir(dname)
 
-        for alg in algorithms:
-            estimator = alg.estimator
+        plt.figure()
+        plt.title(algorithm.estimator.__class__.__name__)
+        plt.xlabel("Number of clusters")
+        plt.ylabel("Davies-Bouldin score")
 
-            plt.figure()
-            plt.title(estimator.__class__.__name__)
-            plt.xlabel("Number of clusters")
-            plt.ylabel("Davies-Bouldin score")
-
-            plt.plot(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
-                     alg.results['davies'], 'o-', color='limegreen')
-            plt.axvline(x=alg.results['davies_nc'], ls='--', C='gray', zorder=0)
-            plt.savefig('%s/davies_%s.png' %
-                        (dname, estimator.__class__.__name__),
-                        bbox_inches='tight', dpi=75)
-            plt.close()
+        plt.plot(range(algorithm.results['min_nc'], algorithm.results['max_nc'] + 1),
+                    algorithm.results['davies'], 'o-', color='limegreen')
+        plt.axvline(x=algorithm.results['davies_nc'], ls='--', C='gray', zorder=0)
+        plt.savefig('%s/davies_%s.png' %
+                    (dname, algorithm.estimator.__class__.__name__),
+                    bbox_inches='tight', dpi=75)
+        plt.close()
 
     @classmethod
-    def plot_calinski(cls, algorithms, dname):
+    def plot_calinski(cls, algorithm, dname):
         if dname is None:
             return
         if not os.path.exists(dname):
             os.mkdir(dname)
 
-        for alg in algorithms:
-            estimator = alg.estimator
+        plt.figure()
+        plt.title(algorithm.estimator.__class__.__name__)
+        plt.xlabel("Number of clusters")
+        plt.ylabel("Calinski and Harabasz score")
 
-            plt.figure()
-            plt.title(estimator.__class__.__name__)
-            plt.xlabel("Number of clusters")
-            plt.ylabel("Calinski and Harabasz score")
+        plt.plot(range(algorithm.results['min_nc'], algorithm.results['max_nc'] + 1),
+                    algorithm.results['calinski'], 'o-', color='crimson')
+        plt.axvline(x=algorithm.results['calinski_nc'], ls='--', C='gray', zorder=0)
+        plt.savefig('%s/calinski_%s.png' %
+                    (dname, algorithm.estimator.__class__.__name__),
+                    bbox_inches='tight', dpi=75)
+        plt.close()
 
-            plt.plot(range(alg.results['min_nc'], alg.results['max_nc'] + 1),
-                     alg.results['calinski'], 'o-', color='crimson')
-            plt.axvline(x=alg.results['calinski_nc'], ls='--', C='gray', zorder=0)
-            plt.savefig('%s/calinski_%s.png' %
-                        (dname, estimator.__class__.__name__),
-                        bbox_inches='tight', dpi=75)
-            plt.close()
+    @classmethod
+    def plot_dendrogram(cls, algorithm, dname):
+        if dname is None:
+            return
+        if not os.path.exists(dname):
+            os.mkdir(dname)
+
+        plt.figure()
+        plt.title(algorithm.estimator.__class__.__name__)
+        plt.title('Dendrogram')
+        plt.ylabel('Distance')
+        plt.xlabel(('A number with brackets represents the number of the samples in the node\n'
+                    'and a number without brackets represents the index of the sample in the data.'))
+
+        algorithm.estimator.dendrogram()
+        plt.savefig('%s/dendrogram_%s.png' %
+                    (dname, algorithm.estimator.__class__.__name__),
+                    bbox_inches='tight', dpi=100)
+        plt.close()
 
     @classmethod
     def make_report(cls, algorithms, data, dname, lang):
@@ -261,10 +276,13 @@ class Clustering(object):
             votes[alg.results['calinski_nc']] += 1
         nc = ', '.join(map(str, np.where(votes == votes.max())[0]))
 
-        Clustering.plot_gap(algorithms, dname)
-        Clustering.plot_silhouette(algorithms, dname)
-        Clustering.plot_davies(algorithms, dname)
-        Clustering.plot_calinski(algorithms, dname)
+        for algorithm in algorithms:
+            Clustering.plot_gap(algorithm, dname)
+            Clustering.plot_silhouette(algorithm, dname)
+            Clustering.plot_davies(algorithm, dname)
+            Clustering.plot_calinski(algorithm, dname)
+            if algorithm.estimator.__class__.__name__ == 'HierarchicalClustering':
+                Clustering.plot_dendrogram(algorithm, dname)
 
         env = Environment(
             loader=FileSystemLoader(

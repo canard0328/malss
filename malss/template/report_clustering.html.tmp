@@ -94,6 +94,9 @@
     
 	<h2 id="{{ algorithms[1].name }}"><a href="{{ algorithms[1].link }}">Hierarchical clustering</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 
+	<h3>Dendrogram</h3>
+	<img border="0" src="dendrogram_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="400" alt="dendrogram">
+
 	<h3>Gap statistics</h3>
 	<img border="0" src="gap_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">
 

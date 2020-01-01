@@ -76,7 +76,10 @@
 	<details>
 	<summary><font size="+1"><strong>解説（クリックして中身を確認してください）</strong></font></summary>
 	<ul>
-		<li>クラスタリングはサンプル間の距離をみることが多いため，特徴量ごとの大きさが大きく異なっている（例えば特徴量１は身長[m]で1桁のオーダー，特徴量２は体重[g]で5桁のオーダー）と上手くクラスタリングできないことがあります（数値の小さい身長の影響が無視されてしまう）．<br>そこで，MALSSの初期設定では各特徴量を平均が0，分散が1になるように<strong>標準化</strong>しています．標準化が不要な場合は，コンストラクタの引数を <i>standardize=False</i> にしてください．</li>
+		<li>クラスタリングはサンプル間の距離をみることが多いため，<strong>特徴量ごとの桁数が大きく異なっていると桁数の小さい特徴量の影響が無視されてしまいます</strong>（例えば特徴量１は身長[m]で1桁のオーダー，特徴量２は体重[g]で5桁のオーダー）．</br>
+		    そこで，MALSSの初期設定では各特徴量を平均が0，分散が1になるように<strong>標準化</strong>しています．</br>
+			標準化が不要な場合は，コンストラクタの引数を <i>standardize=False</i> にしてください．
+		</li>
 		<li>数値データであってもカテゴリ型として扱わなければいけない変数（例えば市区町村コードなど）もあるので注意してください．この場合，<a href="http://www.weblio.jp/content/%E3%83%80%E3%83%9F%E3%83%BC%E5%A4%89%E6%95%B0">ダミー変数</a>を用いて事前にデータ変換をしておく必要があります．</li>
 	</ul>
 	</details>
@@ -114,7 +117,7 @@
 				<ul>
 					<li>デンドログラムの縦軸はクラスタ間の距離を表すが，横軸の描画方法には任意性があり<strong>近くのデータと類似しているとは限らない</strong>．</li>
 					<li>デンドログラムは常に階層構造を示すが，<strong>データに本当にそのような階層構造が存在するとは限らない</strong>．</li>
-					<li>デンドログラムの形状はクラスタ間の距離の計算方法（linkage criteria）に強く依存します．</br>MALSSではlinkage criteriaに完全連結法（complete linkage method）を採用しています．</li>
+					<li>デンドログラムの形状はクラスタ間の距離の計算方法（<a href="https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.cluster.hierarchy.linkage.html" target="new">linkage criteria</a>）に強く依存します．</br>MALSSではlinkage criteriaに完全連結法（complete linkage method）を採用しています．</li>
 				</ul>
             </li>
 		</ul>

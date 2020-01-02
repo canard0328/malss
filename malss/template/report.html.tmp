@@ -28,15 +28,15 @@
 	<p>
 		<strong>* Cross-vaidation score:</strong>
 		<ul>
-			<li><a href="http://en.wikipedia.org/wiki/Generalization_error/">Generalization error</a>: It is important to measure how well a learning machine generalizes to unseen data.</li>
-			<li>Evaluating the quality of the model on the data used to fit the model can lead to <a href="http://en.wikipedia.org/wiki/Overfitting"><strong>overfitting</strong></a>.</li>
-			<li>The solution to overfitting is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)"><strong>Cross validation</strong></a>.</br>The most common cross validation method is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation"><strong>k-fold cross validation</strong></a>: divide the dataset into k (5 by default in MALSS) parts of (roughly) equal size, then for each of these five parts, train the classifier on the other four and test on the held-out part.</li>
-			<li>You can select an appropriate cross validation method from <a href="http://scikit-learn.org/stable/modules/cross_validation.html">sklearn.cross_validation modules</a>.</br>(5-fold cross validation for regression task or Stratified 5-fold cross validation for the classification task is selected by default).</li>
+			<li><a href="http://en.wikipedia.org/wiki/Generalization_error/" target="new">Generalization error</a>: It is important to measure how well a learning machine generalizes to unseen data.</li>
+			<li>Evaluating the quality of the model on the data used to fit the model can lead to <a href="http://en.wikipedia.org/wiki/Overfitting" target="new"><strong>overfitting</strong></a>.</li>
+			<li>The solution to overfitting is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)" target="new"><strong>Cross validation</strong></a>.</br>The most common cross validation method is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation" target="new"><strong>k-fold cross validation</strong></a>: divide the dataset into k (5 by default in MALSS) parts of (roughly) equal size, then for each of these five parts, train the classifier on the other four and test on the held-out part.</li>
+			<li>You can select an appropriate cross validation method from <a href="http://scikit-learn.org/stable/modules/cross_validation.html" target="new">sklearn.cross_validation modules</a>.</br>(5-fold cross validation for regression task or Stratified 5-fold cross validation for the classification task is selected by default).</li>
 		</ul>
 		<strong>* Model evaluation:</strong>
 		<ul>
 			<li>Considering an imbalance ratio of 99 to 1, the accuracy of a classifier that classifies everything as negative is 99%.</br>Obviously, such a classifier may be of no use.</li>
-			<li>You can select an appropriate scoring function from <a href="http://scikit-learn.org/stable/modules/model_evaluation.html">sklearn.metrics modules</a>.</br>(mean squared error for regression task or f1 score for classification task is selected by default.)</li>
+			<li>You can select an appropriate scoring function from <a href="http://scikit-learn.org/stable/modules/model_evaluation.html" target="new">sklearn.metrics modules</a>.</br>(mean squared error for regression task or f1 score for classification task is selected by default.)</li>
 			<li>All scorer objects in sklearn.metrics follow the convention that higher return values are better than lower return values. Thus, metrics that measure the distance between the model and the data, like <i>mean squared error</i>, are available as <i>neg_mean_squared_error</i>, which returns the negated value of the metric.</li>
 		</ul>
 	</p>
@@ -49,23 +49,23 @@
 		<li>Number of columns: {{ data.shape_before[1] }} (numerical: {{ data.shape_before[1] - data.del_columns|length }}, categorical: {{ data.del_columns|length }})</li>
 		{%- if data.del_columns|length > 0 %}
 		<ul>
-			<li>Categorical values were encoded to integer features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features">one-of-K scheme</a>.</li>
+			<li>Categorical values were encoded to integer features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features" target="new">one-of-K scheme</a>.</li>
 		</ul>
 		{%- endif %}
 		{%- if data.col_was_null|length > 0 %}
 		<li>Column {% for col in data.col_was_null %}{{ col }} {% endfor %}had NA values.</li>
 		<ul>
 			<li>NA values were filled in with the most frequent value (categorical), median (integer), mean (float).</li>
-			<li>See also: <a href="http://pandas.pydata.org/pandas-docs/stable/missing_data.html">missing data</a></li>
+			<li>See also: <a href="http://pandas.pydata.org/pandas-docs/stable/missing_data.html" target="new">missing data</a></li>
 		</ul>
 		{%- endif %}
 	</ul>
 	<details>
 	<summary><font size="+1"><strong>Descriptions (click here)</strong></font></summary>
 	<ul>
-		<li>Data may contain features with a mixture of scales for various quantities.<br>Many machine learning algorithms expect features to have the same scale.<br>For feature scaling, <a href="http://en.wikipedia.org/wiki/Feature_scaling#Standardization"><strong>standardization</strong></a> is used in default settings.<br>If you don't need feature scaling, set <i>standardize=False</i> in the constructor.</li>
+		<li>Data may contain features with a mixture of scales for various quantities.<br>Many machine learning algorithms expect features to have the same scale.<br>For feature scaling, <a href="http://en.wikipedia.org/wiki/Feature_scaling#Standardization" target="new"><strong>standardization</strong></a> is used in default settings.<br>If you don't need feature scaling, set <i>standardize=False</i> in the constructor.</li>
 		<li>Data shuffling is done to avoid overfitting in default settings. If you don't need data shuffling, set <i>shuffle=False</i> in the constructor.</li>
-		<li>Note that some features may have to be handled as the categorical feature even though they look like numerical features. In such case, you need to encode categorical features into numerical features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features">one-of-K scheme</a> by yourself before setting data to MALSS.</li>
+		<li>Note that some features may have to be handled as the categorical feature even though they look like numerical features. In such case, you need to encode categorical features into numerical features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features" target="new">one-of-K scheme</a> by yourself before setting data to MALSS.</li>
 	</ul>
 	</details>
 	<hr>
@@ -76,7 +76,7 @@
 	{%- else %}
 	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	{%- endif %}
-	<h3>Hyperparameter optimization by <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><strong>grid search</strong></a></h3>
+	<h3>Hyperparameter optimization by <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search" target="new"><strong>grid search</strong></a></h3>
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 		{%- for key in algorithm.grid_scores[0][0].keys() %}
@@ -110,7 +110,7 @@
 	{%- if task == "classification" %}
 	<h3>Classification report</h3>
 	<pre>{{ algorithm.classification_report }}</pre>
-	* <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_fscore_support.html">precision, recall, f1-score, support</a>
+	* <a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_fscore_support.html" target="new">precision, recall, f1-score, support</a>
 	<ul>
 		<li>Note that above scores were made by closed test (the training data is the same as the test data).</li>
 		<li>Thus, the model may be overfitted.</li>
@@ -150,13 +150,13 @@
 		</ul>
 		See also:
 		<ul>
-			<li><a href="http://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff">Bias-variance tradeoff</a></li>
+			<li><a href="http://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff" target="new">Bias-variance tradeoff</a></li>
 		</ul>
 	</p>
 	</details>
 
 	<hr>
 	{%- endfor %}
-	* much of the material in this report was adapted from <a href="http://www.astroml.org/sklearn_tutorial/practical.html">sklearn tutorials</a>.
+	* much of the material in this report was adapted from <a href="http://www.astroml.org/sklearn_tutorial/practical.html" target="new">sklearn tutorials</a>.
 </body>
 </html>

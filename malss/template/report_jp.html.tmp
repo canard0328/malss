@@ -29,13 +29,13 @@
 		<strong>※交差検証：</strong>
 		<ul>
 			<li>機械学習では，モデル学習に使うデータ(訓練データ)に含まれない未知のデータに対して良い結果を出す能力，<strong>汎化能力</strong>が重要となります．</li>
-			<li>モデルの学習と評価に同じデータを使うと訓練データに過度に適応(<a href="http://ja.wikipedia.org/wiki/%E9%81%8E%E5%89%B0%E9%81%A9%E5%90%88"><strong>過学習</strong></a>)してしまい，訓練スコア(training score)は良く(訓練誤差(training error)は小さく)なりますが，汎化能力が低下してしまいます．</li>
-			<li>過学習を防ぐためには<a href="http://ja.wikipedia.org/wiki/%E4%BA%A4%E5%B7%AE%E6%A4%9C%E8%A8%BC"><strong>交差検証</strong></a>を行い，交差検証スコア(cross-validation score)(交差検証誤差(cross-validation error))により，汎化能力を評価します．</br>代表的な交差検証法であるK-fold cross validationでは，まずデータセットをK個（default: 5）に分割します．そして，そのうちの1つをテスト用とし，残るK−1個でモデルを学習します．<br>交差検証はK個に分割されたデータそれぞれをテストデータとしてK回検証を行い，得られた結果を平均して1つのスコアを得ます．</li>
-			<li>交差検証は<a href="http://scikit-learn.org/stable/modules/cross_validation.html">様々な手法</a>が提案されているので，目的に応じて適切な手法を選択してください．</br>（デフォルトでは，回帰（regression）タスクでは5-fold cross validationが，分類（classification）タスクではStratified 5-fold cross validationが選択されています．）</li>
+			<li>モデルの学習と評価に同じデータを使うと訓練データに過度に適応(<a href="http://ja.wikipedia.org/wiki/%E9%81%8E%E5%89%B0%E9%81%A9%E5%90%88" target="new"><strong>過学習</strong></a>)してしまい，訓練スコア(training score)は良く(訓練誤差(training error)は小さく)なりますが，汎化能力が低下してしまいます．</li>
+			<li>過学習を防ぐためには<a href="http://ja.wikipedia.org/wiki/%E4%BA%A4%E5%B7%AE%E6%A4%9C%E8%A8%BC" target="new"><strong>交差検証</strong></a>を行い，交差検証スコア(cross-validation score)(交差検証誤差(cross-validation error))により，汎化能力を評価します．</br>代表的な交差検証法であるK-fold cross validationでは，まずデータセットをK個（default: 5）に分割します．そして，そのうちの1つをテスト用とし，残るK−1個でモデルを学習します．<br>交差検証はK個に分割されたデータそれぞれをテストデータとしてK回検証を行い，得られた結果を平均して1つのスコアを得ます．</li>
+			<li>交差検証は<a href="http://scikit-learn.org/stable/modules/cross_validation.html" target="new">様々な手法</a>が提案されているので，目的に応じて適切な手法を選択してください．</br>（デフォルトでは，回帰（regression）タスクでは5-fold cross validationが，分類（classification）タスクではStratified 5-fold cross validationが選択されています．）</li>
 		</ul>
 		<strong>※スコア：</strong>
 		<ul>
-			<li>汎化能力の評価指標(スコア)には様々なものがあります(<a href="http://scikit-learn.org/stable/modules/model_evaluation.html">scoringオプション</a>)．</li>
+			<li>汎化能力の評価指標(スコア)には様々なものがあります(<a href="http://scikit-learn.org/stable/modules/model_evaluation.html" target="new">scoringオプション</a>)．</li>
 			<li>精度(accuracy)は分類モデルを評価する代表的なスコアの一つですが，ラベルに偏りがあり，1％のデータのみが陽性の場合，常に陰性と予測するモデルの精度は99%ですが，このモデルは実用的ではありません．</li>
 			<li>デフォルトでは，回帰（regression）タスクでは平均二乗誤差(mean squared error)(小さいほど良く0が最小)が，分類（classification）タスクではF値(f1 score)(大きいほどよく1が最大)が選択されています．</li>
 			<li>sklearn.metrics内の評価指標は「大きい値ほど良い」というルールになっています．よって，例えば<i>平均二乗誤差</i>のように小さい方が良い評価指標を用いる場合は，<i>neg_mean_squared_error</i>のように符号を反転させた指標を利用します．</li>
@@ -50,14 +50,14 @@
 		<li>特徴量数（列数）: {{ data.shape_before[1] }} (数値型: {{ data.shape_before[1] - data.del_columns|length }}, カテゴリ型: {{ data.del_columns|length }})</li>
 		{%- if data.del_columns|length > 0 %}
 		<ul>
-			<li>カテゴリ型の特徴量は<a href="http://www.weblio.jp/content/%E3%83%80%E3%83%9F%E3%83%BC%E5%A4%89%E6%95%B0">ダミー変数</a>をつかって数値型に変換しています．</li>
+			<li>カテゴリ型の特徴量は<a href="http://www.weblio.jp/content/%E3%83%80%E3%83%9F%E3%83%BC%E5%A4%89%E6%95%B0" target="new">ダミー変数</a>をつかって数値型に変換しています．</li>
 		</ul>
 		{%- endif %}
 		{%- if data.col_was_null|length > 0 %}
 		<li>{% for col in data.col_was_null %}{{ col }}列 {% endfor %}は欠損値（NA）を含んでいました．</li>
 		<ul>
 			<li>欠損値は最頻値（カテゴリカル型），中央値（整数型），平均値（実数型）に置換されます．</li>
-			<li>参考）<a href="http://pandas.pydata.org/pandas-docs/stable/missing_data.html">様々な欠損値の処理方法</a></li>
+			<li>参考）<a href="http://pandas.pydata.org/pandas-docs/stable/missing_data.html" target="new">様々な欠損値の処理方法</a></li>
 		</ul>
 		{%- endif %}
 	</ul>
@@ -66,7 +66,7 @@
 	<ul>
 		<li>特徴量ごとの大きさやばらつきが大きく異なっていると分析に影響を与えるため，初期設定では各特徴量を平均が0，分散が1になるように<strong>標準化</strong>しています．<br>標準化が不要な場合は，コンストラクタの引数を <i>standardize=False</i> にしてください．</li>
 		<li>初期設定では過学習を防ぐためにデータはシャッフルされます．データによりシャッフルが不要な場合は，コンストラクタの引数を <i>shuffle=False</i> にしてください．<br>（※時系列データなどではシャッフルした方が過学習しやすくなってしまうこともあります）</li>
-		<li>数値データであってもカテゴリ型として扱わなければいけない変数もあるので注意してください．この場合，<a href="http://www.weblio.jp/content/%E3%83%80%E3%83%9F%E3%83%BC%E5%A4%89%E6%95%B0">ダミー変数</a>を用いて事前にデータ変換をしておく必要があります．</li>
+		<li>数値データであってもカテゴリ型として扱わなければいけない変数もあるので注意してください．この場合，<a href="http://www.weblio.jp/content/%E3%83%80%E3%83%9F%E3%83%BC%E5%A4%89%E6%95%B0" target="new">ダミー変数</a>を用いて事前にデータ変換をしておく必要があります．</li>
 	</ul>
 	</details>
 	<hr>
@@ -77,7 +77,7 @@
 	{%- else %}
 	<h2 id="{{ algorithm.name }}">{{ algorithm.name }} <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	{%- endif %}
-	<h3><a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search"><strong>グリッドサーチ</strong></a>によるハイパーパラメータチューニング結果</h3>
+	<h3><a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search" target="new"><strong>グリッドサーチ</strong></a>によるハイパーパラメータチューニング結果</h3>
 	<table border="1" cellspacing="0" cellpadding="5">
 		<tr>
 		{%- for key in algorithm.grid_scores[0][0].keys() %}
@@ -111,7 +111,7 @@
 	{%- if task == "classification" %}
 	<h3>分類結果</h3>
 	<pre>{{ algorithm.classification_report }}</pre>
-	※<a href="http://ja.wikipedia.org/wiki/%E6%83%85%E5%A0%B1%E6%A4%9C%E7%B4%A2#.E6.A4.9C.E7.B4.A2.E6.80.A7.E8.83.BD.E3.81.AE.E8.A9.95.E4.BE.A1">precision（適合率），recall（再現率），f1-score（F1値）</a>，<a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_fscore_support.html">support（正解ラベルのデータ数）</a>
+	※<a href="http://ja.wikipedia.org/wiki/%E6%83%85%E5%A0%B1%E6%A4%9C%E7%B4%A2#.E6.A4.9C.E7.B4.A2.E6.80.A7.E8.83.BD.E3.81.AE.E8.A9.95.E4.BE.A1" target="new">precision（適合率），recall（再現率），f1-score（F1値）</a>，<a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_fscore_support.html" target="new">support（正解ラベルのデータ数）</a>
 	<ul>
 		<li>注）上記のスコアはクローズ評価（学習と評価が同データ）なので，モデルが過学習しているかもしれません．</li>
 	</ul>
@@ -139,7 +139,7 @@
 		</ul>
 		<strong>ハイバリアンス(High variance)</strong>への対策：
 		<ul>
-			<li><a href="http://ja.wikipedia.org/wiki/%E7%89%B9%E5%BE%B4%E9%81%B8%E6%8A%9E">特徴量選択</a>や<a href="http://en.wikipedia.org/wiki/Dimensionality_reduction">次元削減</a>により特徴量の数を減らす．</li>
+			<li><a href="http://ja.wikipedia.org/wiki/%E7%89%B9%E5%BE%B4%E9%81%B8%E6%8A%9E" target="new">特徴量選択</a>や<a href="http://en.wikipedia.org/wiki/Dimensionality_reduction" target="new">次元削減</a>により特徴量の数を減らす．</li>
 			<li>データ量を増やす．</li>
 		</ul>
 		<strong>ハイバイアス(High bias)</strong>への対策：
@@ -148,12 +148,12 @@
 			<li>より複雑なモデル（アルゴリズム）を利用する．</li>
 			<li>データ量が多すぎて計算コストの問題から複雑なモデルが利用できない場合，データ量の削減が有効な場合があります．</li>
 		</ul>
-		※<a href="http://ibisforest.org/index.php?%E3%83%90%E3%82%A4%E3%82%A2%E3%82%B9-%E3%83%90%E3%83%AA%E3%82%A2%E3%83%B3%E3%82%B9">バイアス，バリアンス</a>
+		※<a href="http://ibisforest.org/index.php?%E3%83%90%E3%82%A4%E3%82%A2%E3%82%B9-%E3%83%90%E3%83%AA%E3%82%A2%E3%83%B3%E3%82%B9" target="new">バイアス，バリアンス</a>
 	</p>
 	</details>
 
 	<hr>
 	{%- endfor %}
-	※このレポートの記載内容は <a href="http://www.astroml.org/sklearn_tutorial/practical.html">sklearn tutorials</a> を参考にしています．
+	※このレポートの記載内容は <a href="http://www.astroml.org/sklearn_tutorial/practical.html" target="new">sklearn tutorials</a> を参考にしています．
 </body>
 </html>

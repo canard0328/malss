@@ -38,7 +38,7 @@
 	<h2>Clustering <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<p>
 		<ul>
-			<li>Clustering is the task of grouping a set of data samples in such a way that samples in the same group are more similar to each other than to those in other groups.</li>
+			<li>Clustering is the task of <strong>grouping a set of data samples in such a way that samples in the same group are more similar to each other</strong> than to those in other groups.</li>
 			<li>In general, data samples have no labels so that we <strong>need to interpret the results of clustering</strong>.</li>
 			<li>Many clustering algorithms need to set the number of clusters.</br>
 			    However, the optimal number of clusters is unknown.</br>

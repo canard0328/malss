@@ -83,7 +83,10 @@
 		    <strong>If the scale of an attribute is much smaller than that of the other attributes</strong> (e.g. the attribute has one digit and the other attributes have five digits.), <strong>the effect of the attribute is ignored</strong>.</br>
 			Therefore, <strong>MALSS standardizes the data</strong> to a mean is zero and standard deviation is one by default.</br>
 			If scaling is not needed, set <i>standardize</i> parameter to <i>True</i>.
-		<li>Note that some features (e.g. country code) may have to be handled as the categorical feature even though they look like numerical features. In such case, you need to encode categorical features into numerical features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features">one-of-K scheme</a> by yourself before setting data to MALSS.</li>
+		<li>Note that some features (e.g. country code) may have to be handled as the categorical feature even though they look like numerical features.</br>
+		    In such case, you need to encode categorical features into numerical features by yourself before setting data to MALSS.</br>
+			<a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html" target="new"><strong>One-hot encoding</strong></a> is commonly used.
+		</li>
 	</ul>
 	</details>
 	<hr>

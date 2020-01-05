@@ -39,8 +39,10 @@
 	<p>
 		<ul>
 			<li>Clustering is the task of <strong>grouping a set of data samples in such a way that samples in the same group are more similar to each other</strong> than to those in other groups.</li>
-			<li>In general, data samples have no labels so that we <strong>need to interpret the results of clustering</strong>.</li>
-			<li>Many clustering algorithms need to set the number of clusters.</br>
+			<li>In general, data samples have no labels so that we <strong>need to interpret the results of clustering</strong>.</br>
+			    This type of problems are called <string>unsupervised learning</strong>.
+			</li>
+			<li>Many clustering algorithms <strong>need to set the number of clusters</strong> in advance.</br>
 			    However, the optimal number of clusters is unknown.</br>
 				Therefore, MALSS conducts the cluster analysis with a range of candidates of the number of clusters.
 			</li>

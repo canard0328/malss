@@ -117,7 +117,7 @@
 	<p>
 		<ul>
 			<li><a href="https://en.wikipedia.org/wiki/Hierarchical_clustering" target="new">Hierarchical clustering</a> is one of the most commonly used clustering algorithm as well as k-means algorithm.</li>
-			<li>Hiearchical clustering algorithms are broadly devided into two groups.</br>
+			<li>Hierarchical clustering algorithms are broadly divided into two groups.</br>
 			    One is <strong>agglomerative (bottom-up) approach</strong> that each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy.</br>
 				The other is <strong>divisive (top-down) approach</strong> that all observations start in one cluster, and splits are performed recursively as one moves down the hierarchy.</br>
 				MALSS supports agglomerative clustering methods.

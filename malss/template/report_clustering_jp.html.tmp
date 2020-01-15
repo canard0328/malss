@@ -81,6 +81,10 @@
 			標準化が不要な場合は，コンストラクタの引数を <i>standardize=False</i> にしてください．
 		</li>
 		<li>数値データであってもカテゴリ型として扱わなければいけない変数（例えば市区町村コードなど）もあるので注意してください．この場合，<a href="http://www.weblio.jp/content/%E3%83%80%E3%83%9F%E3%83%BC%E5%A4%89%E6%95%B0">ダミー変数</a>を用いて事前にデータ変換をしておく必要があります．</li>
+		<li>クラスタリングは，<a href="https://ja.wikipedia.org/wiki/次元の呪い" target="new">次元の呪い</a>と呼ばれる問題により，<strong>特徴量の数が多くなるとよい結果が得られないことがあります</strong>．</br>
+			ダミー変数により特徴量の数が増えた場合は注意が必要です．</br>
+			このようなときは，<a href="https://ja.wikipedia.org/wiki/特徴選択" target="new">特徴量選択</a>や<a href="https://en.wikipedia.org/wiki/Dimensionality_reduction" target="new">次元削減</a>が有効なことがあります．
+		</li>
 	</ul>
 	</details>
 	<hr>
@@ -89,20 +93,22 @@
 	<p>
 		<ul>
 			<li><a href="https://ja.wikipedia.org/wiki/K%E5%B9%B3%E5%9D%87%E6%B3%95" target="new">k-meansクラスタリング</a>は最もポピュラーなクラスタリングアルゴリズムの１つです．</li>
-			<li>k-meansクラスタリングは，<strong>各クラスタのサイズが同じである</strong>ことを仮定していることに注意が必要です．この仮定が妥当でないデータにk-meansクラスタリングを適用した場合，望ましいクラスタリング結果が得られない可能性があります．</li>
+			<li>k-meansクラスタリングは，<strong>各クラスタのサイズが同じである</strong>ことを仮定していることに注意が必要です．この仮定が妥当でないデータにk-meansクラスタリングを適用した場合，望ましいクラスタリング結果が得られない可能性があります（下図参照）．</li>
+			<img border="0" src="kmeans_mouse.png" height="300" alt="kmeans_mouse">
 		</ul>
 	</p>
 
-	<h3>Gap統計量（Gap statistics）</h3>
+	<h3>クラスタ数推定結果</h3>
+	<h4>Gap統計量（Gap statistics）</h4>
 	<img border="0" src="gap_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">
 
-	<h3>Silhouette score</h3>
+	<h4>Silhouette score</h4>
 	<img border="0" src="silhouette_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="silhouette_score">
     
-	<h3>Davies-Bouldin score</h3>
+	<h4>Davies-Bouldin score</h4>
 	<img border="0" src="davies_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="davies_bouldin_score">
     
-	<h3>Calinski and Harabasz score</h3>
+	<h4>Calinski and Harabasz score</h4>
 	<img border="0" src="calinski_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="calinski_harabasz_score">
     
 	<h2 id="{{ algorithms[1].name }}"><a href="{{ algorithms[1].link }}">階層的クラスタリング (Hierarchical clustering)</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
@@ -126,16 +132,17 @@
 	<h3>デンドログラム（Dendrogram）</h3>
 	<img border="0" src="dendrogram_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="400" alt="dendrogram">
 
-	<h3>Gap統計量（Gap statistics）</h3>
+	<h3>クラスタ数推定結果</h3>
+	<h4>Gap統計量（Gap statistics）</h4>
 	<img border="0" src="gap_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">
 
-	<h3>Silhouette score</h3>
+	<h4>Silhouette score</h4>
 	<img border="0" src="silhouette_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="silhouette_score">
     
-	<h3>Davies-Bouldin score</h3>
+	<h4>Davies-Bouldin score</h4>
 	<img border="0" src="davies_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="davies_bouldin_score">
     
-	<h3>Calinski and Harabasz score</h3>
+	<h4>Calinski and Harabasz score</h4>
 	<img border="0" src="calinski_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="calinski_harabasz_score">
     
 </body>

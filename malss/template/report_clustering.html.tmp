@@ -40,7 +40,7 @@
 		<ul>
 			<li>Clustering is the task of <strong>grouping a set of data samples in such a way that samples in the same group are more similar to each other</strong> than to those in other groups.</li>
 			<li>In general, data samples have no labels so that we <strong>need to interpret the results of clustering</strong>.</br>
-			    This type of problems are called <string>unsupervised learning</strong>.
+			    This type of problems are called <strong>unsupervised learning</strong>.
 			</li>
 			<li>Many clustering algorithms <strong>need to set the number of clusters</strong> in advance.</br>
 			    However, the optimal number of clusters is unknown.</br>
@@ -50,9 +50,9 @@
 			    MALSS <strong>estimates the optimal number of clusters by majority vote</strong> of these indices.
 			</li>
 			<li>The indices that MALSS uses are as follows: 
-			    <a href="https://statweb.stanford.edu/~gwalther/gap" target="new">Gap statistic</a>，
-				<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html" target="new">Silhouette score</a>，
-				<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.davies_bouldin_score.html" target="new">Davies-Bouldin score</a>，
+			    <a href="https://statweb.stanford.edu/~gwalther/gap" target="new">Gap statistic</a>,
+				<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.silhouette_score.html" target="new">Silhouette score</a>,
+				<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.davies_bouldin_score.html" target="new">Davies-Bouldin score</a>,
 				<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.calinski_harabasz_score.html" target="new">Calinski and Harabasz score</a>.
 			</li>
 		</ul>
@@ -83,34 +83,41 @@
 		    <strong>If the scale of an attribute is much smaller than that of the other attributes</strong> (e.g. the attribute has one digit and the other attributes have five digits.), <strong>the effect of the attribute is ignored</strong>.</br>
 			Therefore, <strong>MALSS standardizes the data</strong> to a mean is zero and standard deviation is one by default.</br>
 			If scaling is not needed, set <i>standardize</i> parameter to <i>True</i>.
+		</li>
 		<li>Note that some features (e.g. country code) may have to be handled as the categorical feature even though they look like numerical features.</br>
 		    In such case, you need to encode categorical features into numerical features by yourself before setting data to MALSS.</br>
 			<a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html" target="new"><strong>One-hot encoding</strong></a> is commonly used.
+		</li>
+		<li><strong>Clustering algorithms work poorly as the number of features increases</strong>, which is known as <a href="https://en.wikipedia.org/wiki/Clustering_high-dimensional_data" target="new">curse of dimensionality</a>.</br>
+			The one-hot encoding sometimes causes the problem.</br>
+			<a href="https://en.wikipedia.org/wiki/Feature_selection" target="new">Feature selection</a> or <a href="https://en.wikipedia.org/wiki/Dimensionality_reduction" target="new">dimensionality reduction</a> may help in such case.
 		</li>
 	</ul>
 	</details>
 	<hr>
 
-	<h2 id="{{ algorithms[0].name }}"><a href="{{ algorithms[0].link }}">k-means clustering</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
+	<h2 id="{{ algorithms[0].name }}"><a href="{{ algorithms[0].link }}">K-means clustering</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<p>
 		<ul>
-			<li><a href="https://en.wikipedia.org/wiki/K-means_clustering" target="new">k-means clustering</a> is one of the most commonly used clustering algorithm.</li>
-			<li>Note that k-means algorithm assumes that clusters are spherical and of equal size.</br>
-			    If clusters are not spherical or not of equal size, k-means algorithm may produce undesirable results.
+			<li><a href="https://en.wikipedia.org/wiki/K-means_clustering" target="new">K-means clustering</a> is one of the most commonly used clustering algorithm.</li>
+			<li>Note that <strong>k-means algorithm assumes that clusters are spherical and of equal size</strong>.</br>
+			    If clusters are not spherical or not of equal size, k-means algorithm may produce undesirable results (see the figure below).
 			</li>
+			<img border="0" src="kmeans_mouse.png" height="300" alt="kmeans_mouse">
 		</ul>
 	</p>
 
-	<h3>Gap statistics</h3>
+	<h3>Results of estimating the number of clusters</h3>
+	<h4>Gap statistics</h4>
 	<img border="0" src="gap_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">
 
-	<h3>Silhouette score</h3>
+	<h4>Silhouette score</h4>
 	<img border="0" src="silhouette_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="silhouette_score">
     
-	<h3>Davies-Bouldin score</h3>
+	<h4>Davies-Bouldin score</h4>
 	<img border="0" src="davies_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="davies_bouldin_score">
     
-	<h3>Calinski and Harabasz score</h3>
+	<h4>Calinski and Harabasz score</h4>
 	<img border="0" src="calinski_{{ algorithms[0].estimator.__class__.__name__ }}.png" height="300" alt="calinski_harabasz_score">
     
 	<h2 id="{{ algorithms[1].name }}"><a href="{{ algorithms[1].link }}">Hierarchical clustering</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
@@ -140,16 +147,17 @@
 	<h3>Dendrogram</h3>
 	<img border="0" src="dendrogram_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="400" alt="dendrogram">
 
-	<h3>Gap statistics</h3>
+	<h3>Results of estimating the number of clusters</h3>
+	<h4>Gap statistics</h4>
 	<img border="0" src="gap_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="gap_statistics">
 
-	<h3>Silhouette score</h3>
+	<h4>Silhouette score</h4>
 	<img border="0" src="silhouette_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="silhouette_score">
     
-	<h3>Davies-Bouldin score</h3>
+	<h4>Davies-Bouldin score</h4>
 	<img border="0" src="davies_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="davies_bouldin_score">
     
-	<h3>Calinski and Harabasz score</h3>
+	<h4>Calinski and Harabasz score</h4>
 	<img border="0" src="calinski_{{ algorithms[1].estimator.__class__.__name__ }}.png" height="300" alt="calinski_harabasz_score">
     
 </body>

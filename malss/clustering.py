@@ -1,5 +1,6 @@
 import os
 import io
+import shutil
 import numpy as np
 import pandas
 import matplotlib.pyplot as plt
@@ -266,6 +267,9 @@ class Clustering(object):
     def make_report(cls, algorithms, data, dname, lang):
         if not os.path.exists(dname):
             os.mkdir(dname)
+        
+        shutil.copy(os.path.abspath(os.path.dirname(__file__)) + '/static/kmeans_mouse.png',
+                    dname + '/kmeans_mouse.png')
         
         # Estimate number of clusters
         votes = np.zeros(algorithms[0].results['max_nc'] + 1)

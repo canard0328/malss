@@ -42,7 +42,7 @@
 			<li>In general, data samples have no labels so that we <strong>need to interpret the results of clustering</strong>.</br>
 			    This type of problems are called <strong>unsupervised learning</strong>.
 			</li>
-			<li>Many clustering algorithms <strong>need to set the number of clusters</strong> in advance.</br>
+			<li>Many clustering algorithms <strong>require to set the number of clusters</strong> in advance.</br>
 			    However, the optimal number of clusters is unknown.</br>
 				Therefore, MALSS conducts the cluster analysis with a range of candidates of the number of clusters.
 			</li>

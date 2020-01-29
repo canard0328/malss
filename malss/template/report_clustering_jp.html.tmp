@@ -93,7 +93,7 @@
 	<p>
 		<ul>
 			<li><a href="https://ja.wikipedia.org/wiki/K%E5%B9%B3%E5%9D%87%E6%B3%95" target="new">k-meansクラスタリング</a>は最もポピュラーなクラスタリングアルゴリズムの１つです．</li>
-			<li>k-meansクラスタリングは，<strong>各クラスタのサイズが同じである</strong>ことを仮定していることに注意が必要です．この仮定が妥当でないデータにk-meansクラスタリングを適用した場合，望ましいクラスタリング結果が得られない可能性があります（下図参照）．</li>
+			<li>k-meansクラスタリングは，<strong>各クラスタが球形でサイズが同じである</strong>ことを仮定していることに注意が必要です．この仮定が妥当でないデータにk-meansクラスタリングを適用した場合，望ましいクラスタリング結果が得られない可能性があります（下図参照）．</li>
 			<img border="0" src="kmeans_mouse.png" height="300" alt="kmeans_mouse">
 		</ul>
 	</p>

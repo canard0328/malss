@@ -87,6 +87,7 @@ ENV/
 !malss/app/static/*.txt
 *.png
 !malss/app/static/*.png
+!static/*.png
 *.html
 test*/
 data/

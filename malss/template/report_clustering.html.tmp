@@ -38,13 +38,13 @@
 	<h2>Clustering <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<p>
 		<ul>
-			<li>Clustering is the task of <strong>grouping a set of data samples in such a way that samples in the same group are more similar to each other</strong> than to those in other groups.</li>
-			<li>In general, data samples have no labels so that we <strong>need to interpret the results of clustering</strong>.</br>
-			    This type of problems are called <strong>unsupervised learning</strong>.
+			<li>Clustering is the task of <strong>grouping a set of data samples in such a way that the data samples in the same group are more similar to each other</strong> than to those in the other groups.</li>
+			<li>In general, data samples have no labels, so we <strong>need to interpret the clustering results</strong>.</br>
+			    This type of problem is called <strong>unsupervised learning</strong>.
 			</li>
-			<li>Many clustering algorithms <strong>require to set the number of clusters</strong> in advance.</br>
+			<li>Many clustering algorithms <strong>require the user to set the number of clusters</strong> in advance.</br>
 			    However, the optimal number of clusters is unknown.</br>
-				Therefore, MALSS conducts the cluster analysis with a range of candidates of the number of clusters.
+				Therefore, MALSS conducts the cluster analysis with a range of candidates for the number of clusters.
 			</li>
 			<li>A wide variety of indices have been proposed to find the optimal number of clusters.</br>
 			    MALSS <strong>estimates the optimal number of clusters by majority vote</strong> of these indices.
@@ -79,18 +79,18 @@
 	<details>
 	<summary><font size="+1"><strong>Descriptions (click here)</strong></font></summary>
 	<ul>
-		<li>Clustering algorithms are affected by the difference of the scale of each attributes.</br>
+		<li>Clustering algorithms are affected by the difference of the scale of each attribute.</br>
 		    <strong>If the scale of an attribute is much smaller than that of the other attributes</strong> (e.g. the attribute has one digit and the other attributes have five digits.), <strong>the effect of the attribute is ignored</strong>.</br>
-			Therefore, <strong>MALSS standardizes the data</strong> to a mean is zero and standard deviation is one by default.</br>
-			If scaling is not needed, set <i>standardize</i> parameter to <i>True</i>.
+			Therefore, <strong>MALSS standardizes the data</strong> to a mean of zero and standard deviation of one by default.</br>
+			If scaling is not needed, set the <i>standardize</i> parameter to <i>True</i>.
 		</li>
 		<li>Note that some features (e.g. country code) may have to be handled as the categorical feature even though they look like numerical features.</br>
-		    In such case, you need to encode categorical features into numerical features by yourself before setting data to MALSS.</br>
+		    In such a case, you need to encode categorical features into numerical features by yourself before setting data to MALSS.</br>
 			<a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html" target="new"><strong>One-hot encoding</strong></a> is commonly used.
 		</li>
-		<li><strong>Clustering algorithms work poorly as the number of features increases</strong>, which is known as <a href="https://en.wikipedia.org/wiki/Clustering_high-dimensional_data" target="new">curse of dimensionality</a>.</br>
-			The one-hot encoding sometimes causes the problem.</br>
-			<a href="https://en.wikipedia.org/wiki/Feature_selection" target="new">Feature selection</a> or <a href="https://en.wikipedia.org/wiki/Dimensionality_reduction" target="new">dimensionality reduction</a> may help in such case.
+		<li><strong>Clustering algorithms work poorly as the number of features increases</strong>, which is known as the <a href="https://en.wikipedia.org/wiki/Clustering_high-dimensional_data" target="new">curse of dimensionality</a>.</br>
+			One-hot encoding sometimes causes this problem.</br>
+			<a href="https://en.wikipedia.org/wiki/Feature_selection" target="new">Feature selection</a> or <a href="https://en.wikipedia.org/wiki/Dimensionality_reduction" target="new">dimensionality reduction</a> may help in such a case.
 		</li>
 	</ul>
 	</details>
@@ -99,9 +99,9 @@
 	<h2 id="{{ algorithms[0].name }}"><a href="{{ algorithms[0].link }}">K-means clustering</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<p>
 		<ul>
-			<li><a href="https://en.wikipedia.org/wiki/K-means_clustering" target="new">K-means clustering</a> is one of the most commonly used clustering algorithm.</li>
-			<li>Note that <strong>k-means algorithm assumes that clusters are spherical and of equal size</strong>.</br>
-			    If clusters are not spherical or not of equal size, k-means algorithm may produce undesirable results (see the figure below).
+			<li><a href="https://en.wikipedia.org/wiki/K-means_clustering" target="new">K-means clustering</a> is one of the most commonly used clustering algorithms.</li>
+			<li>Note that the <strong>k-means algorithm assumes that clusters are spherical and of equal size</strong>.</br>
+			    If clusters are not spherical or not of equal size, the k-means algorithm may produce undesirable results (see the figure below).
 			</li>
 			<img border="0" src="kmeans_mouse.png" height="300" alt="kmeans_mouse">
 		</ul>
@@ -123,20 +123,20 @@
 	<h2 id="{{ algorithms[1].name }}"><a href="{{ algorithms[1].link }}">Hierarchical clustering</a> <font size="-1">[<a href="#top">Back To Top</a>]</font></h2>
 	<p>
 		<ul>
-			<li><a href="https://en.wikipedia.org/wiki/Hierarchical_clustering" target="new">Hierarchical clustering</a> is one of the most commonly used clustering algorithm as well as k-means algorithm.</li>
+			<li>The <a href="https://en.wikipedia.org/wiki/Hierarchical_clustering" target="new">hierarchical clustering</a> (like the k-means algorithm) is one of the most commonly used clustering algorithms.</li>
 			<li>Hierarchical clustering algorithms are broadly divided into two groups.</br>
-			    One is <strong>agglomerative (bottom-up) approach</strong> that each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy.</br>
-				The other is <strong>divisive (top-down) approach</strong> that all observations start in one cluster, and splits are performed recursively as one moves down the hierarchy.</br>
+			    One is the <strong>agglomerative (bottom-up) approach</strong> where each observation starts in its own cluster, and pairs of clusters are merged as one moves up the hierarchy.</br>
+				The other is the <strong>divisive (top-down) approach</strong> where all observations start in one cluster, and splits are performed recursively as one moves down the hierarchy.</br>
 				MALSS supports agglomerative clustering methods.
 			</li>
-			<li>Hierarchical clustering algorithms have an advantage that they can visualize the results of clustering as a cluster tree called <strong>dendrogram</strong>.</br>
-			    Note the following points when referring the dendrogram:
+			<li>Hierarchical clustering algorithms have an advantage that they can visualize the results of clustering as a cluster tree called a <strong>dendrogram</strong>.</br>
+			    Note the following points when referring to the dendrogram:
 				<ul>
 					<li><strong>Proximity along the horizontal axis of the dendrogram doesn't represent the similarity of two observations</strong>.</br>
 					    We need to see the location on the vertical axis where branches containing those two observations first are fused.
 					</li>
 					<li><strong>The assumption that an arbitrary data has hierarchical structure might be unrealistic</strong> though the results of hierarchical clustering always have hierarchical structures.</li>
-					<li>Dendrogram strongly depends on the type of <a href="https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.cluster.hierarchy.linkage.html" target="new">linkage</a>, which defines the dissimilarity between two groups of observations.</br>
+					<li>A dendrogram strongly depends on the type of <a href="https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.cluster.hierarchy.linkage.html" target="new">linkage</a>, which defines the dissimilarity between two groups of observations.</br>
 					    MALSS adopts a <i>complete linkage method</i>.
 					</li>
 				</ul>

@@ -254,8 +254,8 @@ class Clustering(object):
         plt.title(algorithm.estimator.__class__.__name__)
         plt.title('Dendrogram')
         plt.ylabel('Distance')
-        plt.xlabel(('A number with brackets represents the number of the samples in the node\n'
-                    'and a number without brackets represents the index of the sample in the data.'))
+        plt.xlabel(('A number in brackets represents the number of samples in the nodes\n'
+                    'and a number not in brackets represents the index of the sample in the data.'))
 
         algorithm.estimator.dendrogram()
         plt.savefig('%s/dendrogram_%s.png' %

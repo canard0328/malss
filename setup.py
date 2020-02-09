@@ -34,8 +34,8 @@ if LooseVersion(numpy.__version__) < LooseVersion('1.10.2'):
 if LooseVersion(scipy.__version__) < LooseVersion('0.16.1'):
     raise ImportError('scipy >= 0.16.1 is required')
 
-if LooseVersion(sklearn.__version__) < LooseVersion('0.19'):
-    raise ImportError('sklearn >= 0.19 is required')
+if LooseVersion(sklearn.__version__) < LooseVersion('0.20'):
+    raise ImportError('sklearn >= 0.20 is required')
 
 if LooseVersion(matplotlib.__version__) < LooseVersion('1.5.1'):
     raise ImportError('matplotlib >= 1.5.1 is required')
@@ -72,7 +72,7 @@ setup(
     #packages=["malss", "malss.app"],
     packages=find_packages(),
     install_requires=[
-        'scikit-learn>=0.19',
+        'scikit-learn>=0.20',
         'matplotlib>=1.5.1',
         'pandas>=0.14.1',
         'jinja2>=2.8'

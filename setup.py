@@ -79,6 +79,7 @@ setup(
         ],
     include_package_data=True,
     package_data={"malss": ["template/*.tmp",
+                            "static/*.png",
                             "app/static/*.txt",
                             "app/static/*.png"]},
     classifiers=[

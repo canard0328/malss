@@ -35,6 +35,9 @@ For interactive mode, you need to install PyQt5 using pip.
 Example
 *******
 
+Supervised learning
+===================
+
 Classification:
 
 .. code-block:: python
@@ -42,9 +45,9 @@ Classification:
   from malss import MALSS
   from sklearn.datasets import load_iris
   iris = load_iris()
-  clf = MALSS(task='classification', lang='en')
-  clf.fit(iris.data, iris.target, 'classification_result')
-  clf.generate_module_sample('classification_module_sample.py')
+  model = MALSS(task='classification', lang='en')
+  model.fit(iris.data, iris.target, 'classification_result')
+  model.generate_module_sample('classification_module_sample.py')
 
 Regression:
 
@@ -53,9 +56,9 @@ Regression:
   from malss import MALSS
   from sklearn.datasets import load_boston
   boston = load_boston()
-  clf = MALSS(task='regression', lang='en')
-  clf.fit(boston.data, boston.target, 'regression_result')
-  clf.generate_module_sample('regression_module_sample.py')
+  model = MALSS(task='regression', lang='en')
+  model.fit(boston.data, boston.target, 'regression_result')
+  model.generate_module_sample('regression_module_sample.py')
 
 Change algorithm:
 
@@ -65,19 +68,19 @@ Change algorithm:
   from sklearn.datasets import load_iris
   from sklearn.ensemble import RandomForestClassifier as RF
   iris = load_iris()
-  clf = MALSS(task='classification', lang='en')
-  clf.fit(iris.data, iris.target, algorithm_selection_only=True)
-  algorithms = clf.get_algorithms()
+  model = MALSS(task='classification', lang='en')
+  model.fit(iris.data, iris.target, algorithm_selection_only=True)
+  algorithms = model.get_algorithms()
   # check algorithms here
-  clf.remove_algorithm(0)  # remove the first algorithm
+  model.remove_algorithm(0)  # remove the first algorithm
   # add random forest classifier
-  clf.add_algorithm(RF(n_jobs=3),
+  model.add_algorithm(RF(n_jobs=3),
                     [{'n_estimators': [10, 30, 50],
                       'max_depth': [3, 5, None],
                       'max_features': [0.3, 0.6, 'auto']}],
                     'Random Forest')
-  clf.fit(iris.data, iris.target, 'classification_result')
-  clf.generate_module_sample('classification_module_sample.py')
+  model.fit(iris.data, iris.target, 'classification_result')
+  model.generate_module_sample('classification_module_sample.py')
 
 Interactive mode:
 
@@ -88,3 +91,18 @@ In the interactive mode, you can interactively analyze data through a GUI.
   from malss import MALSS
 
   MALSS(lang='en', interactive=True)
+
+
+Unsupervised learning
+=====================
+
+Clustering:
+
+.. code-block:: python
+
+  from malss import MALSS
+  from sklearn.datasets import load_iris
+  
+  iris = load_iris()
+  model = MALSS(task='clustering', lang='en')
+  model.fit(iris.data, None, 'clustering_result')

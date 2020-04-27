@@ -247,6 +247,7 @@ def test_clustering():
     iris = load_iris()
     cls = MALSS(task='clustering', lang='en')
     cls.fit(iris.data, None, '../report')
+    assert type(cls.predict(iris.data)) == dict
 
 
 if __name__ == "__main__":

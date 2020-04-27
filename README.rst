@@ -106,3 +106,4 @@ Clustering:
   iris = load_iris()
   model = MALSS(task='clustering', lang='en')
   model.fit(iris.data, None, 'clustering_result')
+  pred_dict = model.predict(iris.data)

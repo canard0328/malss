@@ -64,6 +64,29 @@ class Clustering(object):
             algorithms[i].results['calinski'] = cal
             algorithms[i].results['calinski_nc'] = cal_nc
             algorithms[i].results['linkage'] = Z
+
+        # Estimate number of clusters
+        votes = np.zeros(algorithms[0].results['max_nc'] + 1)
+        for alg in algorithms:
+            votes[alg.results['gap_nc']] += 1
+            votes[alg.results['silhouette_nc']] += 1
+            votes[alg.results['davies_nc']] += 1
+            votes[alg.results['calinski_nc']] += 1
+        nc = list(np.where(votes == votes.max())[0])
+        for alg in algorithms:
+            alg.results['est_nc'] = nc
+            alg.estimator.n_clusters = nc[0]
+            alg.estimator = alg.estimator.fit(X)
+
+    @classmethod
+    def predict(cls, algorithms, data):
+        ret = None
+        for alg in algorithms:
+            if hasattr(alg.estimator, 'predict'):
+                if ret is None:
+                    ret = {}
+                ret[alg.name] = alg.estimator.predict(data)
+        return ret
     
     @staticmethod
     def calc_inertia(data, labels):
@@ -169,10 +192,7 @@ class Clustering(object):
         for nc in range(min_clusters, max_clusters + 1):
             model.n_clusters = nc
             model.random_state = random_state
-            if model.__class__.__name__ == 'HierarchicalClustering':
-                pred_labels = model.predict(data)
-            else:
-                pred_labels = model.fit_predict(data)
+            pred_labels = model.fit_predict(data)
             silhouettes.append(silhouette_score(data, pred_labels, random_state=random_state))
             davieses.append(davies_bouldin_score(data, pred_labels))
             calinskies.append(calinski_harabasz_score(data, pred_labels))
@@ -271,14 +291,7 @@ class Clustering(object):
         shutil.copy(os.path.abspath(os.path.dirname(__file__)) + '/static/kmeans_mouse.png',
                     dname + '/kmeans_mouse.png')
         
-        # Estimate number of clusters
-        votes = np.zeros(algorithms[0].results['max_nc'] + 1)
-        for alg in algorithms:
-            votes[alg.results['gap_nc']] += 1
-            votes[alg.results['silhouette_nc']] += 1
-            votes[alg.results['davies_nc']] += 1
-            votes[alg.results['calinski_nc']] += 1
-        nc = ', '.join(map(str, np.where(votes == votes.max())[0]))
+        nc = ', '.join(map(str, algorithms[0].results['est_nc']))
 
         for algorithm in algorithms:
             Clustering.plot_gap(algorithm, dname)

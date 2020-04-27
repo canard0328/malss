@@ -18,9 +18,5 @@ class HierarchicalClustering(object):
         self.model = linkage(X, method=self.method, metric=self.metric)
         return self.model
     
-    def predict(self,X):
-        self.model = linkage(X, method=self.method, metric=self.metric)
-        return fcluster(self.model, t=self.n_clusters, criterion='maxclust') - 1
-    
     def dendrogram(self):
         return dendrogram(self.model, truncate_mode='lastp', p=min(12, len(self.model)))

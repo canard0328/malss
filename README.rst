@@ -19,7 +19,7 @@ malss requires:
 * matplotlib (>= 1.5.1)
 * pandas (>= 0.14.1)
 * jinja2 (>= 2.8)
-* PyQt5 (>= 5.12) (only for interactive mode)
+* PyQt5 (== 5.10) (only for interactive mode)
 
 All modules except PyQt5 are automatically installed when installing malss.
 

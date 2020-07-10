@@ -65,7 +65,10 @@
 	<ul>
 		<li>Data may contain features with a mixture of scales for various quantities.<br>Many machine learning algorithms expect features to have the same scale.<br>For feature scaling, <a href="http://en.wikipedia.org/wiki/Feature_scaling#Standardization" target="new"><strong>standardization</strong></a> is used in default settings.<br>If you don't need feature scaling, set <i>standardize=False</i> in the constructor.</li>
 		<li>Data shuffling is done to avoid overfitting in default settings. If you don't need data shuffling, set <i>shuffle=False</i> in the constructor.</li>
-		<li>Note that some features may have to be handled as the categorical feature even though they look like numerical features. In such case, you need to encode categorical features into numerical features using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features" target="new">one-of-K scheme</a> by yourself before setting data to MALSS.</li>
+		<li>A categorical variable is usually transformed into a numerical variable before the analysis. MALSS automatically transform categorical variables into numerical variables using a <a href="http://scikit-learn.org/stable/modules/preprocessing.html#encoding-categorical-features" target="new">one-of-K scheme</a>.<br>
+		    Note that some features (e.g. country code) may have to be handled as the categorical feature even though they look like numerical features.<br>
+			In such case, you need to encode categorical features into numerical features by yourself before setting data to MALSS.<br>
+			<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.get_dummies.html">get_dummies method</a> in pandas library may help you.</li>
 	</ul>
 	</details>
 	<hr>
@@ -101,8 +104,11 @@
 	<summary><font size="+1"><strong>Descriptions (click here)</strong></font></summary>
 	<p>
 		<ul>
-			<li>If the best parameter is at the border of the grid, its range should be expanded.</li>
-			<li>Often a second, narrower grid is searched centered around the best parameters of the first grid.</li>
+		    <li>The performance of a modell is greatly affected by hyper-parameters that are set manually before training the model.<br>
+			    MALSS optimizes hyper-parameters by using <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search" target="new"><strong>grid search</strong></a> technique.</li>
+			<li>If the best parameter is at the border of the grid, its range should be expanded.<br>
+			    Often a second, narrower grid is searched centered around the best parameters of the first grid.<br>
+			    You can change the grid by referring to the <a href="https://github.com/canard0328/malss#supervised-learning" target="new"><i>Change algorithm</i> section in the document</a>.</li>
 		</ul>
 	</p>
 	</details>

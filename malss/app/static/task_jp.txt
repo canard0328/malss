@@ -1,4 +1,4 @@
-MALSS interactiveは<font color="#1E90FF"><strong>教師あり学習</strong></font>（supervised learning）をサポートしています。<br>
+MALSSは<font color="#1E90FF"><strong>教師あり学習</strong></font>（supervised learning）をサポートしています。<br>
 教師あり学習は手元にあるデータから，未知のデータの予測を行うためのモデルを学習します。<br>
 手元のデータには，<strong>予測に使うための変数</strong>（<font color="#1E90FF"><strong>説明変数</strong></font>（features））と，<strong>予測の答え</strong>（<font color="#1E90FF"><strong>目的変数</strong></font>（target variable））が揃っている必要があります。<br>
 （手元のデータに<strong>目的変数を含まない</strong>ケースを，<font color="#1E90FF"><strong>教師なし学習</strong></font>（unsupervised learning）といいます。）

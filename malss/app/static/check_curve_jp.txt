@@ -2,6 +2,6 @@
 縦軸のScoreは分類/識別タスクであればF値，回帰タスクであれば平均二乗誤差に-1を掛けた値で，スコアが高いほど性能がよいことを示しています。<br>
 <br>
 性能の良いアルゴリズムに<strong>ハイバリアンスな傾向がみられる場合，不要な特徴量を削除する対策が有効</strong>な場合があります。<br>
-MALSS interactiveは特徴量（説明変数）選択（Feature selection）をサポートしています。<br>
+MALSSは特徴量（説明変数）選択（Feature selection）をサポートしています。<br>
 特徴量選択を試みる場合は「Try feature selection」ボタンを押してください。<br>
 そのままでよい場合は「Continue」ボタンを押してください。

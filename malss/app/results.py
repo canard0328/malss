@@ -50,10 +50,10 @@ class Results2(ResultsBase):
         self.btn_re = QPushButton('Re-analyze', self.inner)
         self.btn_re.setStyleSheet('QPushButton{font: bold; font-size: 15pt; background-color: white;};')
         if self.params.lang == 'en':
-            btn_re.clicked.connect(
+            self.btn_re.clicked.connect(
                 lambda: self.button_func('Feature selection'))
         else:
-            btn_re.clicked.connect(
+            self.btn_re.clicked.connect(
                 lambda: self.button_func('特徴量選択'))
         self.btn_re.setEnabled(False)
 

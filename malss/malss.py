@@ -138,7 +138,8 @@ class MALSS(object):
             raise ValueError('lang:%s is no supported' % lang)
         self.lang = lang
 
-        self.data = None
+        # self.data = None
+        self.data = Data(self.shuffle, self.standardize, self.random_state)
 
         self.algorithms = []
 
@@ -396,7 +397,7 @@ class MALSS(object):
 
         if self.verbose:
             print('Set data.')
-        self.data = Data(self.shuffle, self.standardize, self.random_state)
+        # self.data = Data(self.shuffle, self.standardize, self.random_state)
         self.data.fit_transform(X, y)
 
         if self.task == 'classification' or self.task == 'regression':

@@ -46,6 +46,9 @@ class Data(object):
         if self.standardize:
             self.X = self.__standardize(self.X)
 
+        if self.columns is not None:
+            self.X = self.X[self.columns]
+
         if self.shuffle:
             if self.y is not None:
                 self.X, self.y = sk_shuffle(self.X, self.y,

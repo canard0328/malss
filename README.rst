@@ -82,6 +82,21 @@ Change algorithm:
   model.fit(iris.data, iris.target, 'classification_result')
   model.generate_module_sample('classification_module_sample.py')
 
+Feature selection:
+
+.. code-block:: python
+
+  from malss.malss import MALSS
+  from sklearn.datasets import make_friedman1
+  X, y = make_friedman1(n_samples=1000, n_features=20, noise=0.0, random_state=0)
+  model = MALSS(task='regression', lang='en')
+  model.fit(X, y, dname='default')
+  # check the analysis report
+  model.select_features()
+  model.fit(X, y, dname='feature_selection')
+  # You can set the original data after feature selection
+  # (You do not need to select features by yourself.)
+
 Interactive mode:
 
 In the interactive mode, you can interactively analyze data through a GUI.

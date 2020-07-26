@@ -30,7 +30,8 @@
 		<ul>
 			<li><a href="http://en.wikipedia.org/wiki/Generalization_error/" target="new">Generalization error</a>: It is important to measure how well a learning machine generalizes to unseen data.</li>
 			<li>Evaluating the quality of the model on the data used to fit the model can lead to <a href="http://en.wikipedia.org/wiki/Overfitting" target="new"><strong>overfitting</strong></a>.</li>
-			<li>The solution to overfitting is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)" target="new"><strong>Cross validation</strong></a>.</br>The most common cross validation method is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation" target="new"><strong>k-fold cross validation</strong></a>: divide the dataset into k (5 by default in MALSS) parts of (roughly) equal size, then for each of these five parts, train the classifier on the other four and test on the held-out part.</li>
+			<li>Getting more data would help to avoid overfitting, and some machine learning algorithms have hyper parameters that is effective for avoiding overfitting (reguralization parameters).</li>
+			<li>The solution to check overfitting is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)" target="new"><strong>Cross validation</strong></a>.</br>The most common cross validation method is <a href="http://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation" target="new"><strong>k-fold cross validation</strong></a>: divide the dataset into k (5 by default in MALSS) parts of (roughly) equal size, then for each of these five parts, train the classifier on the other four and test on the held-out part.</li>
 			<li>You can select an appropriate cross validation method from <a href="http://scikit-learn.org/stable/modules/cross_validation.html" target="new">sklearn.cross_validation modules</a>.</br>(5-fold cross validation for regression task or Stratified 5-fold cross validation for the classification task is selected by default).</li>
 		</ul>
 		<strong>* Model evaluation:</strong>
@@ -104,7 +105,7 @@
 	<summary><font size="+1"><strong>Descriptions (click here)</strong></font></summary>
 	<p>
 		<ul>
-		    <li>The performance of a modell is greatly affected by hyper-parameters that are set manually before training the model.<br>
+		    <li>The performance of a model is greatly affected by hyper-parameters that are set manually before training the model.<br>
 			    MALSS optimizes hyper-parameters by using <a href="http://en.wikipedia.org/wiki/Hyperparameter_optimization#Grid_search" target="new"><strong>grid search</strong></a> technique.</li>
 			<li>If the best parameter is at the border of the grid, its range should be expanded.<br>
 			    Often a second, narrower grid is searched centered around the best parameters of the first grid.<br>

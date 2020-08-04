@@ -135,7 +135,7 @@ class Analysis(Analyzer):
                 self.params.mdl.fit(X, y,
                                     algorithm_selection_only=True)
 
-                self.params.algorithms = self.params.mdl.get_algorithms()
+            self.params.algorithms = self.params.mdl.get_algorithms()
         elif self.params.results is not None:
             self.add_algorithm(self.params.mdl, self.params.algorithms,
                                self.params.results)

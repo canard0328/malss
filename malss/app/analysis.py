@@ -130,11 +130,10 @@ class Analysis(Analyzer):
             X = data.drop(self.params.objective, axis=1)
             y = data.loc[:, self.params.objective]
 
-            if self.params.mdl is None:
-                self.params.mdl = MALSS(self.params.task.lower())
-                self.params.X, self.params.y =\
-                    self.params.mdl.fit(X, y,
-                                        algorithm_selection_only=True)
+            self.params.mdl = MALSS(self.params.task.lower())
+            self.params.X, self.params.y =\
+                self.params.mdl.fit(X, y,
+                                    algorithm_selection_only=True)
 
                 self.params.algorithms = self.params.mdl.get_algorithms()
         elif self.params.results is not None:

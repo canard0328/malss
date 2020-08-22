@@ -86,7 +86,7 @@ Feature selection:
 
 .. code-block:: python
 
-  from malss.malss import MALSS
+  from malss import MALSS
   from sklearn.datasets import make_friedman1
   X, y = make_friedman1(n_samples=1000, n_features=20, noise=0.0, random_state=0)
   model = MALSS(task='regression', lang='en')

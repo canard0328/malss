@@ -12,14 +12,14 @@ Dependencies
 
 malss requires:
 
-* python (>= 3.6)
-* numpy (>= 1.10.2)
-* scipy (>= 0.16.1)
-* scikit-learn (>= 0.20)
-* matplotlib (>= 1.5.1)
-* pandas (>= 0.14.1)
-* jinja2 (>= 2.8)
-* PyQt5 (== 5.10) (only for interactive mode)
+* python (>= 3.9)
+* numpy (>= 1.21.2)
+* scipy (>= 1.7.1)
+* scikit-learn (>= 1.1.1)
+* matplotlib (>= 3.4.3)
+* pandas (>= 1.3.3)
+* jinja2 (>= 3.1.2)
+.. * PyQt5 (== 5.10) (only for interactive mode)
 
 All modules except PyQt5 are automatically installed when installing malss.
 
@@ -97,15 +97,16 @@ Feature selection:
   # You can set the original data after feature selection
   # (You do not need to select features by yourself.)
 
-Interactive mode:
+.. 
+  Interactive mode:
 
-In the interactive mode, you can interactively analyze data through a GUI.
+  In the interactive mode, you can interactively analyze data through a GUI.
 
-.. code-block:: python
+  .. code-block:: python
 
-  from malss import MALSS
+    from malss import MALSS
 
-  MALSS(lang='en', interactive=True)
+    MALSS(lang='en', interactive=True)
 
 
 Unsupervised learning

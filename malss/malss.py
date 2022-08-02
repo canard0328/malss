@@ -511,7 +511,7 @@ class MALSS(object):
             parameters = self.algorithms[i].parameters
             clf = GridSearchCV(
                 estimator, parameters, cv=self.cv, scoring=self.scoring,
-                iid=False, n_jobs=self.n_jobs)
+                n_jobs=self.n_jobs)
             clf.fit(self.data.X, self.data.y)
             grid_scores = []
             for j in range(len(clf.cv_results_['mean_test_score'])):

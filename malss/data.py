@@ -19,7 +19,7 @@ class Data(object):
 
     def fit_transform(self, X, y=None):
         if isinstance(X, np.ndarray):
-            self.X = pd.DataFrame(X)
+            self.X = pd.DataFrame(X, columns=list(map(str, range(X.shape[1]))))
             if y is not None:
                 self.y = pd.Series(y)
         else:
@@ -58,7 +58,7 @@ class Data(object):
 
     def transform(self, X):
         if isinstance(X, np.ndarray):
-            Xtrans = pd.DataFrame(X)
+            Xtrans = pd.DataFrame(X, columns=list(map(str, range(X.shape[1]))))
         else:
             Xtrans = X.copy(deep=True)
 

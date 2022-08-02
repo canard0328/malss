@@ -11,10 +11,10 @@ except ImportError:
     sys.exit()
 
 if sys.version_info.major == 2:
-    print('python >= 3.6 is required.')
+    print('python >= 3.9 is required.')
     sys.exit()
-elif sys.version_info.major == 3 and sys.version_info < (3, 6):
-    print('python >= 3.6 is required.')
+elif sys.version_info.major == 3 and sys.version_info < (3, 9):
+    print('python >= 3.9 is required.')
     sys.exit()
 
 try:
@@ -28,23 +28,23 @@ import matplotlib
 import pandas
 import jinja2
 
-if LooseVersion(numpy.__version__) < LooseVersion('1.10.2'):
-    raise ImportError('numpy >= 1.10.2 is required')
+if LooseVersion(numpy.__version__) < LooseVersion('1.21.2'):
+    raise ImportError('numpy >= 1.21.2 is required')
 
-if LooseVersion(scipy.__version__) < LooseVersion('0.16.1'):
-    raise ImportError('scipy >= 0.16.1 is required')
+if LooseVersion(scipy.__version__) < LooseVersion('1.7.1'):
+    raise ImportError('scipy >= 1.7.1 is required')
 
-if LooseVersion(sklearn.__version__) < LooseVersion('0.20'):
-    raise ImportError('sklearn >= 0.20 is required')
+if LooseVersion(sklearn.__version__) < LooseVersion('1.1.1'):
+    raise ImportError('sklearn >= 1.1.1 is required')
 
-if LooseVersion(matplotlib.__version__) < LooseVersion('1.5.1'):
-    raise ImportError('matplotlib >= 1.5.1 is required')
+if LooseVersion(matplotlib.__version__) < LooseVersion('3.4.3'):
+    raise ImportError('matplotlib >= 3.4.3 is required')
 
-if LooseVersion(pandas.__version__) < LooseVersion('0.14.1'):
-    raise ImportError('pandas >= 0.14.1 is required')
+if LooseVersion(pandas.__version__) < LooseVersion('1.3.3'):
+    raise ImportError('pandas >= 1.3.3 is required')
 
-if LooseVersion(jinja2.__version__) < LooseVersion('2.8'):
-    raise ImportError('jinja2 >= 2.8 is required')
+if LooseVersion(jinja2.__version__) < LooseVersion('3.1.2'):
+    raise ImportError('jinja2 >= 3.1.2 is required')
 
 
 PACKAGE = "malss"
@@ -68,14 +68,14 @@ setup(
     author_email=AUTHOR_EMAIL,
     license=LICENSE,
     url=URL,
-    python_requires='>=3.6',
+    python_requires='>=3.9',
     #packages=["malss", "malss.app"],
     packages=find_packages(),
     install_requires=[
-        'scikit-learn>=0.20',
-        'matplotlib>=1.5.1',
-        'pandas>=0.14.1',
-        'jinja2>=2.8'
+        'scikit-learn>=1.1.1',
+        'matplotlib>=3.4.3',
+        'pandas>=1.3.3',
+        'jinja2>=3.1.2'
         ],
     include_package_data=True,
     package_data={"malss": ["template/*.tmp",

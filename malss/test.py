@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from sklearn.datasets.samples_generator import make_classification,\
-    make_regression
+from sklearn.datasets import make_classification, make_regression
 from .malss import MALSS
 import pandas as pd
 from nose.plugins.attrib import attr
@@ -166,7 +165,7 @@ def test_regression_big():
 
 
 def test_classification_categorical():
-    data = pd.read_csv('http://faculty.marshall.usc.edu/gareth-james/ISL/Heart.csv',
+    data = pd.read_csv("https://www.statlearning.com/s/Heart.csv",
                        index_col=0, na_values=[''])
 
     y = data['AHD']
@@ -185,7 +184,7 @@ def test_classification_categorical():
 
 
 def test_ndarray():
-    data = pd.read_csv('http://faculty.marshall.usc.edu/gareth-james/ISL/Heart.csv',
+    data = pd.read_csv("https://www.statlearning.com/s/Heart.csv",
                        index_col=0, na_values=[''])
 
     y = data['AHD']

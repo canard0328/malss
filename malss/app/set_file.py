@@ -98,9 +98,9 @@ class SetFile(Content):
 
             self.params.columns = data.columns
             self.params.col_types_def =\
-                list(map(str, data.dtypes.get_values()))
+                list(map(str, data.dtypes.to_numpy()))
             self.params.col_types =\
-                list(map(str, data.dtypes.get_values()))
+                list(map(str, data.dtypes.to_numpy()))
 
         if self.params.lang == 'jp':
             self.button_func('データの確認')

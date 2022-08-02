@@ -174,7 +174,7 @@ class Clustering(object):
                     algorithm.results['gap'], 'o-', color='dodgerblue')
         plt.errorbar(range(algorithm.results['min_nc'], algorithm.results['max_nc'] + 1),
                         algorithm.results['gap'], algorithm.results['gap_sk'], capsize=3)
-        plt.axvline(x=algorithm.results['gap_nc'], ls='--', C='gray', zorder=0)
+        plt.axvline(x=algorithm.results['gap_nc'], ls='--', color='gray', zorder=0)
         plt.savefig('%s/gap_%s.png' %
                     (dname, algorithm.estimator.__class__.__name__),
                     bbox_inches='tight', dpi=75)
@@ -217,7 +217,7 @@ class Clustering(object):
 
         plt.plot(range(algorithm.results['min_nc'], algorithm.results['max_nc'] + 1),
                     algorithm.results['silhouette'], 'o-', color='darkorange')
-        plt.axvline(x=algorithm.results['silhouette_nc'], ls='--', C='gray', zorder=0)
+        plt.axvline(x=algorithm.results['silhouette_nc'], ls='--', color='gray', zorder=0)
         plt.savefig('%s/silhouette_%s.png' %
                     (dname, algorithm.estimator.__class__.__name__),
                     bbox_inches='tight', dpi=75)
@@ -237,7 +237,7 @@ class Clustering(object):
 
         plt.plot(range(algorithm.results['min_nc'], algorithm.results['max_nc'] + 1),
                     algorithm.results['davies'], 'o-', color='limegreen')
-        plt.axvline(x=algorithm.results['davies_nc'], ls='--', C='gray', zorder=0)
+        plt.axvline(x=algorithm.results['davies_nc'], ls='--', color='gray', zorder=0)
         plt.savefig('%s/davies_%s.png' %
                     (dname, algorithm.estimator.__class__.__name__),
                     bbox_inches='tight', dpi=75)
@@ -257,7 +257,7 @@ class Clustering(object):
 
         plt.plot(range(algorithm.results['min_nc'], algorithm.results['max_nc'] + 1),
                     algorithm.results['calinski'], 'o-', color='crimson')
-        plt.axvline(x=algorithm.results['calinski_nc'], ls='--', C='gray', zorder=0)
+        plt.axvline(x=algorithm.results['calinski_nc'], ls='--', color='gray', zorder=0)
         plt.savefig('%s/calinski_%s.png' %
                     (dname, algorithm.estimator.__class__.__name__),
                     bbox_inches='tight', dpi=75)

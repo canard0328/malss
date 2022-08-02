@@ -16,7 +16,7 @@ class HierarchicalClustering(object):
     
     def fit(self, X, y=None):
         self.model = linkage(X, method=self.method, metric=self.metric)
-        return self.model
+        return self
     
     def dendrogram(self):
         return dendrogram(self.model, truncate_mode='lastp', p=min(12, len(self.model)))

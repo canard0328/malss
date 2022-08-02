@@ -12,8 +12,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble.forest import _generate_unsampled_indices
-from sklearn.ensemble import forest
+from sklearn.ensemble._forest import _generate_unsampled_indices
+from sklearn.ensemble import _forest
 from sklearn.model_selection import cross_val_score
 from sklearn.base import clone
 from sklearn.metrics import r2_score
